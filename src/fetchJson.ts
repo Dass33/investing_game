@@ -18,13 +18,13 @@ function extractAndParseJSON(csv: string) {
   if (lines.length > 1) {
 
     const returnValues = ['', '', ''];
-    returnValues.forEach((item, index) => {
+    returnValues.forEach((_, index) => {
       try {
         let jsonString = lines[index];
         if (jsonString.startsWith('"')) jsonString = jsonString.substring(1);
         if (jsonString.endsWith('"')) jsonString = jsonString.slice(0, -1);
         jsonString = jsonString.replace(/""/g, '"');
-        item = JSON.parse(jsonString);
+        returnValues[index] = JSON.parse(jsonString);
       } catch (error) {
         console.error('Error parsing JSON:', error);
         return null;
