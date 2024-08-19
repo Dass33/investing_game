@@ -9,7 +9,7 @@ function getJson(index: number) {
     const fetchData = async () => {
       try {
         const fetchedData = await getJsObjects();
-
+        console.log(await getJsObjects());
         if (fetchedData) setData(fetchedData[index]);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -24,11 +24,10 @@ function getJson(index: number) {
 
 function GameLoop(param: { isLoopRunnig: boolean, SetEndGame: Function }) {
   const productData = getJson(2);
-  console.log(productData);
   return (
     <>
       {/*continue here, add elements, checks...*/}
-      <h1>{productData[0].productName}</h1>
+      <h1>{productData[2].productName}</h1>
       <h1>{param.isLoopRunnig}</h1>
     </>
   );

@@ -9,7 +9,7 @@ function App() {
   const [showWelcomeSite, setShowWelcomeSite] = useState(true);
   const [endGame, setEndGame] = useState(false);
 
-  //prompr user if they want to exit the site => loose game progress
+  //prompt user if they want to exit the site => loose game progress
   window.addEventListener('beforeunload', function(e) {
     if (!showWelcomeSite) e.preventDefault();
   });

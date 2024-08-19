@@ -41,7 +41,8 @@ function extractAndParseJSON(csv: string) {
 
 export async function getJsObjects() {
   const csvData = await fetchCSV();
+  console.log(csvData);
   if (csvData) return extractAndParseJSON(csvData);
 }
 
-export const jsObjects = getJsObjects();
+//export const jsObjects = getJsObjects();
