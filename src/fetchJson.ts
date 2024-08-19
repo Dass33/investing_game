@@ -1,48 +1,29 @@
-async function fetchCSV() {
-  const url = 'https://docs.google.com/spreadsheets/d/1oijYgt0-3uAmo_RKh5ReR9Z4P7oyS6dYBIytKxvEL_Y/pub?gid=1305846011&single=true&output=csv';
-
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error('Network response was not ok ' + response.statusText);
-    }
-    const data = await response.text();
-    return data;
-  } catch (error) {
-    console.error('There has been a problem with fetch operation:', error);
-  }
-}
-
-function extractAndParseJSON(csv: string) {
-  const lines = csv.split(/\r\n|\n/);
-  if (lines.length > 1) {
-
-    const returnValues = ['', '', ''];
-    returnValues.forEach((_, index) => {
-      try {
-        let jsonString = lines[index];
-        if (jsonString.startsWith('"')) jsonString = jsonString.substring(1);
-        if (jsonString.endsWith('"')) jsonString = jsonString.slice(0, -1);
-        jsonString = jsonString.replace(/""/g, '"');
-        returnValues[index] = JSON.parse(jsonString);
-      } catch (error) {
-        console.error('Error parsing JSON:', error);
-        return null;
-      }
-    });
-    return returnValues;
-  } else {
-    console.error('CSV data does not contain expected JSON string.');
-    return null;
-  }
-}
-
-
+let cachedData: Array<JSON> | null = null;
 
 export async function getJsObjects() {
-  const csvData = await fetchCSV();
-  console.log(csvData);
-  if (csvData) return extractAndParseJSON(csvData);
+  if (cachedData) {
+    return cachedData;
+  }
+
+  // Otherwise, fetch the data
+  const url = 'https://docs.google.com/spreadsheets/d/1oijYgt0-3uAmo_RKh5ReR9Z4P7oyS6dYBIytKxvEL_Y/pub?gid=1305846011&single=true&output=tsv';
+
+  const response = await fetch(url);
+
+  if (!response.ok) throw new Error('Network response was not ok ' + response.statusText);
+
+  const data = await response.text();
+
+  const lines = data.trim().split('\n');
+
+  const config = JSON.parse(lines[0]);
+  const events = JSON.parse(lines[1]);
+  const products = JSON.parse(lines[2]);
+
+  // Cache the data
+  cachedData = [config, events, products];
+
+  // Return the fetched data
+  return cachedData;
 }
 
-//export const jsObjects = getJsObjects();

@@ -16,7 +16,7 @@ function App() {
   return (
     <>
       {showWelcomeSite && <WelcomeSite setShowWelcomeSite={setShowWelcomeSite} />}
-      {!showWelcomeSite && <GameLoop isLoopRunnig={showWelcomeSite} SetEndGame={setEndGame} />}
+      {!showWelcomeSite && !endGame && <GameLoop SetEndGame={setEndGame} />}
       {endGame && <EndScreen setShowWelcomeSite={setShowWelcomeSite} />}
     </>
   )
