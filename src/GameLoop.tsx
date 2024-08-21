@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getJsObjects } from "./fetchJson";
 
 interface config {
@@ -47,15 +47,18 @@ function useJson(index: number) {
   return data;
 }
 
-function findCurrentProduct(item: string, portfolioItems: string[], productData: products[]) {
-  const productIndex = productData.findIndex(product => product.productName === item);
-  const count = portfolioItems.filter(product => product === item).length;
+function Portfolio({ portfolioItems, setNewPortfolioItems, newPortfolioItems, productData, liquidity, setLiquidity, oldPortfolioItems }:
+  {
+    portfolioItems: string[] | null, setNewPortfolioItems: Function, newPortfolioItems: string[] | null, productData: products[],
+    liquidity: number, setLiquidity: Function, oldPortfolioItems: string[] | null
+  }) {
+  const uniquePortfolioItems = Array.from(new Set(portfolioItems));
 
-  return [productIndex, count];
-}
+  const productsInPortfolio = productData.filter(product => uniquePortfolioItems.includes(product.productName));
+  const productsNotInPortfolio = productData.filter(product => !uniquePortfolioItems.includes(product.productName));
 
-function Portfolio({ portfolioItems, productData, setItemsToSell, itemsToSell }: { portfolioItems: string[] | null, productData: products[], setItemsToSell: Function, itemsToSell: string[] | null }) {
-  const uniqueItems = Array.from(new Set(portfolioItems));
+  const combinedProductList = [...productsInPortfolio, ...productsNotInPortfolio];
+
 
   return (
     <>
@@ -63,85 +66,95 @@ function Portfolio({ portfolioItems, productData, setItemsToSell, itemsToSell }:
         <h1 className="text-4xl text-center">Vaše portfolio</h1>
         <hr className="w-64 mx-auto bg-black h-0.5 mt-1"></hr>
       </div>
-      {uniqueItems?.map((item: string) => {
-        const [currentProductIndex, initialCount] = findCurrentProduct(item, portfolioItems!, productData);
+      {combinedProductList.map((product) => {
+        const initialCount = portfolioItems!.filter(item => item === product.productName).length;
+        const oldInitialCount = oldPortfolioItems ? oldPortfolioItems.filter((item: string) => item === product.productName).length
+          : initialCount;
         const [count, setCount] = useState(initialCount);
         const [amountToSell, setAmountToSell] = useState(0);
 
-        if (currentProductIndex !== -1 && initialCount) {
-          const currentProduct = productData[currentProductIndex];
-          const isTimeToSellValid = currentProduct.timeToSell > -1;
+        const isTimeToSellValid = product.timeToSell > -1;
 
-          return (
-            <div className="mt-8 mx-6" key={item}>
-              <h2 className="text-3xl">
-                {currentProduct.productName} <span className="float-right">{count}</span>
-              </h2>
-              <div className="mt-2 flex items-center justify-between">
-                {/* Left side: Sell text and buttons */}
-                <div className="flex items-center space-x-2">
-                  <span className="text-3xl">Sell</span>
-                  <button
-                    className={`size-12 border-solid border-2 text-3xl rounded-lg flex items-center justify-center 
-          ${isTimeToSellValid ? 'border-black text-black hover:bg-gray-200' : 'border-gray-400 text-gray-400 hover:cursor-not-allowed'}`}
-                    onClick={() => {
-                      if (isTimeToSellValid && count > 0) {
-                        setItemsToSell((previousItems: string) => [...(previousItems || []), item]);
+        return (
+          <div className="mt-8 mx-6" key={product.productName}>
+            <h2 className="text-3xl">
+              {product.productName}
+              <span className="float-right">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                </svg>
+              </span>
+            </h2>
+            <div className="mt-2 flex items-center justify-between">
 
-                        setCount(count - 1);
-                        setAmountToSell(amountToSell + 1);
+              <div className="flex items-center space-x-2">
+                <button
+                  className={`size-12 border-solid border-2 text-3xl rounded-lg flex items-center justify-center 
+                    ${(isTimeToSellValid || count > oldInitialCount) && count > 0 ? 'border-black text-black' : 'border-black/30 text-black/30 hover:cursor-not-allowed'}`}
+                  onClick={() => {
+                    if ((isTimeToSellValid || count > oldInitialCount) && count > 0) {
+                      const indexToSell = newPortfolioItems?.findIndex((toSellItem: string) => toSellItem === product.productName);
+
+                      if (indexToSell !== -1 && newPortfolioItems) {
+                        const updatedPortfolioItems = [...newPortfolioItems];
+                        updatedPortfolioItems.splice(indexToSell!, 1);
+                        setNewPortfolioItems(updatedPortfolioItems);
                       }
-                    }}
-                    disabled={!isTimeToSellValid}
-                  >
-                    +
-                  </button>
-                  <span className="text-2xl">{amountToSell}</span>
-                  <button
-                    className={`size-12 border-solid border-2 text-3xl rounded-lg flex items-center justify-center 
-          ${isTimeToSellValid ? 'border-black text-black hover:bg-gray-200' : 'border-gray-400 text-gray-400 hover:cursor-not-allowed'}`}
-                    onClick={() => {
-                      if (isTimeToSellValid && amountToSell > 0) {
-                        const indexToSell = itemsToSell?.findIndex(toSellItem => toSellItem === item);
 
-                        if (indexToSell !== -1) {
-                          const newItemsToSell = [...itemsToSell!];
-                          newItemsToSell.splice(indexToSell!, 1); setItemsToSell(newItemsToSell);
-                        }
+                      setCount(count - 1);
+                      setAmountToSell(amountToSell + 1);
+                      setLiquidity(liquidity + Number(product.cost));
+                    }
+                  }}
+                >
+                  -
+                </button>
+                <span className="text-2xl">{count}</span>
+                <button
+                  className={`size-12 border-solid border-2 text-3xl rounded-lg flex items-center justify-center
+                    ${liquidity < product.cost ? 'border-black/30 text-black/30' : 'border-black text-black'}`}
 
-                        setCount(count + 1);
-                        setAmountToSell(amountToSell - 1);
-                      }
-                    }}
-                    disabled={!isTimeToSellValid}
-                  >
-                    -
-                  </button>
-                </div>
+                  onClick={() => {
+                    if (liquidity >= Number(product.cost)) {
+                      setNewPortfolioItems((previousItems: string[]) => [...previousItems, product.productName]);
 
-                <div className="flex space-x-3 text-3xl">
-                  <span>+${currentProduct.fixedIncome}</span>
-                  <span>${currentProduct.cost}</span>
-                </div>
+                      setCount(count + 1);
+                      setAmountToSell(amountToSell - 1);
+                      setLiquidity(liquidity - Number(product.cost));
+                    }
+                  }}
+                >
+                  +
+                </button>
               </div>
-              <hr className="w-full mx-auto bg-black h-0.5 mt-3"></hr>
+
+              <div className="flex space-x-3 text-3xl">
+                <span>+${product.fixedIncome}</span>
+                <span>${product.cost}</span>
+              </div>
             </div>
-          );
-        }
-        return null;
+            <hr className="w-full mx-auto bg-black h-0.5 mt-3"></hr>
+          </div>
+        );
       })}
     </>
   );
 }
 
-function StockExchange({ portfolioItems, productData, setItemsToSell, itemsToSell }: { portfolioItems: string[] | null, productData: products[], setItemsToSell: Function, itemsToSell: string[] | null }) {
+function ChangeSummary({ portfolioItems, productData, newPortfolioItems }: { portfolioItems: string[] | null, productData: products[], newPortfolioItems: string[] | null }) {
+  let combinedItems = portfolioItems;
+  if (newPortfolioItems !== null) combinedItems = portfolioItems?.concat(newPortfolioItems)!;
+  const uniqueCombinedItems = Array.from(new Set(combinedItems));
+
+  const uniqueCombinedProducts = productData.filter(product => uniqueCombinedItems.includes(product.productName));
+
   return (
     <>
       <div className="mt-16">
-        <h1 className="text-4xl text-center">Stock Exchange</h1>
+        <h1 className="text-4xl text-center">Shrnutí:</h1>
         <hr className="w-64 mx-auto bg-black h-0.5 mt-1"></hr>
       </div>
-      {productData.map((item: products) => {
+      {uniqueCombinedProducts.map((item: products) => {
 
         return (
           <div className="mt-8 mx-6" key={item.productName}>
@@ -159,7 +172,7 @@ function TopBar({ liquidity, year }: { liquidity: number | null, year: number })
   }
 
   return (
-    <div className="absolute top-0 py-1 text-3xl w-full bg-black/90 text-white">
+    <div className="fixed top-0 py-1 text-3xl w-full bg-black/90 text-white">
       <p className="float-left px-2">{year}</p>
       <p className="float-right px-2">{liquidity}$</p>
     </div>
@@ -193,27 +206,41 @@ function GameLoop({ SetEndGame }: { SetEndGame: Function }) {
   const [showSite, setShowSite] = useState(0);
   const [liquidity, setLiquidity] = useState<number | null>(null);
   const [portfolioItems, setPortfolioItems] = useState<Array<string> | null>(null);
-  const [itemsToSell, setItemsToSell] = useState<Array<string> | null>(null);
+  const [newPortfolioItems, setNewPortfolioItems] = useState<Array<string> | null>(null);
+  const [oldPortfolioItems, setOldPortfolioItmes] = useState<Array<string> | null>(null);
+
+  const isInitialized = useRef(false);
 
   useEffect(() => {
     if (configData) {
       setLiquidity(configData.startingMoney);
       setPortfolioItems(configData.startingProducts);
-      // testing code
-      // setPortfolioItems((prevItmes) => [...(prevItmes || []), 'Akcie', 'Zlato', 'Podnikání']);
+      setNewPortfolioItems(configData.startingProducts);
+      if (isInitialized!) {
+        setOldPortfolioItmes(configData.startingProducts);
+        isInitialized.current = true;
+      }
     }
   }, [configData]);
+
+  useEffect(() => {
+    setPortfolioItems(newPortfolioItems);
+  }, [showSite, portfolioItems]);
 
   if (!productData || liquidity === null) {
     return <h1>Loading...</h1>;
   }
 
+  //doufejme ze nebudou lidi hrat na silvestra
+  if ((year - new Date().getFullYear()) > configData.roundsAmount) SetEndGame(true);
+
   return (
     <>
       <TopBar liquidity={liquidity} year={year} />
       <NavigationArrows showSite={showSite} setShowSite={setShowSite} />
-      {showSite === 0 && <Portfolio portfolioItems={portfolioItems} productData={productData} setItemsToSell={setItemsToSell} itemsToSell={itemsToSell} />}
-      {showSite === 1 && <StockExchange portfolioItems={portfolioItems} productData={productData} setItemsToSell={setItemsToSell} itemsToSell={itemsToSell} />}
+      {showSite === 0 && <Portfolio portfolioItems={portfolioItems} setNewPortfolioItems={setNewPortfolioItems} newPortfolioItems={newPortfolioItems}
+        productData={productData} liquidity={liquidity} setLiquidity={setLiquidity} oldPortfolioItems={oldPortfolioItems} />}
+      {showSite === 1 && <ChangeSummary portfolioItems={portfolioItems} productData={productData} newPortfolioItems={newPortfolioItems} />}
     </>
   );
 }
