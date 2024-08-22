@@ -56,9 +56,23 @@ function useJson(index: number) {
   return data;
 }
 
-function NewEvent({ portfolioItems, oldPortfolioItems, setNextRound, eventData }: { portfolioItems: string[] | null, oldPortfolioItems: string[] | null, setNextRound: Function, eventData: events[] }) {
+function NewEvent({ portfolioItems, setNextRound, eventData, setYear, year }:
+  {
+    portfolioItems: string[] | null,
+    setNextRound: Function,
+    eventData: events[],
+    setYear: Function,
+    year: number
+  }) {
+
   return (
-    <p>{eventData[0].eventName}</p>
+    <>
+      <p>{eventData[0].eventName}</p>
+      <button onClick={() => {
+        setNextRound(false);
+        setYear(year + 1);
+      }}>Pokracovat</button>
+    </>
   );
 }
 
@@ -168,8 +182,17 @@ function Portfolio({ portfolioItems,
   );
 }
 
-function ChangeSummary({ portfolioItems, productData, setNextRound, setShowSite, setOldPortfolioItems, setYear, year }:
-  { portfolioItems: string[] | null, productData: products[], setNextRound: Function, setShowSite: Function, setOldPortfolioItems: Function, setYear: Function, year: number }) {
+function ChangeSummary({ portfolioItems, productData, setNextRound, setShowSite, setOldPortfolioItems, portfolioItemCount, liquidity, setLiquidity }:
+  {
+    portfolioItems: string[] | null,
+    productData: products[],
+    setNextRound: Function,
+    setShowSite: Function,
+    setOldPortfolioItems: Function,
+    portfolioItemCount: { [key: string]: number },
+    liquidity: number,
+    setLiquidity: Function
+  }) {
   const productsInPortfolio = productData.filter(product => portfolioItems?.includes(product.productName));
   let incomeSum = 0;
 
@@ -180,12 +203,12 @@ function ChangeSummary({ portfolioItems, productData, setNextRound, setShowSite,
         <hr className="w-64 mx-auto bg-black h-0.5 mt-1"></hr>
       </div>
       {productsInPortfolio.map((item: products) => {
-        incomeSum += Number(item.fixedIncome);
+        incomeSum += portfolioItemCount[item.productName] * Number(item.fixedIncome);
 
         return (
           <div className="mt-6 mx-6 flex justify-between" key={item.productName}>
             <h3 className="text-3xl flex-1 break-words">{item.productName}</h3>
-            <h3 className="text-3xl text-right">${item.fixedIncome}</h3>
+            <h3 className="text-3xl text-right">{portfolioItemCount[item.productName]} x ${(item.fixedIncome)}</h3>
           </div>
         );
       })}
@@ -195,9 +218,8 @@ function ChangeSummary({ portfolioItems, productData, setNextRound, setShowSite,
       <button className="rounded-lg hover:scale-110 duration-200 border-2 border-black p-2 block text-3xl mx-auto mt-5" onClick={() => {
         setShowSite(0);
         setOldPortfolioItems(portfolioItems);
-        setYear(year + 1);
-        setNextRound(true)
-
+        setNextRound(true);
+        setLiquidity(liquidity + incomeSum);
       }}>Další kolo</button>
     </>
   );
@@ -241,11 +263,10 @@ function NavigationArrows({ showSite, setShowSite, numberOfSites }:
   );
 }
 
-function GameLoop({ SetEndGame }: { SetEndGame: Function }) {
+function GameLoop({ SetEndGame, year, setYear }: { SetEndGame: Function, year: number, setYear: Function }) {
   const configData: config = useJson(0);
   const eventData: events[] = useJson(1);
   const productData: products[] = useJson(2);
-  const [year, setYear] = useState(new Date().getFullYear());
   const [showSite, setShowSite] = useState(0);
   const numberOfSites = 1; //zero indexing, can be changed if stay at two
   const [liquidity, setLiquidity] = useState<number | null>(null);
@@ -263,7 +284,13 @@ function GameLoop({ SetEndGame }: { SetEndGame: Function }) {
       setPortfolioItems(configData.startingProducts);
       setNewPortfolioItems(configData.startingProducts);
 
-      if (isInitialized.current!) {
+      const initialCount: { [key: string]: number } = {};
+      configData.startingProducts.forEach(product => {
+        initialCount[product] = (initialCount[product] || 0) + 1;
+      });
+
+      setPortfolioItemCount(initialCount);
+      if (isInitialized!) {
         setOldPortfolioItmes(configData.startingProducts);
         isInitialized.current = true;
       }
@@ -278,11 +305,8 @@ function GameLoop({ SetEndGame }: { SetEndGame: Function }) {
     return <h1>Loading...</h1>;
   }
 
-  //testing logging 
-  console.log(portfolioItems);
 
-  //doufejme ze nebudou lidi hrat na silvestra
-  if ((year - new Date().getFullYear()) > configData.roundsAmount) SetEndGame(true);
+  if ((year - new Date().getFullYear()) >= configData.roundsAmount) SetEndGame(true);
 
   if (nextRound == false) return (
     <>
@@ -309,16 +333,18 @@ function GameLoop({ SetEndGame }: { SetEndGame: Function }) {
         setNextRound={setNextRound}
         setShowSite={setShowSite}
         setOldPortfolioItems={setOldPortfolioItmes}
-        setYear={setYear} year={year}
-        portfolioItemCount={portfolioItemCount} />}
+        portfolioItemCount={portfolioItemCount}
+        liquidity={liquidity}
+        setLiquidity={setLiquidity} />}
     </>
   );
   else {
     return <NewEvent
       portfolioItems={portfolioItems}
-      oldPortfolioItems={oldPortfolioItems}
       setNextRound={setNextRound}
-      eventData={eventData} />
+      eventData={eventData}
+      setYear={setYear}
+      year={year} />
   }
 }
 
