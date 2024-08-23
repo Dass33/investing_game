@@ -1,15 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import { getJsObjects } from "./fetchJson";
 
-interface config {
-  imgages: string;
-  startingMoney: number;
-  startingProducts: Array<string>;
-  luckLowerBound: number;
-  luckUpperBound: number;
-  roundsAmount: number;
-  howToPlay: string;
-}
+// interface config {
+//   imgages: string;
+//   startingMoney: number;
+//   startingProducts: Array<string>;
+//   luckLowerBound: number;
+//   luckUpperBound: number;
+//   roundsAmount: number;
+//   howToPlay: string;
+// }
 
 interface events {
   baseGame: string;
@@ -53,25 +53,58 @@ function useJson(index: number) {
     fetchData();
   }, [index]);
 
-  return data;
+  return [data, setData];
 }
 
-function NewEvent({ portfolioItems, setNextRound, eventData, setYear, year }:
+function NewEvent(
   {
-    portfolioItems: string[] | null,
-    setNextRound: Function,
-    eventData: events[],
-    setYear: Function,
-    year: number
-  }) {
+    setNextRound,
+    eventData,
+    setYear,
+    year,
+    setProductData,
+    productData,
+    eventIndex
+  }:
+    {
+      setNextRound: Function,
+      eventData: events[],
+      setYear: Function,
+      year: number,
+      setProductData: Function,
+      productData: products[],
+      eventIndex: number
+    }) {
+
+  console.log(eventIndex);
 
   return (
     <>
-      <p>{eventData[0].eventName}</p>
-      <button onClick={() => {
+      <div className="mt-8">
+        <h1 className="text-4xl text-center">{eventData[eventIndex].eventName}</h1>
+        <hr className="w-64 mb-8 mx-auto bg-black h-0.5 mt-1"></hr>
+        <p className="text-3xl text-center">{eventData[eventIndex].eventText}</p>
+        <hr className="w-52 mb-0 mx-auto bg-black h-0.5 mt-4"></hr>
+      </div>
+
+      {(productData).map((item: products) => {
+        return (
+          <div className="mt-3 mx-6 flex justify-between" key={item.productName}>
+            <h3 className="text-3xl flex-1 break-words">{item.productName}</h3>
+            <h3 className="text-3xl text-right">
+              <span className={(eventData[eventIndex] as any)[item.productName][1] >= 0 ? 'text-green-700' : 'text-red-700'}>
+                ${(eventData[eventIndex] as any)[item.productName][1]}</span>&nbsp;
+              <span className={(eventData[eventIndex] as any)[item.productName][0] >= 0 ? 'text-green-700' : 'text-red-700'}>
+                ${(eventData[eventIndex] as any)[item.productName][0]}</span>
+            </h3>
+          </div>
+        );
+      })}
+
+      <button className="rounded-lg hover:scale-110 duration-200 border-2 border-black p-2 block text-3xl mx-auto mt-5" onClick={() => {
         setNextRound(false);
         setYear(year + 1);
-      }}>Pokracovat</button>
+      }}>Pokračovat</button>
     </>
   );
 }
@@ -182,17 +215,31 @@ function Portfolio({ portfolioItems,
   );
 }
 
-function ChangeSummary({ portfolioItems, productData, setNextRound, setShowSite, setOldPortfolioItems, portfolioItemCount, liquidity, setLiquidity }:
+function ChangeSummary(
   {
-    portfolioItems: string[] | null,
-    productData: products[],
-    setNextRound: Function,
-    setShowSite: Function,
-    setOldPortfolioItems: Function,
-    portfolioItemCount: { [key: string]: number },
-    liquidity: number,
-    setLiquidity: Function
-  }) {
+    portfolioItems,
+    productData,
+    setNextRound,
+    setShowSite,
+    setOldPortfolioItems,
+    portfolioItemCount,
+    liquidity,
+    setLiquidity,
+    setEventIndex,
+    eventDataLength
+  }:
+    {
+      portfolioItems: string[] | null,
+      productData: products[],
+      setNextRound: Function,
+      setShowSite: Function,
+      setOldPortfolioItems: Function,
+      portfolioItemCount: { [key: string]: number },
+      liquidity: number,
+      setLiquidity: Function,
+      setEventIndex: Function,
+      eventDataLength: number
+    }) {
   const productsInPortfolio = productData.filter(product => portfolioItems?.includes(product.productName));
   let incomeSum = 0;
 
@@ -220,6 +267,7 @@ function ChangeSummary({ portfolioItems, productData, setNextRound, setShowSite,
         setOldPortfolioItems(portfolioItems);
         setNextRound(true);
         setLiquidity(liquidity + incomeSum);
+        setEventIndex(Math.floor(Math.random() * eventDataLength));
       }}>Další kolo</button>
     </>
   );
@@ -264,9 +312,9 @@ function NavigationArrows({ showSite, setShowSite, numberOfSites }:
 }
 
 function GameLoop({ SetEndGame, year, setYear }: { SetEndGame: Function, year: number, setYear: Function }) {
-  const configData: config = useJson(0);
-  const eventData: events[] = useJson(1);
-  const productData: products[] = useJson(2);
+  const [configData] = useJson(0);
+  const [eventData] = useJson(1);
+  const [productData, setProductData] = useJson(2);
   const [showSite, setShowSite] = useState(0);
   const numberOfSites = 1; //zero indexing, can be changed if stay at two
   const [liquidity, setLiquidity] = useState<number | null>(null);
@@ -275,6 +323,7 @@ function GameLoop({ SetEndGame, year, setYear }: { SetEndGame: Function, year: n
   const [oldPortfolioItems, setOldPortfolioItmes] = useState<Array<string> | null>(null);
   const [nextRound, setNextRound] = useState(false);
   const [portfolioItemCount, setPortfolioItemCount] = useState<{ [key: string]: number }>({});
+  const [eventIndex, setEventIndex] = useState<number>(0);
 
   const isInitialized = useRef(false);
 
@@ -285,7 +334,7 @@ function GameLoop({ SetEndGame, year, setYear }: { SetEndGame: Function, year: n
       setNewPortfolioItems(configData.startingProducts);
 
       const initialCount: { [key: string]: number } = {};
-      configData.startingProducts.forEach(product => {
+      configData.startingProducts.forEach((product: string) => {
         initialCount[product] = (initialCount[product] || 0) + 1;
       });
 
@@ -335,16 +384,21 @@ function GameLoop({ SetEndGame, year, setYear }: { SetEndGame: Function, year: n
         setOldPortfolioItems={setOldPortfolioItmes}
         portfolioItemCount={portfolioItemCount}
         liquidity={liquidity}
-        setLiquidity={setLiquidity} />}
+        setLiquidity={setLiquidity}
+        setEventIndex={setEventIndex}
+        eventDataLength={eventData.length}
+      />}
     </>
   );
   else {
     return <NewEvent
-      portfolioItems={portfolioItems}
       setNextRound={setNextRound}
       eventData={eventData}
       setYear={setYear}
-      year={year} />
+      year={year}
+      setProductData={setProductData}
+      productData={productData}
+      eventIndex={eventIndex} />
   }
 }
 
