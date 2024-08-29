@@ -58,13 +58,45 @@ function useJson(index: number) {
 
 function NewEvent(
   {
+    eventData,
+    eventIndex,
+    setEconomySummary
+
+  }:
+    {
+      eventData: events[],
+      eventIndex: number,
+      setEconomySummary: Function
+    }) {
+
+
+  return (
+    <>
+      <div className="mt-8">
+        <h1 className="text-4xl text-center">{eventData[eventIndex].eventName}</h1>
+        <hr className="w-64 mb-8 mx-auto bg-black h-0.5 mt-1"></hr>
+        <img src={`../images/events/${eventData[eventIndex].IMG}.png`}></img>
+        <p className="text-3xl text-center">{eventData[eventIndex].eventText}</p>
+        <hr className="w-52 mb-0 mx-auto bg-black h-0.5 mt-4"></hr>
+      </div>
+
+      <button className="rounded-lg hover:scale-110 duration-200 border-2 border-black p-2 block text-3xl mx-auto mt-5" onClick={() => {
+        setEconomySummary(true);
+      }}>Pokračovat</button>
+    </>
+  );
+}
+
+function EconomyAfterEvent(
+  {
     setNextRound,
     eventData,
     setYear,
     year,
     setProductData,
     productData,
-    eventIndex
+    eventIndex,
+    setEconomySummary
   }:
     {
       setNextRound: Function,
@@ -73,40 +105,70 @@ function NewEvent(
       year: number,
       setProductData: Function,
       productData: products[],
-      eventIndex: number
+      eventIndex: number,
+      setEconomySummary: Function
     }) {
 
-  console.log(eventIndex);
+  const [diceRolls, setDiceRolls] = useState<{ [key: string]: number }>({});
+
+  useEffect(() => {
+    // Generate dice rolls for each product only once
+    const initialDiceRolls: { [key: string]: number } = {};
+    productData.forEach(item => {
+      initialDiceRolls[item.productName] = Math.floor(Math.random() * 6);
+    });
+    setDiceRolls(initialDiceRolls);
+  }, [productData]);
 
   return (
     <>
       <div className="mt-8">
         <h1 className="text-4xl text-center">{eventData[eventIndex].eventName}</h1>
         <hr className="w-64 mb-8 mx-auto bg-black h-0.5 mt-1"></hr>
-        <p className="text-3xl text-center">{eventData[eventIndex].eventText}</p>
-        <hr className="w-52 mb-0 mx-auto bg-black h-0.5 mt-4"></hr>
       </div>
 
       {(productData).map((item: products) => {
+        const diceRoll = diceRolls[item.productName];
+        const diceIncome = (diceRoll >= item.minDiceForProfit) ? item.diceMultiplier * diceRoll : 0;
+
         return (
           <div className="mt-3 mx-6 flex justify-between" key={item.productName}>
-            <h3 className="text-3xl flex-1 break-words">{item.productName}</h3>
+            <h3 className="text-3xl flex-1 break-words">{item.productName}
+              {diceIncome > 0 && <img className="size-8 my-auto inline-block" src={`../images/dices/dice${diceRoll}.svg`}></img>}
+            </h3>
             <h3 className="text-3xl text-right">
               <span className={(eventData[eventIndex] as any)[item.productName][1] >= 0 ? 'text-green-700' : 'text-red-700'}>
                 ${(eventData[eventIndex] as any)[item.productName][1]}</span>&nbsp;
-              <span className={(eventData[eventIndex] as any)[item.productName][0] >= 0 ? 'text-green-700' : 'text-red-700'}>
-                ${(eventData[eventIndex] as any)[item.productName][0]}</span>
+              <span className={(eventData[eventIndex] as any)[item.productName][0] + diceIncome >= 0 ? 'text-green-700' : 'text-red-700'}>
+                ${(eventData[eventIndex] as any)[item.productName][0] + diceIncome}</span>
             </h3>
           </div>
         );
       })}
 
       <button className="rounded-lg hover:scale-110 duration-200 border-2 border-black p-2 block text-3xl mx-auto mt-5" onClick={() => {
+
+        const updatedProducts = productData.map(product => {
+          const diceRoll = diceRolls[product.productName];
+          const diceIncome = (diceRoll > product.minDiceForProfit) ? product.diceMultiplier * diceRoll : 0;
+          if ((eventData[eventIndex] as any)[product.productName]) {
+            return {
+              ...product,
+              cost: Number(product.cost) + (eventData[eventIndex] as any)[product.productName][0] + diceIncome,
+              fixedIncome: Number(product.fixedIncome) + (eventData[eventIndex] as any)[product.productName][1],
+            };
+          }
+          return product;
+        });
+        setProductData(updatedProducts);
+
         setNextRound(false);
         setYear(year + 1);
+        setEconomySummary(false);
+
       }}>Pokračovat</button>
     </>
-  );
+  )
 }
 
 function Portfolio({ portfolioItems,
@@ -150,6 +212,10 @@ function Portfolio({ portfolioItems,
         const isTimeToSellValid = product.timeToSell > -1;
 
         const count = portfolioItemCount[product.productName] ?? initialCount;
+
+        //trying to stop going to negative numbers
+        if (product.cost < 1) product.cost = 1;
+        if (product.fixedIncome < 0) product.fixedIncome = 0;
 
         return (
           <div className="mt-8 mx-6" key={product.productName}>
@@ -311,7 +377,7 @@ function NavigationArrows({ showSite, setShowSite, numberOfSites }:
   );
 }
 
-function GameLoop({ SetEndGame, year, setYear }: { SetEndGame: Function, year: number, setYear: Function }) {
+function GameLoop({ SetEndGame, year, setYear, setTotalScore }: { SetEndGame: Function, year: number, setYear: Function, setTotalScore: Function }) {
   const [configData] = useJson(0);
   const [eventData] = useJson(1);
   const [productData, setProductData] = useJson(2);
@@ -324,7 +390,7 @@ function GameLoop({ SetEndGame, year, setYear }: { SetEndGame: Function, year: n
   const [nextRound, setNextRound] = useState(false);
   const [portfolioItemCount, setPortfolioItemCount] = useState<{ [key: string]: number }>({});
   const [eventIndex, setEventIndex] = useState<number>(0);
-
+  const [economySummary, setEcomomySummary] = useState(false);
   const isInitialized = useRef(false);
 
   useEffect(() => {
@@ -355,7 +421,17 @@ function GameLoop({ SetEndGame, year, setYear }: { SetEndGame: Function, year: n
   }
 
 
-  if ((year - new Date().getFullYear()) >= configData.roundsAmount) SetEndGame(true);
+  if ((year - new Date().getFullYear()) >= configData.roundsAmount) {
+    let score = 0;
+    productData.find((product: products) => {
+      if (portfolioItemCount[product.productName]) {
+        score += portfolioItemCount[product.productName] * product.cost;
+      }
+    });
+
+    setTotalScore(liquidity + score);
+    SetEndGame(true);
+  }
 
   if (nextRound == false) return (
     <>
@@ -390,15 +466,22 @@ function GameLoop({ SetEndGame, year, setYear }: { SetEndGame: Function, year: n
       />}
     </>
   );
-  else {
+  else if (nextRound && !economySummary) {
     return <NewEvent
+      eventData={eventData}
+      eventIndex={eventIndex}
+      setEconomySummary={setEcomomySummary} />
+  }
+  else if (nextRound && economySummary) {
+    return <EconomyAfterEvent
       setNextRound={setNextRound}
       eventData={eventData}
       setYear={setYear}
       year={year}
       setProductData={setProductData}
       productData={productData}
-      eventIndex={eventIndex} />
+      eventIndex={eventIndex}
+      setEconomySummary={setEcomomySummary} />
   }
 }
 

@@ -1,6 +1,8 @@
-add rollig of the dice for each product that it applies to
+locking of selling for specified amount of rounds
 
-create site for showing events
-    random events
-    effect of the events on the products
+add expandable descriptions to products
+
+rethink how the information should be communicated
+
+create a more balanced picking of events
 
