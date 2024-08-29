@@ -75,7 +75,7 @@ function NewEvent(
       <div className="mt-8">
         <h1 className="text-4xl text-center">{eventData[eventIndex].eventName}</h1>
         <hr className="w-64 mb-8 mx-auto bg-black h-0.5 mt-1"></hr>
-        <img src={`../images/events/${eventData[eventIndex].IMG}.png`}></img>
+        <img src={`../src/assets/events/${eventData[eventIndex].IMG}.png`}></img>
         <p className="text-3xl text-center">{eventData[eventIndex].eventText}</p>
         <hr className="w-52 mb-0 mx-auto bg-black h-0.5 mt-4"></hr>
       </div>
@@ -134,7 +134,7 @@ function EconomyAfterEvent(
         return (
           <div className="mt-3 mx-6 flex justify-between" key={item.productName}>
             <h3 className="text-3xl flex-1 break-words">{item.productName}
-              {diceIncome > 0 && <img className="size-8 my-auto inline-block" src={`../images/dices/dice${diceRoll}.svg`}></img>}
+              {diceIncome > 0 && <img className="size-8 my-auto inline-block" src={`../src/assets/dices/dice${diceRoll}.svg`}></img>}
             </h3>
             <h3 className="text-3xl text-right">
               <span className={(eventData[eventIndex] as any)[item.productName][1] >= 0 ? 'text-green-700' : 'text-red-700'}>
