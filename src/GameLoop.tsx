@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { getJsObjects } from "./fetchJson";
+import { useRive, Layout, Fit, Alignment, useStateMachineInput } from "@rive-app/react-canvas";
 
 // interface config {
 //     imgages: string;
@@ -24,19 +25,29 @@ interface events {
 
 interface products {
     baseGame: string;
-    advancedGame: string;
     productName: string;
     productDescription: string;
-    cost: number;
-    minHoldingTime: number;
-    timeToSell: number;
-    fixedIncome: number;
-    diceMultiplier: number;
-    minDiceForProfit: number;
     IMG: string;
+    cost: number;
+    fixedIncome: number;
+    minToPreventBankrupcy: number;
+    divideDiceByToSell: number;
+    timeToSell: number;
+    sellingFolLastRounds: number;
+    diceValues: number[];
 }
 
-// Index 0 is config, 1 events, 2 is products
+interface scenarios {
+    baseGame: string;
+    random: string;
+    scenarioName: string;
+    menuText: string;
+    scenarioLength: number;
+    howToPlay: string;
+    eventOrder: string[];
+}
+
+// Index 0 is config, 1 events, 2 is products, 3 is scenanrios
 function useJson(index: number) {
     const [data, setData] = useState<any>(null);
 
@@ -62,31 +73,79 @@ function NewEvent(
     {
         eventData,
         eventIndex,
-        setEconomySummary
-
+        setEconomySummary,
+        scenarios,
+        gameMode
     }:
         {
             eventData: events[],
             eventIndex: number,
-            setEconomySummary: Function
+            setEconomySummary: Function,
+            scenarios: scenarios[],
+            gameMode: number
         }) {
 
+    const soloGame = scenarios[gameMode].random == "TRUE";
 
     return (
         <>
-            <div className="mt-8">
-                <h1 className="text-4xl text-center">{eventData[eventIndex].eventName}</h1>
-                <hr className="w-64 mb-8 mx-auto bg-black h-0.5 mt-1"></hr>
-                <img src={`investing_game/images/events/${eventData[eventIndex].IMG}.png`}></img>
-                <p className="text-3xl text-center">{eventData[eventIndex].eventText}</p>
-                <hr className="w-52 mb-0 mx-auto bg-black h-0.5 mt-4"></hr>
-            </div>
+            {soloGame ?
+                <div className="mt-8">
+                    <h1 className="text-4xl text-center">{eventData[eventIndex].eventName}</h1>
+                    <hr className="w-64 mb-8 mx-auto bg-black h-0.5 mt-1"></hr>
+                    <img src={`investing_game/images/events/${eventData[eventIndex].IMG}.png`}></img>
+                    <p className="text-3xl text-center">{eventData[eventIndex].eventText}</p>
+                    <hr className="w-52 mb-0 mx-auto bg-black h-0.5 mt-4"></hr>
+                </div>
+                :
+                <div className="flex items-center justify-center h-screen">
+                    <h1 className="text-4xl pb-20 mx-6 text-center font-bold">Událost by měla být na tabuli.</h1>
+                </div>
+            }
 
-            <button className="rounded-lg hover:scale-110 duration-200 border-2 border-black p-2 block text-3xl mx-auto mt-5" onClick={() => {
-                setEconomySummary(true);
-            }}>Pokračovat</button>
+            <div className="w-full fixed bottom-16">
+                <button className="rounded-lg hover:scale-110 duration-200 border-2 border-black p-2 block text-3xl mx-auto" onClick={() => {
+                    setEconomySummary(true);
+                }}>Pokračovat</button>
+            </div>
         </>
     );
+}
+
+function RiveDice({ diceRolled, diceValue }: { diceRolled: boolean, diceValue: number }) {
+    const { rive, RiveComponent } = useRive({
+        src: "investing_game/public/dice_roll.riv", // Path to your Rive file
+        stateMachines: "dice_state",    // The state machine's name
+        layout: new Layout({
+            fit: Fit.FitWidth, // Layout options
+            alignment: Alignment.Center,
+        }),
+        autoplay: false,
+    });
+
+    const diceNumberInput = useStateMachineInput(rive, "dice_state", "dice_number");
+
+    if (diceNumberInput) {
+        diceNumberInput.value = diceValue;
+    }
+
+    useEffect(() => {
+        if (diceRolled) {
+            rive?.play();
+
+            // Set a timeout to stop the animation after 1 second
+            const timeoutId = setTimeout(() => {
+                rive?.stop();
+            }, 1300);
+
+            // Clear timeout when the component is unmounted or diceRolled changes
+            return () => {
+                clearTimeout(timeoutId);
+            };
+        }
+    }, [diceRolled]);
+
+    return <RiveComponent />;
 }
 
 function EconomyAfterEvent(
@@ -112,31 +171,59 @@ function EconomyAfterEvent(
         }) {
 
     const [diceRolls, setDiceRolls] = useState<{ [key: string]: number }>({});
+    const [rolledDices, setRolledDices] = useState(false);
+    const [diceRolledState, setRollDiceState] = useState<{ [key: string]: boolean }>({});
 
     useEffect(() => {
-        // Generate dice rolls for each product only once
         const initialDiceRolls: { [key: string]: number } = {};
+        const initialRollDiceState: { [key: string]: boolean } = {};
         productData.forEach(item => {
-            initialDiceRolls[item.productName] = Math.floor(Math.random() * 6);
+            initialDiceRolls[item.productName] = Math.floor(Math.random() * 6) + 1;
+            initialRollDiceState[item.productName] = false;
         });
         setDiceRolls(initialDiceRolls);
+        setRollDiceState(initialRollDiceState);
     }, [productData]);
+
+    const rollAllDice = () => {
+        const newRollDiceState = { ...diceRolledState };
+        Object.keys(newRollDiceState).forEach(key => {
+            newRollDiceState[key] = true;
+        });
+        setRollDiceState(newRollDiceState);
+        setTimeout(() => {
+            setRolledDices(true);
+        }, 2700);
+    };
 
     return (
         <>
+            <div className={`fixed -mt-8 pt-20 size-full bg-black/90 ${rolledDices ? 'hidden' : 'visible'}`} onClick={rollAllDice}>
+                <div className="flex flex-wrap justify-center items-center gap-4">
+                    {productData
+                        .filter(item => item.diceValues[5] > 0)
+                        .map((item) => (
+                            <div className="size-40" key={item.productName}>
+                                <RiveDice diceRolled={diceRolledState[item.productName]} diceValue={diceRolls[item.productName]} />
+                            </div>
+                        ))}
+                    <h2 className="text-5xl text-white/80 text-center font-bold m-4">Kliknutím hodíš kostkami</h2>
+                </div>
+            </div>
+
             <div className="mt-8">
                 <h1 className="text-4xl text-center">{eventData[eventIndex].eventName}</h1>
                 <hr className="w-64 mb-8 mx-auto bg-black h-0.5 mt-1"></hr>
             </div>
 
-            {(productData).map((item: products) => {
+            {productData.map((item: products) => {
                 const diceRoll = diceRolls[item.productName];
-                const diceIncome = (diceRoll >= item.minDiceForProfit) ? item.diceMultiplier * diceRoll : 0;
+                const diceIncome = item.diceValues[diceRoll - 1];
 
                 return (
                     <div className="mt-3 mx-6 flex justify-between" key={item.productName}>
                         <h3 className="text-3xl flex-1 break-words">{item.productName}
-                            {diceIncome > 0 && <img className="size-8 my-auto inline-block" src={`investing_game/images/dices/dice${diceRoll}.svg`}></img>}
+                            {item.diceValues[5] > 0 && rolledDices && <img className="size-8 my-auto inline-block" src={`investing_game/images/dices/dice${diceRoll}.svg`}></img>}
                         </h3>
                         <h3 className="text-3xl text-right">
                             <span className={(eventData[eventIndex] as any)[item.productName][1] >= 0 ? 'text-green-700' : 'text-red-700'}>
@@ -152,7 +239,7 @@ function EconomyAfterEvent(
 
                 const updatedProducts = productData.map(product => {
                     const diceRoll = diceRolls[product.productName];
-                    const diceIncome = (diceRoll > product.minDiceForProfit) ? product.diceMultiplier * diceRoll : 0;
+                    const diceIncome = product.diceValues[diceRoll - 1];
                     if ((eventData[eventIndex] as any)[product.productName]) {
                         return {
                             ...product,
@@ -294,7 +381,11 @@ function ChangeSummary(
         liquidity,
         setLiquidity,
         setEventIndex,
-        eventDataLength
+        eventDataLength,
+        currentRound,
+        gameMode,
+        scenarios,
+        eventData
     }:
         {
             portfolioItems: string[] | null,
@@ -307,9 +398,16 @@ function ChangeSummary(
             setLiquidity: Function,
             setEventIndex: Function,
             eventDataLength: number
+            currentRound: number,
+            gameMode: number,
+            scenarios: scenarios[],
+            eventData: events[]
         }) {
     const productsInPortfolio = productData.filter(product => portfolioItems?.includes(product.productName));
     let incomeSum = 0;
+
+    const scenario = scenarios[gameMode];
+    let nextEvent: number;
 
     return (
         <>
@@ -335,7 +433,15 @@ function ChangeSummary(
                 setOldPortfolioItems(portfolioItems);
                 setNextRound(true);
                 setLiquidity(liquidity + incomeSum);
-                setEventIndex(Math.floor(Math.random() * eventDataLength));
+                if (scenario.random === "TRUE") {
+                    nextEvent = Math.floor(Math.random() * eventDataLength);
+                }
+                else {
+                    nextEvent = eventData.findIndex(item => item.eventName.toLowerCase() === scenario.eventOrder[currentRound].toLowerCase());
+                    if (nextEvent == -1) nextEvent = Math.floor(Math.random() * eventDataLength);
+                }
+
+                setEventIndex(nextEvent);
             }}>Další kolo</button>
         </>
     );
@@ -397,6 +503,7 @@ function GameLoop(
 ) {
     const [configData] = useJson(0);
     const [eventData] = useJson(1);
+    const [scenarios] = useJson(3);
     const [productData, setProductData] = useJson(2);
     const [showSite, setShowSite] = useState(0);
     const numberOfSites = 1;
@@ -520,6 +627,10 @@ function GameLoop(
                     setLiquidity={setLiquidity}
                     setEventIndex={setEventIndex}
                     eventDataLength={eventData.length}
+                    currentRound={year - new Date().getFullYear()}
+                    gameMode={gameMode}
+                    scenarios={scenarios}
+                    eventData={eventData}
                 />}
             </>
         );
@@ -528,7 +639,10 @@ function GameLoop(
             <NewEvent
                 eventData={eventData}
                 eventIndex={eventIndex}
-                setEconomySummary={setEcomomySummary} />
+                setEconomySummary={setEcomomySummary}
+                scenarios={scenarios}
+                gameMode={gameMode}
+            />
         );
     } else if (nextRound && economySummary) {
         content = (
