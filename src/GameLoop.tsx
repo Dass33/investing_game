@@ -1,27 +1,7 @@
-import { useState, useEffect, useRef } from "react";
-import { getJsObjects } from "./fetchJson";
+import { useState, useEffect } from "react";
 import { useRive, Layout, Fit, Alignment, useStateMachineInput } from "@rive-app/react-canvas";
-
-// interface config {
-//     imgages: string;
-//     startingMoney: number;
-//     startingProducts: Array<string>;
-//     luckLowerBound: number;
-//     luckUpperBound: number;
-//     roundsAmount: number;
-//     howToPlay: string;
-//     investingTimer: number;
-//     eventTimer: number;
-// }
-
-interface events {
-    baseGame: string;
-    advancedGame: string;
-    eventName: string;
-    eventText: string;
-    eventValue: number;
-    IMG: string;
-}
+import { useGame } from "./GameContext";
+import { useGameLoop } from "./GameLoopContext";
 
 interface products {
     baseGame: string;
@@ -33,57 +13,31 @@ interface products {
     minToPreventBankrupcy: number;
     divideDiceByToSell: number;
     timeToSell: number;
-    sellingFolLastRounds: number;
+    sellingForLastRounds: number;
     diceValues: number[];
 }
 
-interface scenarios {
-    baseGame: string;
-    random: string;
-    scenarioName: string;
-    menuText: string;
-    scenarioLength: number;
-    howToPlay: string;
-    eventOrder: string[];
-}
+// class PortfolioProducts {
+//     productName: string;
+//     cost: number;
+//     fixedIncome: number;
+//     timeToSell: number;
+//     autoSellIn: number = -1;
+//
+//     constructor(productName: string, cost: number, fixedIncome: number, timeToSell: number) {
+//         this.productName = productName;
+//         this.cost = cost;
+//         this.fixedIncome = fixedIncome;
+//         this.timeToSell = timeToSell;
+//     }
+//
+// }
 
-// Index 0 is config, 1 events, 2 is products, 3 is scenanrios
-function useJson(index: number) {
-    const [data, setData] = useState<any>(null);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const fetchedData = await getJsObjects();
-                if (fetchedData) {
-                    setData(fetchedData[index]);
-                }
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                setData(null);
-            }
-        };
-        fetchData();
-    }, [index]);
+function NewEvent() {
 
-    return [data, setData];
-}
-
-function NewEvent(
-    {
-        eventData,
-        eventIndex,
-        setEconomySummary,
-        scenarios,
-        gameMode
-    }:
-        {
-            eventData: events[],
-            eventIndex: number,
-            setEconomySummary: Function,
-            scenarios: scenarios[],
-            gameMode: number
-        }) {
+    const { gameMode } = useGame();
+    const { scenarios, eventData, eventIndex, setEconomySummary } = useGameLoop();
 
     const soloGame = scenarios[gameMode].random == "TRUE";
 
@@ -148,27 +102,10 @@ function RiveDice({ diceRolled, diceValue }: { diceRolled: boolean, diceValue: n
     return <RiveComponent />;
 }
 
-function EconomyAfterEvent(
-    {
-        setNextRound,
-        eventData,
-        setYear,
-        year,
-        setProductData,
-        productData,
-        eventIndex,
-        setEconomySummary
-    }:
-        {
-            setNextRound: Function,
-            eventData: events[],
-            setYear: Function,
-            year: number,
-            setProductData: Function,
-            productData: products[],
-            eventIndex: number,
-            setEconomySummary: Function
-        }) {
+function EconomyAfterEvent() {
+
+    const { setRound, round } = useGame();
+    const { productData, eventData, eventIndex, setProductData, setNextRound, setEconomySummary } = useGameLoop();
 
     const [diceRolls, setDiceRolls] = useState<{ [key: string]: number }>({});
     const [rolledDices, setRolledDices] = useState(false);
@@ -177,7 +114,7 @@ function EconomyAfterEvent(
     useEffect(() => {
         const initialDiceRolls: { [key: string]: number } = {};
         const initialRollDiceState: { [key: string]: boolean } = {};
-        productData.forEach(item => {
+        productData.forEach((item: products) => {
             initialDiceRolls[item.productName] = Math.floor(Math.random() * 6) + 1;
             initialRollDiceState[item.productName] = false;
         });
@@ -201,8 +138,8 @@ function EconomyAfterEvent(
             <div className={`fixed -mt-8 pt-20 size-full bg-black/90 ${rolledDices ? 'hidden' : 'visible'}`} onClick={rollAllDice}>
                 <div className="flex flex-wrap justify-center items-center gap-4">
                     {productData
-                        .filter(item => item.diceValues[5] > 0)
-                        .map((item) => (
+                        .filter((item: products) => item.diceValues[5] > 0)
+                        .map((item: products) => (
                             <div className="size-40" key={item.productName}>
                                 <RiveDice diceRolled={diceRolledState[item.productName]} diceValue={diceRolls[item.productName]} />
                             </div>
@@ -221,10 +158,9 @@ function EconomyAfterEvent(
                 const diceIncome = item.diceValues[diceRoll - 1];
 
                 return (
-                    <div className="mt-3 mx-6 flex justify-between" key={item.productName}>
-                        <h3 className="text-3xl flex-1 break-words">{item.productName}
-                            {item.diceValues[5] > 0 && rolledDices && <img className="size-8 my-auto inline-block" src={`investing_game/images/dices/dice${diceRoll}.svg`}></img>}
-                        </h3>
+                    <div className="mt-3 mx-6 flex justify-between" key={item.productName}> <h3 className="text-3xl flex-1 break-words">{item.productName}
+                        {item.diceValues[5] > 0 && rolledDices && <img className="size-8 my-auto inline-block" src={`investing_game/images/dices/dice${diceRoll}.svg`}></img>}
+                    </h3>
                         <h3 className="text-3xl text-right">
                             <span className={(eventData[eventIndex] as any)[item.productName][1] >= 0 ? 'text-green-700' : 'text-red-700'}>
                                 ${(eventData[eventIndex] as any)[item.productName][1]}</span>&nbsp;
@@ -237,7 +173,7 @@ function EconomyAfterEvent(
 
             <button className="rounded-lg hover:scale-110 duration-200 border-2 border-black p-2 block text-3xl mx-auto mt-5" onClick={() => {
 
-                const updatedProducts = productData.map(product => {
+                const updatedProducts = productData.map((product: products) => {
                     const diceRoll = diceRolls[product.productName];
                     const diceIncome = product.diceValues[diceRoll - 1];
                     if ((eventData[eventIndex] as any)[product.productName]) {
@@ -252,7 +188,7 @@ function EconomyAfterEvent(
                 setProductData(updatedProducts);
 
                 setNextRound(false);
-                setYear(year + 1);
+                setRound(round + 1);
                 setEconomySummary(false);
 
             }}>Pokračovat</button>
@@ -260,30 +196,13 @@ function EconomyAfterEvent(
     )
 }
 
-function Portfolio({ portfolioItems,
-    setNewPortfolioItems,
-    newPortfolioItems,
-    productData,
-    liquidity,
-    setLiquidity,
-    oldPortfolioItems,
-    portfolioItemCount,
-    setPortfolioItemCount
-}:
-    {
-        portfolioItems: string[] | null,
-        setNewPortfolioItems: Function,
-        newPortfolioItems: string[] | null,
-        productData: products[],
-        liquidity: number, setLiquidity: Function,
-        oldPortfolioItems: string[] | null
-        portfolioItemCount: { [key: string]: number },
-        setPortfolioItemCount: Function
-    }) {
+function Portfolio() {
+
+    const { portfolioItems, productData, oldPortfolioItems, portfolioItemCount, newPortfolioItems, liquidity, setLiquidity, setPortfolioItemCount, setNewPortfolioItems } = useGameLoop();
     const uniquePortfolioItems = Array.from(new Set(portfolioItems));
 
-    const productsInPortfolio = productData.filter(product => uniquePortfolioItems.includes(product.productName));
-    const productsNotInPortfolio = productData.filter(product => !uniquePortfolioItems.includes(product.productName));
+    const productsInPortfolio = productData.filter((product: products) => uniquePortfolioItems.includes(product.productName));
+    const productsNotInPortfolio = productData.filter((product: products) => !uniquePortfolioItems.includes(product.productName));
 
     const combinedProductList = [...productsInPortfolio, ...productsNotInPortfolio];
 
@@ -333,7 +252,7 @@ function Portfolio({ portfolioItems,
                                             }
 
                                             setPortfolioItemCount((prevCount: { [key: string]: number }) => ({ ...prevCount, [product.productName]: count - 1 }));
-                                            setLiquidity(liquidity + Number(product.cost));
+                                            setLiquidity((liquidity ?? 0) + Number(product.cost));
                                         }
                                     }}
                                 >
@@ -342,14 +261,14 @@ function Portfolio({ portfolioItems,
                                 <span className="text-2xl">{count}</span>
                                 <button
                                     className={`size-12 border-solid border-2 text-3xl rounded-lg flex items-center justify-center
-                    ${liquidity < product.cost ? 'border-black/30 text-black/30' : 'border-black text-black'}`}
+                    ${(liquidity ?? 0) < product.cost ? 'border-black/30 text-black/30' : 'border-black text-black'}`}
 
                                     onClick={() => {
-                                        if (liquidity >= Number(product.cost)) {
+                                        if ((liquidity ?? 0) >= Number(product.cost)) {
                                             setNewPortfolioItems((previousItems: string[]) => [...previousItems, product.productName]);
 
                                             setPortfolioItemCount((prevCount: { [key: string]: number }) => ({ ...prevCount, [product.productName]: count + 1 }));
-                                            setLiquidity(liquidity - Number(product.cost));
+                                            setLiquidity((liquidity ?? 0) - Number(product.cost));
                                         }
                                     }}
                                 >
@@ -370,40 +289,11 @@ function Portfolio({ portfolioItems,
     );
 }
 
-function ChangeSummary(
-    {
-        portfolioItems,
-        productData,
-        setNextRound,
-        setShowSite,
-        setOldPortfolioItems,
-        portfolioItemCount,
-        liquidity,
-        setLiquidity,
-        setEventIndex,
-        eventDataLength,
-        currentRound,
-        gameMode,
-        scenarios,
-        eventData
-    }:
-        {
-            portfolioItems: string[] | null,
-            productData: products[],
-            setNextRound: Function,
-            setShowSite: Function,
-            setOldPortfolioItems: Function,
-            portfolioItemCount: { [key: string]: number },
-            liquidity: number,
-            setLiquidity: Function,
-            setEventIndex: Function,
-            eventDataLength: number
-            currentRound: number,
-            gameMode: number,
-            scenarios: scenarios[],
-            eventData: events[]
-        }) {
-    const productsInPortfolio = productData.filter(product => portfolioItems?.includes(product.productName));
+function ChangeSummary() {
+    const { gameMode, round } = useGame();
+    const { productData, portfolioItems, portfolioItemCount, scenarios, setShowSite, setOldPortfolioItems, setLiquidity, setNextRound, liquidity, eventData, setEventIndex } = useGameLoop();
+
+    const productsInPortfolio = productData.filter((product: products) => portfolioItems?.includes(product.productName));
     let incomeSum = 0;
 
     const scenario = scenarios[gameMode];
@@ -432,13 +322,13 @@ function ChangeSummary(
                 setShowSite(0);
                 setOldPortfolioItems(portfolioItems);
                 setNextRound(true);
-                setLiquidity(liquidity + incomeSum);
+                setLiquidity((liquidity ?? 0) + incomeSum);
                 if (scenario.random === "TRUE") {
-                    nextEvent = Math.floor(Math.random() * eventDataLength);
+                    nextEvent = Math.floor(Math.random() * eventData.length);
                 }
                 else {
-                    nextEvent = eventData.findIndex(item => item.eventName.toLowerCase() === scenario.eventOrder[currentRound].toLowerCase());
-                    if (nextEvent == -1) nextEvent = Math.floor(Math.random() * eventDataLength);
+                    nextEvent = eventData.findIndex(item => item.eventName.toLowerCase() === scenario.eventOrder[round].toLowerCase());
+                    if (nextEvent == -1) nextEvent = Math.floor(Math.random() * eventData.length);
                 }
 
                 setEventIndex(nextEvent);
@@ -447,21 +337,23 @@ function ChangeSummary(
     );
 }
 
-function TopBar({ liquidity, year }: { liquidity: number | null, year: number }) {
+function TopBar() {
+    const { round } = useGame();
+    const { liquidity } = useGameLoop();
     if (liquidity === null) {
         return <h1>Loading...</h1>;
     }
 
     return (
         <div className="fixed top-0 py-1 text-3xl w-full bg-black/90 text-white">
-            <p className="float-left px-2">{year}</p>
+            <p className="float-left px-2">{round}</p>
             <p className="float-right px-2">{liquidity}$</p>
         </div>
     );
 }
 
-function NavigationArrows({ showSite, setShowSite, numberOfSites }:
-    { showSite: number, setShowSite: Function, numberOfSites: number }) {
+function NavigationArrows() {
+    const { setShowSite, showSite, numberOfSites } = useGameLoop();
 
     return (
         <>
@@ -485,37 +377,10 @@ function NavigationArrows({ showSite, setShowSite, numberOfSites }:
     );
 }
 
-function GameLoop(
-    {
-        SetEndGame,
-        year,
-        setYear,
-        setTotalScore,
-        gameMode
-    }:
-        {
-            SetEndGame: Function,
-            year: number,
-            setYear: Function,
-            setTotalScore: Function,
-            gameMode: number
-        }
-) {
-    const [configData] = useJson(0);
-    const [eventData] = useJson(1);
-    const [scenarios] = useJson(3);
-    const [productData, setProductData] = useJson(2);
-    const [showSite, setShowSite] = useState(0);
-    const numberOfSites = 1;
-    const [liquidity, setLiquidity] = useState<number | null>(null);
-    const [portfolioItems, setPortfolioItems] = useState<Array<string> | null>(null);
-    const [newPortfolioItems, setNewPortfolioItems] = useState<Array<string> | null>(null);
-    const [oldPortfolioItems, setOldPortfolioItmes] = useState<Array<string> | null>(null);
-    const [nextRound, setNextRound] = useState(false);
-    const [portfolioItemCount, setPortfolioItemCount] = useState<{ [key: string]: number }>({});
-    const [eventIndex, setEventIndex] = useState<number>(0);
-    const [economySummary, setEcomomySummary] = useState(false);
-    const isInitialized = useRef(false);
+function GameLoop() {
+
+    const { round, setEndGame, setTotalScore } = useGame();
+    const { portfolioItems, configData, setLiquidity, setPortfolioItems, setNewPortfolioItems, setPortfolioItemCount, isInitialized, setOldPortfolioItems, newPortfolioItems, showSite, liquidity, productData, portfolioItemCount, nextRound, economySummary } = useGameLoop();
 
     useEffect(() => {
         if (configData) {
@@ -530,7 +395,7 @@ function GameLoop(
 
             setPortfolioItemCount(initialCount);
             if (!isInitialized.current) {
-                setOldPortfolioItmes(configData.startingProducts);
+                setOldPortfolioItems(configData.startingProducts);
                 isInitialized.current = true;
             }
         }
@@ -540,49 +405,12 @@ function GameLoop(
         setPortfolioItems(newPortfolioItems);
     }, [showSite]);
 
-    // useEffect(() => {
-    //     const interval = setTimeout(() => {
-    //         if (!nextRound) {
-    //             setShowSite(0);
-    //             setOldPortfolioItmes(portfolioItems);
-    //             setNextRound(true);
-    //             let incomeSum = 0;
-    //             productData.forEach((product: products) => {
-    //                 incomeSum += portfolioItemCount[product.productName] * product.fixedIncome;
-    //             });
-    //             setLiquidity(prev => (prev || 0) + incomeSum);
-    //             setEventIndex(Math.floor(Math.random() * eventData.length));
-    //         }
-    //         else if (nextRound && !economySummary) {
-    //             setEcomomySummary(true);
-    //         } else {
-    //             const updatedProducts = productData.map((product: products) => {
-    //                 const diceRoll = Math.floor(Math.random() * 6);
-    //                 const diceIncome = (diceRoll >= product.minDiceForProfit) ? product.diceMultiplier * diceRoll : 0;
-    //                 if ((eventData[eventIndex] as any)[product.productName]) {
-    //                     return {
-    //                         ...product,
-    //                         cost: Number(product.cost) + (eventData[eventIndex] as any)[product.productName][0] + diceIncome,
-    //                         fixedIncome: Number(product.fixedIncome) + (eventData[eventIndex] as any)[product.productName][1],
-    //                     };
-    //                 }
-    //                 return product;
-    //             });
-    //             setProductData(updatedProducts);
-    //             setNextRound(false);
-    //             setYear((prevYear: number) => prevYear + 1);
-    //             setEcomomySummary(false);
-    //         }
-    //     }, 10000);
-    //
-    //     return () => clearTimeout(interval);
-    // }, [nextRound, economySummary]);
 
-    if (!productData || liquidity === null) {
+    if (!productData || portfolioItems === null || liquidity === null) {
         return <h1>Loading...</h1>;
     }
 
-    if ((year - new Date().getFullYear()) >= configData.roundsAmount) {
+    if (round >= configData.roundsAmount) {
         let score = 0;
         productData.find((product: products) => {
             if (portfolioItemCount[product.productName]) {
@@ -591,74 +419,30 @@ function GameLoop(
         });
 
         setTotalScore(liquidity + score);
-        SetEndGame(true);
+        setEndGame(true);
     }
 
-    // Render logic outside of the return block to avoid conditional hooks
     let content = null;
     if (!nextRound) {
         content = (
             <>
-                <TopBar liquidity={liquidity} year={year} />
-                <NavigationArrows
-                    showSite={showSite}
-                    setShowSite={setShowSite}
-                    numberOfSites={numberOfSites} />
+                <TopBar />
+                <NavigationArrows />
 
-                {showSite === 0 && <Portfolio
-                    portfolioItems={portfolioItems}
-                    setNewPortfolioItems={setNewPortfolioItems}
-                    newPortfolioItems={newPortfolioItems}
-                    productData={productData}
-                    liquidity={liquidity}
-                    setLiquidity={setLiquidity}
-                    oldPortfolioItems={oldPortfolioItems}
-                    portfolioItemCount={portfolioItemCount}
-                    setPortfolioItemCount={setPortfolioItemCount} />}
+                {showSite === 0 && <Portfolio />}
 
-                {showSite === 1 && <ChangeSummary
-                    portfolioItems={portfolioItems}
-                    productData={productData}
-                    setNextRound={setNextRound}
-                    setShowSite={setShowSite}
-                    setOldPortfolioItems={setOldPortfolioItmes}
-                    portfolioItemCount={portfolioItemCount}
-                    liquidity={liquidity}
-                    setLiquidity={setLiquidity}
-                    setEventIndex={setEventIndex}
-                    eventDataLength={eventData.length}
-                    currentRound={year - new Date().getFullYear()}
-                    gameMode={gameMode}
-                    scenarios={scenarios}
-                    eventData={eventData}
-                />}
+                {showSite === 1 && <ChangeSummary />}
             </>
         );
     } else if (nextRound && !economySummary) {
         content = (
-            <NewEvent
-                eventData={eventData}
-                eventIndex={eventIndex}
-                setEconomySummary={setEcomomySummary}
-                scenarios={scenarios}
-                gameMode={gameMode}
-            />
+            <NewEvent />
         );
     } else if (nextRound && economySummary) {
         content = (
-            <EconomyAfterEvent
-                setNextRound={setNextRound}
-                eventData={eventData}
-                setYear={setYear}
-                year={year}
-                setProductData={setProductData}
-                productData={productData}
-                eventIndex={eventIndex}
-                setEconomySummary={setEcomomySummary} />
+            <EconomyAfterEvent />
         );
     }
-
-    // Return the content
     return content;
 }
 
