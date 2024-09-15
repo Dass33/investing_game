@@ -23,7 +23,7 @@ interface products {
     baseGame: string;
     productName: string;
     productDescription: string;
-    IMG: string;
+    color: number;
     cost: number;
     fixedIncome: number;
     minToPreventBankrupcy: number;
@@ -53,11 +53,11 @@ interface GameLoopState {
     numberOfSites: number,
     liquidity: number | null,
     setLiquidity: Function,
-    portfolioItems: string[] | null,
+    portfolioItems: products[],
     setPortfolioItems: Function,
-    newPortfolioItems: string[] | null,
+    newPortfolioItems: products[],
     setNewPortfolioItems: Function,
-    oldPortfolioItems: string[] | null,
+    oldPortfolioItems: products[],
     setOldPortfolioItems: Function,
     nextRound: boolean,
     setNextRound: Function,
@@ -67,7 +67,8 @@ interface GameLoopState {
     setEventIndex: Function,
     economySummary: boolean,
     setEconomySummary: Function,
-    isInitialized: MutableRefObject<boolean>
+    isInitialized: MutableRefObject<boolean>,
+    figmaColors: string[]
 }
 
 const GameLoopContext = createContext<GameLoopState | undefined>(undefined);
@@ -102,18 +103,18 @@ export const GameLoopProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const [showSite, setShowSite] = useState(0);
     const numberOfSites = 1;
     const [liquidity, setLiquidity] = useState<number | null>(() => configData?.startingMoney || 0);
-    const [portfolioItems, setPortfolioItems] = useState([]);
-    const [newPortfolioItems, setNewPortfolioItems] = useState<string[]>([]);
-    const [oldPortfolioItems, setOldPortfolioItems] = useState<string[]>([]);
+    const [portfolioItems, setPortfolioItems] = useState<products[]>([]);
+    const [newPortfolioItems, setNewPortfolioItems] = useState<products[]>([]);
+    const [oldPortfolioItems, setOldPortfolioItems] = useState<products[]>([]);
     const [nextRound, setNextRound] = useState(false);
     const [portfolioItemCount, setPortfolioItemCount] = useState<{ [key: string]: number }>({});
     const [eventIndex, setEventIndex] = useState<number>(0);
     const [economySummary, setEconomySummary] = useState(false);
     const isInitialized = useRef(false);
-
+    const figmaColors = ['figma-honey', 'figma-carrots', 'figma-berries', 'figma-rose', 'figma-lavender', 'figma-pool', 'figma-teal', 'figma-lime', 'figma-forest']
 
     return (
-        <GameLoopContext.Provider value={{ configData, eventData, scenarios, productData, setProductData, showSite, setShowSite, numberOfSites, liquidity, setLiquidity, portfolioItems, setPortfolioItems, newPortfolioItems, setNewPortfolioItems, oldPortfolioItems, setOldPortfolioItems, nextRound, setNextRound, portfolioItemCount, setPortfolioItemCount, eventIndex, setEventIndex, economySummary, setEconomySummary, isInitialized }}>
+        <GameLoopContext.Provider value={{ configData, eventData, scenarios, productData, setProductData, showSite, setShowSite, numberOfSites, liquidity, setLiquidity, portfolioItems, setPortfolioItems, newPortfolioItems, setNewPortfolioItems, oldPortfolioItems, setOldPortfolioItems, nextRound, setNextRound, portfolioItemCount, setPortfolioItemCount, eventIndex, setEventIndex, economySummary, setEconomySummary, isInitialized, figmaColors }}>
             {children}
         </GameLoopContext.Provider>
     );

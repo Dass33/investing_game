@@ -38,17 +38,21 @@ function LandingSite(props: { setShowLandingSite: Function }) {
         return <h1 className="text-center mt-36 lg:mt-56 ">Loading...</h1>;
     }
     return (
-        <>
-            <div className="text-center mt-24 lg:mt-48 ">
-                <h1 className="text-5xl lg:text-[12rem] font-bold font-mono leading-[0.7]">Investiční</h1>
-                <h1 className="text-4xl lg:text-8xl font-light ">Hra</h1>
-            </div>
-            <img src="investing_game/vite.svg" alt="placeholder" className="h-44 block lg:pl-20 lg:inline mx-auto lg:float-start text-center  my-16 lg:my-0 lg:mb-40"></img>
-            <img src="investing_game/vite.svg" alt="placeholder" className="h-44 hidden lg:pr-20 lg:inline lg:float-right text-center lg:mb-40"></img>
-
-            <div className="lg:inline">
+        <div className="bg-figma-black h-screen relative text-white">
+            <svg className="h-full w-full absolute px-11 py-8 z-0" width="331" height="614" viewBox="0 0 331 614" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 0.808472V612.894" stroke="#721C7A" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M48.0264 0.808472V612.894" stroke="#721C7A" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M95.0518 0.808472V612.894" stroke="#721C7A" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M142.078 0.808472V612.894" stroke="#721C7A" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M189.104 0.808472V612.894" stroke="#721C7A" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M236.13 0.808472V612.894" stroke="#721C7A" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M283.157 0.808472V612.894" stroke="#721C7A" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M330.183 0.808472V612.894" stroke="#721C7A" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <img src="investing_game/cover.svg" alt="placeholder" className="mx-auto pt-28 relative z-10"></img>
+            <div className="relative z-10">
                 <select
-                    className="block mx-auto text-xl lg:text-3xl border-black border-2 rounded-lg py-4 px-14 hover:scale-110 duration-200 lg:mt-16"
+                    className="block mx-auto text-lg lg:text-2xl bg-figma-black border-figma-white border rounded-lg py-4 px-6 hover:scale-110 duration-200 mt-16"
                     onChange={(e) => setGameMode(e.target.value)}
                 >
                     {scenariosData.map((scenario, index) => (
@@ -56,10 +60,11 @@ function LandingSite(props: { setShowLandingSite: Function }) {
                     ))}
                 </select>
 
-                <button className="block mt-12 mx-auto text-2xl lg:text-4xl border-black border-2 rounded-lg py-4 px-14 hover:scale-110 duration-200"
-                    onClick={() => props.setShowLandingSite(false)}>Spustit</button>
+                <button className="block mt-12 mx-auto text-3xl bg-figma-black lg:text-4xl border-white border rounded-full py-2 px-7 font-bold hover:scale-110 duration-200"
+                    onClick={() => props.setShowLandingSite(false)}>Hrát</button>
             </div>
-        </>
+            <h3 className="text-center text-[11px] relative z-10 mt-8">2024 Skoala</h3>
+        </div>
     );
 }
 
