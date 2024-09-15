@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import { useRive, Layout, Fit, Alignment, useStateMachineInput } from "@rive-app/react-canvas";
+// import { useState, useEffect } from "react";
+import { useEffect } from "react";
+// import { useRive, Layout, Fit, Alignment, useStateMachineInput } from "@rive-app/react-canvas";
 import { useGame } from "./GameContext";
 import { useGameLoop } from "./GameLoopContext";
 
@@ -49,75 +50,75 @@ function NewEvent() {
     );
 }
 
-function RiveDice({ diceRolled, diceValue }: { diceRolled: boolean, diceValue: number }) {
-    const { rive, RiveComponent } = useRive({
-        src: "investing_game/public/dice_roll.riv", // Path to your Rive file
-        stateMachines: "dice_state",    // The state machine's name
-        layout: new Layout({
-            fit: Fit.FitWidth, // Layout options
-            alignment: Alignment.Center,
-        }),
-        autoplay: false,
-    });
-
-    const diceNumberInput = useStateMachineInput(rive, "dice_state", "dice_number");
-
-    if (diceNumberInput) {
-        diceNumberInput.value = diceValue;
-    }
-
-    useEffect(() => {
-        if (diceRolled) {
-            rive?.play();
-
-            // Set a timeout to stop the animation after 1 second
-            const timeoutId = setTimeout(() => {
-                rive?.stop();
-            }, 1300);
-
-            // Clear timeout when the component is unmounted or diceRolled changes
-            return () => {
-                clearTimeout(timeoutId);
-            };
-        }
-    }, [diceRolled]);
-
-    return <RiveComponent />;
-}
-
-function EconomyAfterEvent() {
-    const { portfolioItems, setPortfolioItems, eventData, eventIndex } = useGameLoop();
-    const [diceRolls, setDiceRolls] = useState<{ [key: string]: number }>({});
-
-    useEffect(() => {
-        // Initialize dice rolls
-    }, [portfolioItems]);
-
-    const applyEventEffects = () => {
-        const updatedPortfolioItems = portfolioItems.map((item) => {
-            const diceRoll = diceRolls[item.productName];
-            const diceIncome = item.diceValues[diceRoll - 1];
-
-            if ((eventData[eventIndex] as any)[item.productName]) {
-                return {
-                    ...item,
-                    cost: item.cost + (eventData[eventIndex] as any)[item.productName][0] + diceIncome,
-                    fixedIncome: item.fixedIncome + (eventData[eventIndex] as any)[item.productName][1],
-                };
-            }
-            return item;
-        });
-
-        setPortfolioItems(updatedPortfolioItems);
-    };
-
-    return (
-        <>
-            {/* Your component JSX */}
-            <button onClick={applyEventEffects}>Apply Effects</button>
-        </>
-    );
-}
+// function RiveDice({ diceRolled, diceValue }: { diceRolled: boolean, diceValue: number }) {
+//     const { rive, RiveComponent } = useRive({
+//         src: "investing_game/public/dice_roll.riv", // Path to your Rive file
+//         stateMachines: "dice_state",    // The state machine's name
+//         layout: new Layout({
+//             fit: Fit.FitWidth, // Layout options
+//             alignment: Alignment.Center,
+//         }),
+//         autoplay: false,
+//     });
+//
+//     const diceNumberInput = useStateMachineInput(rive, "dice_state", "dice_number");
+//
+//     if (diceNumberInput) {
+//         diceNumberInput.value = diceValue;
+//     }
+//
+//     useEffect(() => {
+//         if (diceRolled) {
+//             rive?.play();
+//
+//             // Set a timeout to stop the animation after 1 second
+//             const timeoutId = setTimeout(() => {
+//                 rive?.stop();
+//             }, 1300);
+//
+//             // Clear timeout when the component is unmounted or diceRolled changes
+//             return () => {
+//                 clearTimeout(timeoutId);
+//             };
+//         }
+//     }, [diceRolled]);
+//
+//     return <RiveComponent />;
+// }
+//
+// function EconomyAfterEvent() {
+//     const { portfolioItems, setPortfolioItems, eventData, eventIndex } = useGameLoop();
+//     const [diceRolls, setDiceRolls] = useState<{ [key: string]: number }>({});
+//
+//     useEffect(() => {
+//         // Initialize dice rolls
+//     }, [portfolioItems]);
+//
+//     const applyEventEffects = () => {
+//         const updatedPortfolioItems = portfolioItems.map((item) => {
+//             const diceRoll = diceRolls[item.productName];
+//             const diceIncome = item.diceValues[diceRoll - 1];
+//
+//             if ((eventData[eventIndex] as any)[item.productName]) {
+//                 return {
+//                     ...item,
+//                     cost: item.cost + (eventData[eventIndex] as any)[item.productName][0] + diceIncome,
+//                     fixedIncome: item.fixedIncome + (eventData[eventIndex] as any)[item.productName][1],
+//                 };
+//             }
+//             return item;
+//         });
+//
+//         setPortfolioItems(updatedPortfolioItems);
+//     };
+//
+//     return (
+//         <>
+//             {/* Your component JSX */}
+//             <button onClick={applyEventEffects}>Apply Effects</button>
+//         </>
+//     );
+// }
 
 function Portfolio() {
     const {
@@ -347,7 +348,7 @@ function TopBar() {
 }
 
 function NavigationArrows() {
-    const { setShowSite, showSite, numberOfSites } = useGameLoop();
+    const { setShowSite, showSite } = useGameLoop();
 
     const buttonText = ['MOJE PORTFOLIO', 'UKONČIT KOLO', 'DALŠÍ KOLO'];
     return (
@@ -430,10 +431,10 @@ function GameLoop() {
         content = (
             <NewEvent />
         );
-    } else if (nextRound && economySummary) {
-        content = (
-            <EconomyAfterEvent />
-        );
+        // } else if (nextRound && economySummary) {
+        //     content = (
+        //         <EconomyAfterEvent />
+        //     );
     }
     return content;
 }
