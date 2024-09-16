@@ -8,7 +8,6 @@ interface config {
     luckLowerBound: number;
     luckUpperBound: number;
     roundsAmount: number;
-    howToPlay: string;
 }
 interface events {
     baseGame: string;
@@ -31,6 +30,7 @@ interface products {
     timeToSell: number;
     sellingForLastRounds: number;
     diceValues: number[];
+    id: string;
 }
 
 interface scenarios {
@@ -40,8 +40,12 @@ interface scenarios {
     menuText: string;
     scenarioLength: number;
     howToPlay: string;
+    howToPlay2: string;
+    IMG: string;
+    IMG2: string;
     eventOrder: string[];
 }
+
 interface GameLoopState {
     configData: config,
     eventData: events[],
@@ -68,7 +72,15 @@ interface GameLoopState {
     economySummary: boolean,
     setEconomySummary: Function,
     isInitialized: MutableRefObject<boolean>,
-    figmaColors: string[]
+    figmaColors: string[],
+    roundStart: boolean,
+    setRoundStart: Function,
+    earningsTutorial: boolean,
+    setEarningsTutorial: Function,
+    newsTutorial: boolean,
+    setNewsTutorial: Function,
+    portfolioTutorial: boolean,
+    setPortfolioTutorial: Function
 }
 
 const GameLoopContext = createContext<GameLoopState | undefined>(undefined);
@@ -111,10 +123,20 @@ export const GameLoopProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const [eventIndex, setEventIndex] = useState<number>(0);
     const [economySummary, setEconomySummary] = useState(false);
     const isInitialized = useRef(false);
-    const figmaColors = ['figma-honey', 'figma-carrots', 'figma-berries', 'figma-rose', 'figma-lavender', 'figma-pool', 'figma-teal', 'figma-lime', 'figma-forest']
+    const figmaColors = ['figma-honey', 'figma-winter', 'figma-berries', 'figma-lavender', 'figma-pool', 'figma-teal', 'figma-pale', 'figma-indigo']
+    const [roundStart, setRoundStart] = useState(true);
+    const [earningsTutorial, setEarningsTutorial] = useState(true);
+    const [newsTutorial, setNewsTutorial] = useState(true);
+    const [portfolioTutorial, setPortfolioTutorial] = useState(true);
+
+    if (localStorage.getItem("tutorial") == "false") {
+        setEarningsTutorial(false);
+        setNewsTutorial(false);
+        setPortfolioTutorial(false);
+    }
 
     return (
-        <GameLoopContext.Provider value={{ configData, eventData, scenarios, productData, setProductData, showSite, setShowSite, numberOfSites, liquidity, setLiquidity, portfolioItems, setPortfolioItems, newPortfolioItems, setNewPortfolioItems, oldPortfolioItems, setOldPortfolioItems, nextRound, setNextRound, portfolioItemCount, setPortfolioItemCount, eventIndex, setEventIndex, economySummary, setEconomySummary, isInitialized, figmaColors }}>
+        <GameLoopContext.Provider value={{ configData, eventData, scenarios, productData, setProductData, showSite, setShowSite, numberOfSites, liquidity, setLiquidity, portfolioItems, setPortfolioItems, newPortfolioItems, setNewPortfolioItems, oldPortfolioItems, setOldPortfolioItems, nextRound, setNextRound, portfolioItemCount, setPortfolioItemCount, eventIndex, setEventIndex, economySummary, setEconomySummary, isInitialized, figmaColors, roundStart, setRoundStart, setEarningsTutorial, earningsTutorial, setNewsTutorial, newsTutorial, setPortfolioTutorial, portfolioTutorial }}>
             {children}
         </GameLoopContext.Provider>
     );

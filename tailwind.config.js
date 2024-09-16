@@ -6,14 +6,13 @@ export default {
     ],
     safelist: [
         'bg-figma-honey',
-        'bg-figma-rose',
         'bg-figma-lavender',
         'bg-figma-pool',
         'bg-figma-teal',
-        'bg-figma-lime',
-        'bg-figma-forest',
         'bg-figma-berries',
-        'bg-figma-carrots'
+        'bg-figma-winter',
+        'bg-figma-indigo',
+        'bg-figma-pale',
     ],
     theme: {
         extend: {
@@ -25,12 +24,19 @@ export default {
                 'figma-carrots': '#FF6130',
                 'figma-berries': '#E1015B',
                 'figma-rose': '#EB4C79',
-                'figma-lavender': '#721C7A',
+                'figma-lavender': '#AA4BB3',
                 'figma-pool': '#199CF9',
                 'figma-teal': '#02A3A4',
                 'figma-lime': '#0CB43F',
                 'figma-forest': '#028661',
-            }
+                'figma-winter': '#9FD7FF',
+                'figma-indigo': '#ACABD3',
+                'figma-pale': '#FF9CC4',
+
+            },
+            backgroundImage: {
+                'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+            },
         },
     },
     plugins: [],

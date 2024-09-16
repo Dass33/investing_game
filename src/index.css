@@ -13,3 +13,12 @@
         font-family: InterVariable, sans-serif;
     }
 }
+
+.custom-radial-gradient {
+    background-image: radial-gradient(circle at center,
+            rgba(128, 106, 21, 1) 0%,
+            rgba(128, 48, 24, 1) 25%,
+            rgba(128, 0, 45, 1) 50%,
+            rgba(85, 37, 89, 1) 75%,
+            rgba(12, 78, 124, 1) 100%);
+}
