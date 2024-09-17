@@ -49,7 +49,7 @@ function NewEvent() {
     );
 }
 
-function RiveDice({ diceValue, diceColor }: { diceValue: number, diceColor: number }) {
+function RiveDice({ diceValue, diceColor, throwDelayIndex }: { diceValue: number, diceColor: number, throwDelayIndex: number }) {
     const { rive, RiveComponent } = useRive({
         src: "dice_roll.riv", // Path to your Rive file
         stateMachines: "dice_state",    // The state machine's name
@@ -60,9 +60,11 @@ function RiveDice({ diceValue, diceColor }: { diceValue: number, diceColor: numb
         autoplay: true,
     });
 
-    console.log(diceColor);
     const diceNumberInput = useStateMachineInput(rive, "dice_state", "number_to_roll");
     const diceColorInput = useStateMachineInput(rive, "dice_state", "color_to_pick");
+    const throwDice = useStateMachineInput(rive, "dice_state", "throw");
+
+    setTimeout(() => throwDice?.fire(), throwDelayIndex * 400);
 
     if (diceNumberInput) diceNumberInput.value = diceValue;
     if (diceColorInput) diceColorInput.value = diceColor;
@@ -266,24 +268,29 @@ function Earnings() {
 
     return (
         <div className="relative z-0 h-screen flex flex-col justify-center custom-radial-gradient">
-            <h1 className="mb-12 text-xl text-white text-center -mt-44">Tvoje výnosy za {round}. kolo</h1>
-            <div className="border border-white rounded-t-xl mx-8 bg-figma-black pb-6">
+            <h1 className="mb-6 text-xl text-white text-center -mt-10">Tvoje výnosy za {round}. kolo</h1>
+            <div className="border border-white rounded-t-xl mx-8 bg-figma-black pb-6 pt-1">
 
-                {Object.entries(groupedItems).map(([productName, items]) => {
+                {Object.entries(groupedItems).map(([productName, items], index) => {
                     const count = items.length;
                     const fixedIncome = items[0].fixedIncome;
                     const totalIncome = count * fixedIncome;
                     incomeSum += totalIncome;
 
+                    const testNum = Math.floor(Math.random() * 6);
+                    console.log(items[0].diceValues[testNum]);
+
                     return (
-                        <div className="mt-6 mx-4 flex justify-between text-white text-base font-medium" key={productName}>
+                        <div className="mt-2 mx-4 flex justify-between text-white text-base font-medium" key={productName}>
+
                             <h3 className="my-auto flex-1 break-words text-lg grow">{productName}</h3>
                             {items[0].diceValues[5] > 0 &&
                                 <div className="size-10">
-                                    <RiveDice diceValue={4} diceColor={items[0].color} />
+                                    <RiveDice diceValue={testNum + 1} diceColor={items[0].color} throwDelayIndex={index} />
                                 </div>}
-                            <h3 className="text-center w-12 my-auto text-lg font-bold">
-                                +{fixedIncome}
+                            <h3 className="text-center w-12 my-auto text-lg font-bold pop-in"
+                                style={{ animationDelay: `${(index + 1) * 0.5}s` }}>
+                                +{Number(fixedIncome) + Number(items[0].diceValues[testNum])}
                             </h3>
                         </div>
                     );
