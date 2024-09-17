@@ -32,6 +32,7 @@ export default {
                 'figma-winter': '#9FD7FF',
                 'figma-indigo': '#ACABD3',
                 'figma-pale': '#FF9CC4',
+                'figma-white': '#EEF1F4',
 
             },
             backgroundImage: {

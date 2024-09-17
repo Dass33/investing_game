@@ -19,8 +19,8 @@ function App() {
             {showWelcomeSite && <WelcomeSite />}
             <GameLoopProvider>
                 {!showWelcomeSite && !endGame && <GameLoop />}
+                {endGame && <EndScreen />}
             </GameLoopProvider>
-            {endGame && <EndScreen />}
         </>
     )
 }
