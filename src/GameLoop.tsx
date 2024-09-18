@@ -11,7 +11,6 @@ interface products {
     cost: number;
     fixedIncome: number;
     minToPreventBankrupcy: number;
-    divideDiceByToSell: number;
     timeToSell: number;
     sellingForLastRounds: number;
     diceValues: number[];
@@ -62,7 +61,7 @@ function NewEvent() {
                     </div>
                     <div className="mt-8 text-figma-black">
                         <div className="relative">
-                            <img src={`images/events/${eventData[eventIndex].IMG}.png`}></img>
+                            <img src={`events/${eventData[eventIndex].IMG}.png`}></img>
                             <p className={`absolute font-bold text-base bottom-5 w-[90%] mx-5 px-3 text-figma-black bg-${figmaColors[eventData[eventIndex].color]}`}>BREAKING NEWS</p>
                         </div>
                         <h1 className="text-2xl font-bold mx-4 mt-7 leading-7">{eventData[eventIndex].eventName}</h1>
@@ -147,32 +146,108 @@ function RiveDice({ diceValue, diceColor, throwDelayIndex }: { diceValue: number
 }
 
 function EconomyAfterEvent() {
-
     const { round, gameMode } = useGame();
 
-    const { productData, scenarios, liquidity, setEconomySummary,
-        setNextRound, setShowPortfolio, eventData, eventIndex,
-        setEconomyHistory, economyHistory } = useGameLoop();
-
+    const {
+        productData,
+        setProductData,
+        portfolioItems,
+        setPortfolioItems,
+        scenarios,
+        liquidity,
+        setEconomySummary,
+        setNextRound,
+        setShowPortfolio,
+        eventData,
+        eventIndex,
+        setEconomyHistory,
+        economyHistory
+    } = useGameLoop();
 
     const [isLatestEvent, setIsLatestEvent] = useState(true);
     const [economyOfRound, setEconomyOfRound] = useState(round);
     const [eventToShow, setEventToShow] = useState(eventData[eventIndex]);
+    const [changesApplied, setChangesApplied] = useState(false);
+    const [displayedProductData, setDisplayedProductData] = useState(productData);
 
     useEffect(() => {
         setEconomyHistory([...economyHistory, eventIndex]);
     }, []);
 
     useEffect(() => {
-        if (economyHistory[economyOfRound - 1] != undefined) {
+        if (economyHistory[economyOfRound - 1] !== undefined) {
             setEventToShow(eventData[economyHistory[economyOfRound - 1]]);
         }
     }, [economyHistory, economyOfRound]);
 
     useEffect(() => {
-        if (economyOfRound != round) setIsLatestEvent(false);
+        if (economyOfRound !== round) setIsLatestEvent(false);
         else setIsLatestEvent(true);
     }, [economyOfRound]);
+
+    // Recompute displayedProductData when economyOfRound changes
+    useEffect(() => {
+        if (economyOfRound === round) {
+            // Latest data
+            setDisplayedProductData(productData);
+        } else if (economyOfRound < round) {
+            // Start from latest productData and reverse apply events to reach the selected round
+            let newProductData = productData.map(item => ({ ...item }));
+
+            // Reverse apply events from economyOfRound to round - 1
+            for (let i = round - 1; i >= economyOfRound; i--) {
+                const eventIndexAtRound = economyHistory[i];
+                const eventAtRound: any = eventData[eventIndexAtRound];
+
+                newProductData = newProductData.map(item => {
+                    let costChange = Number(eventAtRound[item.productName][0]);
+                    let incomeChange = Number(eventAtRound[item.productName][1]);
+
+                    return {
+                        ...item,
+                        cost: Math.max(0, Number(item.cost) - costChange),
+                        fixedIncome: Math.max(0, Number(item.fixedIncome) - incomeChange),
+                    };
+                });
+            }
+            setDisplayedProductData(newProductData);
+        }
+    }, [economyOfRound, productData, economyHistory, eventData, round]);
+
+    // Apply cost and income changes when the component mounts and it's the latest event
+    useEffect(() => {
+        if (isLatestEvent && !changesApplied) {
+            const event: any = eventData[eventIndex];
+
+            // Update productData
+            const updatedProductData = productData.map(item => {
+                let costChange = Number(event[item.productName][0]);
+                let incomeChange = Number(event[item.productName][1]);
+
+                return {
+                    ...item,
+                    cost: Math.max(0, Number(item.cost) + costChange),
+                    fixedIncome: Math.max(0, Number(item.fixedIncome) + incomeChange)
+                };
+            });
+            setProductData(updatedProductData);
+
+            // Update portfolioItems
+            const updatedPortfolioItems = portfolioItems.map(item => {
+                let costChange = Number(event[item.productName][0]);
+                let incomeChange = Number(event[item.productName][1]);
+
+                return {
+                    ...item,
+                    cost: Math.max(0, Number(item.cost) + costChange),
+                    fixedIncome: Math.max(0, Number(item.fixedIncome) + incomeChange)
+                };
+            });
+            setPortfolioItems(updatedPortfolioItems);
+
+            setChangesApplied(true); // Prevent re-applying changes
+        }
+    }, [isLatestEvent, changesApplied, productData, portfolioItems, eventData, eventIndex]);
 
     return (
         <>
@@ -193,9 +268,10 @@ function EconomyAfterEvent() {
                 </div>
             </div>
 
-
             <div className="pt-12 pb-28 bg-figma-white h-full">
-                <h1 className="font-bold text-lg text-center text-figma-black mx-auto min-h-20 max-w-80 pt-4 pb-1">{eventToShow.eventName}</h1>
+                <h1 className="font-bold text-lg text-center text-figma-black mx-auto min-h-20 max-w-80 pt-4 pb-1">
+                    {eventToShow.eventName}
+                </h1>
                 <div className="justify-center flex gap-4 mb-2">
                     <button onClick={() => setEconomyOfRound(economyOfRound - 1)} disabled={economyOfRound <= 1}>
                         <svg className="my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -234,20 +310,23 @@ function EconomyAfterEvent() {
                     </button>
                 </div>
                 <div className="flex justify-end w-full text-[10px] font-bold text-figma-black px-6">
-                    <span className="mr-5 text-center">NÁKUP<br></br>PRODEJ</span>
+                    <span className="mr-5 text-center">NÁKUP<br />PRODEJ</span>
                     <span className="my-auto">VÝNOS</span>
                 </div>
-                {productData.map(item => {
-                    const costChange = (eventToShow as any)[`${item.productName}`][0];
-                    const incomeChange = (eventToShow as any)[`${item.productName}`][1];
+                {displayedProductData.map(item => {
+                    const costChange = (eventToShow as any)[item.productName][0];
+                    const incomeChange = (eventToShow as any)[item.productName][1];
 
                     return (
-                        <div className={`relative z-10 mt-2 mx-3 py-2 pl-3 pr-6 flex text-figma-white text-base rounded-full font-bold 
-                        ${(((costChange > 0 && incomeChange >= 0) || (costChange >= 0 && incomeChange > 0)) && 'bg-figma-teal') ||
-                            (((costChange < 0 && incomeChange <= 0) || (costChange <= 0 && incomeChange < 0)) && 'bg-figma-berries') ||
-                            (((costChange < 0 && incomeChange > 0) || (costChange > 0 && incomeChange < 0) || (costChange == 0 && incomeChange == 0))
-                                && 'bg-figma-black')}`} key={item.productName}>
-
+                        <div
+                            className={`relative z-10 mt-2 mx-3 py-2 pl-3 pr-6 flex text-figma-white text-base rounded-full font-bold 
+                            ${(((costChange > 0 && incomeChange >= 0) || (costChange >= 0 && incomeChange > 0)) && 'bg-figma-teal') ||
+                                (((costChange < 0 && incomeChange <= 0) || (costChange <= 0 && incomeChange < 0)) && 'bg-figma-berries') ||
+                                (((costChange < 0 && incomeChange > 0) || (costChange > 0 && incomeChange < 0) || (costChange == 0 && incomeChange == 0)) &&
+                                    'bg-figma-black')
+                                }`}
+                            key={item.productName}
+                        >
                             <div className="my-auto ml-2 mr-3">
                                 {((costChange > 0 && incomeChange >= 0) || (costChange >= 0 && incomeChange > 0)) &&
                                     <svg width="13" height="16" viewBox="0 0 13 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -555,7 +634,10 @@ function PortfolioTutorial() {
 
                 </p>
                 <div className="absolute bottom-14 w-full">
-                    <button className="mx-auto border border-white rounded-full flex pl-6 pr-10" onClick={() => setPortfolioTutorial(false)}>
+                    <button className="mx-auto border border-white rounded-full flex pl-6 pr-10" onClick={() => {
+                        setPortfolioTutorial(false);
+                        localStorage.setItem("tutorial", "false");
+                    }}>
                         <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12.3755 20.4526H28.3755M28.3755 20.4526L22.3755 14.4526M28.3755 20.4526L22.3755 26.4526" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>

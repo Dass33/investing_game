@@ -27,7 +27,6 @@ interface products {
     cost: number;
     fixedIncome: number;
     minToPreventBankrupcy: number;
-    divideDiceByToSell: number;
     timeToSell: number;
     sellingForLastRounds: number;
     diceValues: number[];
@@ -87,7 +86,8 @@ interface GameLoopState {
     showEarnings: boolean,
     setShowEarnings: Function,
     economyHistory: number[],
-    setEconomyHistory: Function
+    setEconomyHistory: Function,
+    startingProductData: products[]
 }
 
 const GameLoopContext = createContext<GameLoopState | undefined>(undefined);
@@ -115,10 +115,13 @@ function useJson(index: number) {
 }
 
 export const GameLoopProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const hideTutorial = localStorage.getItem("tutorial") == "false";
+
     const [configData] = useJson(0);
     const [eventData] = useJson(1);
     const [scenarios] = useJson(3);
     const [productData, setProductData] = useJson(2);
+    const [startingProductData] = useJson(2);
     const [showSite, setShowSite] = useState(0);
     const numberOfSites = 1;
     const [liquidity, setLiquidity] = useState<number | null>(() => configData?.startingMoney || 0);
@@ -132,21 +135,15 @@ export const GameLoopProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const isInitialized = useRef(false);
     const figmaColors = ['figma-honey', 'figma-winter', 'figma-berries', 'figma-lavender', 'figma-pool', 'figma-teal', 'figma-pale', 'figma-indigo-40']
     const [roundStart, setRoundStart] = useState(true);
-    const [earningsTutorial, setEarningsTutorial] = useState(true);
-    const [newsTutorial, setNewsTutorial] = useState(true);
-    const [portfolioTutorial, setPortfolioTutorial] = useState(true);
+    const [earningsTutorial, setEarningsTutorial] = useState(hideTutorial ? false : true);
+    const [newsTutorial, setNewsTutorial] = useState(hideTutorial ? false : true);
+    const [portfolioTutorial, setPortfolioTutorial] = useState(hideTutorial ? false : true);
     const [showPortfolio, setShowPortfolio] = useState(false);
     const [showEarnings, setShowEarnings] = useState(true);
     const [economyHistory, setEconomyHistory] = useState<number[]>([]);
 
-    if (localStorage.getItem("tutorial") == "false") {
-        setEarningsTutorial(false);
-        setNewsTutorial(false);
-        setPortfolioTutorial(false);
-    }
-
     return (
-        <GameLoopContext.Provider value={{ configData, eventData, scenarios, productData, setProductData, showSite, setShowSite, numberOfSites, liquidity, setLiquidity, portfolioItems, setPortfolioItems, newPortfolioItems, setNewPortfolioItems, oldPortfolioItems, setOldPortfolioItems, nextRound, setNextRound, portfolioItemCount, setPortfolioItemCount, eventIndex, setEventIndex, economySummary, setEconomySummary, isInitialized, figmaColors, roundStart, setRoundStart, setEarningsTutorial, earningsTutorial, setNewsTutorial, newsTutorial, setPortfolioTutorial, portfolioTutorial, showEarnings, showPortfolio, setShowEarnings, setShowPortfolio, setEconomyHistory, economyHistory }}>
+        <GameLoopContext.Provider value={{ configData, eventData, scenarios, productData, setProductData, showSite, setShowSite, numberOfSites, liquidity, setLiquidity, portfolioItems, setPortfolioItems, newPortfolioItems, setNewPortfolioItems, oldPortfolioItems, setOldPortfolioItems, nextRound, setNextRound, portfolioItemCount, setPortfolioItemCount, eventIndex, setEventIndex, economySummary, setEconomySummary, isInitialized, figmaColors, roundStart, setRoundStart, setEarningsTutorial, earningsTutorial, setNewsTutorial, newsTutorial, setPortfolioTutorial, portfolioTutorial, showEarnings, showPortfolio, setShowEarnings, setShowPortfolio, setEconomyHistory, economyHistory, startingProductData }}>
             {children}
         </GameLoopContext.Provider>
     );

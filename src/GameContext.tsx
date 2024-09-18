@@ -10,7 +10,9 @@ interface GameState {
     totalScore: number,
     setTotalScore: Function,
     gameMode: number,
-    setGameMode: Function
+    setGameMode: Function,
+    showLandingSite: boolean,
+    setShowLandingSite: Function
 }
 
 const GameContext = createContext<GameState | undefined>(undefined);
@@ -21,9 +23,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [round, setRound] = useState(1);
     const [totalScore, setTotalScore] = useState(0);
     const [gameMode, setGameMode] = useState(0);
+    const [showLandingSite, setShowLandingSite] = useState(true);
 
     return (
-        <GameContext.Provider value={{ showWelcomeSite, setShowWelcomeSite, endGame, setEndGame, round, setRound, totalScore, setTotalScore, gameMode, setGameMode }}>
+        <GameContext.Provider value={{ showWelcomeSite, setShowWelcomeSite, endGame, setEndGame, round, setRound, totalScore, setTotalScore, gameMode, setGameMode, showLandingSite, setShowLandingSite }}>
             {children}
         </GameContext.Provider>
     );

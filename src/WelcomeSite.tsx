@@ -34,9 +34,9 @@ function useJson(index: number) {
     return data;
 }
 
-function LandingSite(props: { setShowLandingSite: Function }) {
+function LandingSite() {
     const scenariosData: scenarios[] = useJson(3);
-    const { setGameMode } = useGame();
+    const { setGameMode, setShowWelcomeSite, setShowLandingSite } = useGame();
     if (!scenariosData) {
         return (
             <div className="bg-figma-black h-screen">
@@ -70,7 +70,10 @@ function LandingSite(props: { setShowLandingSite: Function }) {
                 </select>
 
                 <button className="block mt-12 mx-auto text-3xl bg-figma-black lg:text-4xl border-white border rounded-full py-2 px-7 font-bold hover:scale-110 duration-200"
-                    onClick={() => props.setShowLandingSite(false)}>Hrát</button>
+                    onClick={() => {
+                        if (localStorage.getItem("tutorial") === "false") setShowWelcomeSite(false);
+                        else setShowLandingSite(false);
+                    }}>Hrát</button>
             </div>
             <h3 className="text-center text-[11px] relative z-10 mt-8">2024 Skoala</h3>
         </div>
@@ -125,11 +128,10 @@ function InstructionSite() {
 }
 
 function WelcomeSite() {
-    const [showLandingSite, setShowLandingSite] = useState(true);
-
+    const { showLandingSite } = useGame()
     return (
         <>
-            {showLandingSite && <LandingSite setShowLandingSite={setShowLandingSite} />}
+            {showLandingSite && <LandingSite />}
             {!showLandingSite && <InstructionSite />}
         </>
     );

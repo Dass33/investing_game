@@ -9,15 +9,14 @@ interface products {
     cost: number;
     fixedIncome: number;
     minToPreventBankrupcy: number;
-    divideDiceByToSell: number;
     timeToSell: number;
     sellingForLastRounds: number;
     diceValues: number[];
 }
 
 function EndScreen() {
-    const { totalScore } = useGame();
-    const { portfolioItems, figmaColors } = useGameLoop();
+    const { totalScore, gameMode } = useGame();
+    const { portfolioItems, figmaColors, scenarios } = useGameLoop();
     const groupedItems = portfolioItems.reduce((acc: { [key: string]: products[] }, item) => {
         if (!acc[item.productName]) {
             acc[item.productName] = [];
@@ -25,6 +24,8 @@ function EndScreen() {
         acc[item.productName].push(item);
         return acc;
     }, {});
+
+    const soloGame = (scenarios[gameMode].random === "TRUE");
     return (
         <>
             <div className="text-center text-figma-white bg-figma-black h-screen">
@@ -61,7 +62,7 @@ function EndScreen() {
                     );
                 })}
                 <h1 className="text-lg font-medium mt-10 relative z-10">Gratulujeme. Nějaká větička na závěr.</h1>
-                <div className="z-10 w-full flex mt-8 justify-center font-[Inter] font-bold">
+                {soloGame && <div className="z-10 w-full flex mt-8 justify-center font-[Inter] font-bold">
                     <button className='bg-figma-black relative z-10 bg flex rounded-full hover:scale-110 duration-200 text-white border-white border py-2 px-4 m-2'
                         onClick={() => window.location.replace(window.location.href)}>  {/*temporary way to restart the game*/}
 
@@ -71,7 +72,7 @@ function EndScreen() {
                         </svg>
                         <span className="mx-3 text-lg">Hrát znovu</span>
                     </button>
-                </div>
+                </div>}
                 <h3 className="text-center text-[11px] relative z-10 mt-4">2024 Skoala</h3>
             </div>
         </>
