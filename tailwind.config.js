@@ -11,7 +11,7 @@ export default {
         'bg-figma-teal',
         'bg-figma-berries',
         'bg-figma-winter',
-        'bg-figma-indigo',
+        'bg-figma-indigo-40',
         'bg-figma-pale',
     ],
     theme: {
@@ -30,7 +30,8 @@ export default {
                 'figma-lime': '#0CB43F',
                 'figma-forest': '#028661',
                 'figma-winter': '#9FD7FF',
-                'figma-indigo': '#ACABD3',
+                'figma-indigo-40': '#ACABD3',
+                'figma-indigo': '#2F2D91',
                 'figma-pale': '#FF9CC4',
                 'figma-white': '#EEF1F4',
 

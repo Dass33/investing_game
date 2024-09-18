@@ -85,7 +85,9 @@ interface GameLoopState {
     showPortfolio: boolean,
     setShowPortfolio: Function,
     showEarnings: boolean,
-    setShowEarnings: Function
+    setShowEarnings: Function,
+    economyHistory: number[],
+    setEconomyHistory: Function
 }
 
 const GameLoopContext = createContext<GameLoopState | undefined>(undefined);
@@ -128,13 +130,14 @@ export const GameLoopProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const [eventIndex, setEventIndex] = useState<number>(0);
     const [economySummary, setEconomySummary] = useState(false);
     const isInitialized = useRef(false);
-    const figmaColors = ['figma-honey', 'figma-winter', 'figma-berries', 'figma-lavender', 'figma-pool', 'figma-teal', 'figma-pale', 'figma-indigo']
+    const figmaColors = ['figma-honey', 'figma-winter', 'figma-berries', 'figma-lavender', 'figma-pool', 'figma-teal', 'figma-pale', 'figma-indigo-40']
     const [roundStart, setRoundStart] = useState(true);
     const [earningsTutorial, setEarningsTutorial] = useState(true);
     const [newsTutorial, setNewsTutorial] = useState(true);
     const [portfolioTutorial, setPortfolioTutorial] = useState(true);
     const [showPortfolio, setShowPortfolio] = useState(false);
     const [showEarnings, setShowEarnings] = useState(true);
+    const [economyHistory, setEconomyHistory] = useState<number[]>([]);
 
     if (localStorage.getItem("tutorial") == "false") {
         setEarningsTutorial(false);
@@ -143,7 +146,7 @@ export const GameLoopProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
 
     return (
-        <GameLoopContext.Provider value={{ configData, eventData, scenarios, productData, setProductData, showSite, setShowSite, numberOfSites, liquidity, setLiquidity, portfolioItems, setPortfolioItems, newPortfolioItems, setNewPortfolioItems, oldPortfolioItems, setOldPortfolioItems, nextRound, setNextRound, portfolioItemCount, setPortfolioItemCount, eventIndex, setEventIndex, economySummary, setEconomySummary, isInitialized, figmaColors, roundStart, setRoundStart, setEarningsTutorial, earningsTutorial, setNewsTutorial, newsTutorial, setPortfolioTutorial, portfolioTutorial, showEarnings, showPortfolio, setShowEarnings, setShowPortfolio }}>
+        <GameLoopContext.Provider value={{ configData, eventData, scenarios, productData, setProductData, showSite, setShowSite, numberOfSites, liquidity, setLiquidity, portfolioItems, setPortfolioItems, newPortfolioItems, setNewPortfolioItems, oldPortfolioItems, setOldPortfolioItems, nextRound, setNextRound, portfolioItemCount, setPortfolioItemCount, eventIndex, setEventIndex, economySummary, setEconomySummary, isInitialized, figmaColors, roundStart, setRoundStart, setEarningsTutorial, earningsTutorial, setNewsTutorial, newsTutorial, setPortfolioTutorial, portfolioTutorial, showEarnings, showPortfolio, setShowEarnings, setShowPortfolio, setEconomyHistory, economyHistory }}>
             {children}
         </GameLoopContext.Provider>
     );

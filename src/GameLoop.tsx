@@ -17,12 +17,28 @@ interface products {
     diceValues: number[];
 }
 
+interface events {
+    baseGame: string;
+    advancedGame: string;
+    eventName: string;
+    eventText: string;
+    eventValue: number;
+    IMG: string;
+    color: number;
+}
+
 function NewEvent() {
 
     const { gameMode, round } = useGame();
-    const { scenarios, eventData, eventIndex, setEconomySummary, liquidity, figmaColors } = useGameLoop();
+    const { scenarios, setEventIndex, eventData, eventIndex, setEconomySummary, liquidity, figmaColors } = useGameLoop();
 
     const soloGame = scenarios[gameMode].random == "TRUE";
+
+    useEffect(() => {
+        if (soloGame) setEventIndex(Math.floor(Math.random() * eventData.length));
+        else setEventIndex(
+            (eventData as any[]).findIndex((item: events) => item.eventName === scenarios[gameMode].eventOrder[round - 1]));
+    }, []);
 
     return (
         <>
@@ -133,16 +149,39 @@ function RiveDice({ diceValue, diceColor, throwDelayIndex }: { diceValue: number
 function EconomyAfterEvent() {
 
     const { round, gameMode } = useGame();
-    const { scenarios, liquidity, setEconomySummary, setNextRound, setShowPortfolio } = useGameLoop();
+
+    const { productData, scenarios, liquidity, setEconomySummary,
+        setNextRound, setShowPortfolio, eventData, eventIndex,
+        setEconomyHistory, economyHistory } = useGameLoop();
+
+
+    const [isLatestEvent, setIsLatestEvent] = useState(true);
+    const [economyOfRound, setEconomyOfRound] = useState(round);
+    const [eventToShow, setEventToShow] = useState(eventData[eventIndex]);
+
+    useEffect(() => {
+        setEconomyHistory([...economyHistory, eventIndex]);
+    }, []);
+
+    useEffect(() => {
+        if (economyHistory[economyOfRound - 1] != undefined) {
+            setEventToShow(eventData[economyHistory[economyOfRound - 1]]);
+        }
+    }, [economyHistory, economyOfRound]);
+
+    useEffect(() => {
+        if (economyOfRound != round) setIsLatestEvent(false);
+        else setIsLatestEvent(true);
+    }, [economyOfRound]);
 
     return (
         <>
-            <div className="z-10 fixed top-0 py-1 text-figma-black text-xl w-full font-[Inter] bg-figma-indigo">
+            <div className="z-10 fixed top-0 py-1 text-figma-white text-xl w-full font-[Inter] bg-figma-indigo">
                 <div className="flex">
                     <svg className="w-14 my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="15.8669" cy="15.5" r="10.5" stroke="#0B1F42" />
-                        <path d="M13.1711 12.8945C13.1711 12.8945 13.0495 10.1379 15.952 10.1379C15.952 10.1379 18.5634 10.1379 18.5635 12.8945C18.5635 15.5788 15.8428 15.5304 15.8428 18.1294" stroke="#0B1F42" strokeLinecap="round" />
-                        <path d="M15.9026 20.5477V20.8621" stroke="#0B1F42" strokeLinecap="round" />
+                        <circle cx="15.8669" cy="15.5" r="10.5" stroke="#FFFDFD" />
+                        <path d="M13.1711 12.8945C13.1711 12.8945 13.0495 10.1379 15.952 10.1379C15.952 10.1379 18.5634 10.1379 18.5635 12.8945C18.5635 15.5788 15.8428 15.5304 15.8428 18.1294" stroke="#FFFDFD" strokeLinecap="round" />
+                        <path d="M15.9026 20.5477V20.8621" stroke="#FFFDFD" strokeLinecap="round" />
                     </svg>
                     <div className="grow flex justify-center pr-4">
                         <p className="mx-4 my-auto font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
@@ -155,8 +194,94 @@ function EconomyAfterEvent() {
             </div>
 
 
-            <div className="z-10 w-full flex justify-center fixed font-[Inter] font-medium bottom-0">
-                <button className='flex rounded-full hover:scale-110 duration-200 text-figma-black border-figma-black border py-2 px-6 m-3'
+            <div className="pt-12 pb-28 bg-figma-white h-full">
+                <h1 className="font-bold text-lg text-center text-figma-black mx-auto min-h-20 max-w-80 pt-4 pb-1">{eventToShow.eventName}</h1>
+                <div className="justify-center flex gap-4 mb-2">
+                    <button onClick={() => setEconomyOfRound(economyOfRound - 1)} disabled={economyOfRound <= 1}>
+                        <svg className="my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g opacity={economyOfRound > 1 ? '1' : '0.2'}>
+                                <circle cx="15.2888" cy="15.2925" r="14.5" fill="#EEF1F4" stroke="#0B1F42" />
+                                <g clipPath="url(#clip0_5954_123572)">
+                                    <path d="M22.3154 15.064L7.8855 15.064" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d="M13.1991 9.75032L7.8855 15.064L13.1991 20.3776" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
+                                </g>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_5954_123572">
+                                    <rect width="12" height="16" fill="white" transform="translate(23.0603 9.06396) rotate(90)" />
+                                </clipPath>
+                            </defs>
+                        </svg>
+                    </button>
+
+                    <span className="text-figma-black text-center font-bold text-6xl min-w-16">{economyOfRound}</span>
+
+                    <button onClick={() => setEconomyOfRound(economyOfRound + 1)} disabled={economyOfRound >= round}>
+                        <svg className="my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g opacity={isLatestEvent ? '0.2' : '1'}>
+                                <circle cx="15" cy="15" r="14.5" transform="matrix(-1 0 0 1 30.2888 0.29248)" fill="#EEF1F4" stroke="#0B1F42" />
+                                <g clipPath="url(#clip0_5954_123573)">
+                                    <path d="M8.26225 15.064L22.6921 15.064" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d="M17.3785 9.75032L22.6921 15.064L17.3785 20.3776" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
+                                </g>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_5954_123573">
+                                    <rect width="12" height="16" fill="white" transform="matrix(4.37114e-08 1 1 -4.37114e-08 7.51733 9.06396)" />
+                                </clipPath>
+                            </defs>
+                        </svg>
+                    </button>
+                </div>
+                <div className="flex justify-end w-full text-[10px] font-bold text-figma-black px-6">
+                    <span className="mr-5 text-center">NÁKUP<br></br>PRODEJ</span>
+                    <span className="my-auto">VÝNOS</span>
+                </div>
+                {productData.map(item => {
+                    const costChange = (eventToShow as any)[`${item.productName}`][0];
+                    const incomeChange = (eventToShow as any)[`${item.productName}`][1];
+
+                    return (
+                        <div className={`relative z-10 mt-2 mx-3 py-2 pl-3 pr-6 flex text-figma-white text-base rounded-full font-bold 
+                        ${(((costChange > 0 && incomeChange >= 0) || (costChange >= 0 && incomeChange > 0)) && 'bg-figma-teal') ||
+                            (((costChange < 0 && incomeChange <= 0) || (costChange <= 0 && incomeChange < 0)) && 'bg-figma-berries') ||
+                            (((costChange < 0 && incomeChange > 0) || (costChange > 0 && incomeChange < 0) || (costChange == 0 && incomeChange == 0))
+                                && 'bg-figma-black')}`} key={item.productName}>
+
+                            <div className="my-auto ml-2 mr-3">
+                                {((costChange > 0 && incomeChange >= 0) || (costChange >= 0 && incomeChange > 0)) &&
+                                    <svg width="13" height="16" viewBox="0 0 13 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6.77746 15.18L6.77747 0.750122" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                                        <path d="M12.0911 6.06377L6.77747 0.750122L1.46382 6.06376" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>}
+                                {((costChange < 0 && incomeChange <= 0) || (costChange <= 0 && incomeChange < 0)) &&
+                                    <svg width="13" height="17" viewBox="0 0 13 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6.77734 1.37992L6.77734 15.8098" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                                        <path d="M1.4637 10.4962L6.77734 15.8098L12.091 10.4962" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                }
+                                {((costChange < 0 && incomeChange > 0) || (costChange > 0 && incomeChange < 0) || (costChange == 0 && incomeChange == 0))
+                                    &&
+                                    <svg width="10" height="2" viewBox="0 0 10 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M8.83362 1.06006L0.721069 1.06006" stroke="#FFFDFD" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                }
+                            </div>
+
+                            <h3 className="my-auto flex-1 break-words font-bold text-base text-left grow">{item.productName}</h3>
+                            {costChange != 0 && <h3 className="w-6 my-auto text-[10px] font-bold text-right">({costChange > 0 && '+'}{costChange})</h3>}
+                            <h3 className="ml-1 min-w-6 my-auto text-lg font-bold text-right">{item.cost}</h3>
+                            {incomeChange != 0 ? <h3 className="w-6 ml-2 my-auto text-[10px] font-bold text-right">({incomeChange > 0 && '+'}{incomeChange})</h3>
+                                : <div className="w-6 ml-2"></div>
+                            }
+                            <h3 className="min-w-3 ml-2 my-auto text-lg font-bold text-right">{item.fixedIncome}</h3>
+                        </div>
+                    );
+                })}
+            </div>
+
+            <div className="z-10 w-full flex justify-center fixed font-[Inter] font-medium bottom-0 bg-figma-indigo">
+                <button className='flex rounded-full hover:scale-110 duration-200 text-figma-white border-figma-white border py-2 px-6 m-3'
                     onClick={() => {
                         setEconomySummary(false);
                         setNextRound(false);
@@ -164,7 +289,7 @@ function EconomyAfterEvent() {
                     }}>
 
                     <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1.86694 7.5H17.8669M17.8669 7.5L11.8669 1.5M17.8669 7.5L11.8669 13.5" stroke="#0B1F42" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M1.86694 7.5H17.8669M17.8669 7.5L11.8669 1.5M17.8669 7.5L11.8669 13.5" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                     <span className="mx-3 text-lg">Obchod</span>
                 </button>
@@ -189,6 +314,7 @@ function Portfolio() {
 
     const { round, setRound, gameMode } = useGame();
     const [roundEndingAlert, setRoundEndingAlert] = useState(false);
+    const [insufficientLiquidity, setInsufficientLiquidity] = useState(false);
 
     const uniquePortfolioItems = portfolioItems.filter((item, index, self) =>
         index === self.findIndex((t) => t.productName === item.productName));
@@ -203,7 +329,7 @@ function Portfolio() {
 
     //scrolling prevention
     useEffect(() => {
-        if (roundEndingAlert) {
+        if (roundEndingAlert || insufficientLiquidity) {
             document.body.classList.add('overflow-hidden');
         } else {
             document.body.classList.remove('overflow-hidden');
@@ -211,7 +337,7 @@ function Portfolio() {
         return () => {
             document.body.classList.remove('overflow-hidden');
         };
-    }, [roundEndingAlert]);
+    }, [roundEndingAlert, insufficientLiquidity]);
 
     return (
         <>
@@ -230,6 +356,20 @@ function Portfolio() {
                         }}>
                             <span className="my-auto">Ano</span>
                         </button>
+                    </div>
+                </div>
+            }
+            {insufficientLiquidity &&
+                <div className="fixed flex items-center justify-center z-0 bg-figma-black/70 h-screen w-screen backdrop-blur-sm">
+                    <div className="max-w-80 bg-figma-white rounded-2xl relative pb-10 px-7">
+                        <button className="text-white text-xl rounded-full absolute right-4 top-2" onClick={() => setInsufficientLiquidity(false)}>
+                            <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3.93018 4.00952L19.3471 19.4264" stroke="#0B1F42" strokeWidth="2" strokeLinecap="round" />
+                                <path d="M3.93018 19.4268L19.3471 4.00988" stroke="#0B1F42" strokeWidth="2" strokeLinecap="round" />
+                            </svg>
+                        </button>
+                        <img src='nofunds.svg' alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
+                        <p className="text-center mt-5 text-lg font-bold text-figma-black">Na tuto investici bohužel nemáš dostatečné prostředky. Pokud ji opravdu chceš, budeš muset prodat něco ze svého portfolia.</p>
                     </div>
                 </div>
             }
@@ -280,9 +420,11 @@ function Portfolio() {
                                                 const newItem = { ...product, autoSellIn: -1 };
                                                 setPortfolioItems([...portfolioItems, newItem]);
                                                 setLiquidity((liquidity ?? 0) - adjustedCost);
+                                            } else {
+                                                setInsufficientLiquidity(true);
+                                                setRoundEndingAlert(false);
                                             }
-                                        }}
-                                        disabled={(liquidity ?? 0) < adjustedCost}>
+                                        }}>
                                         <svg
                                             className={`${(liquidity ?? 0) < adjustedCost && 'cursor-not-allowed'}
                                     ${count <= 0 && 'hidden'}`}
@@ -365,10 +507,14 @@ function Portfolio() {
                                             const newItem = { ...product, autoSellIn: -1 };
                                             setPortfolioItems([...portfolioItems, newItem]);
                                             setLiquidity((liquidity ?? 0) - adjustedCost);
+                                        } else {
+                                            setInsufficientLiquidity(true);
+                                            setRoundEndingAlert(false);
                                         }
-                                    }}
-                                    disabled={(liquidity ?? 0) < adjustedCost}>
-                                    <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+                                    }}>
+                                    <svg className={`${(liquidity ?? 0) < adjustedCost && 'cursor-not-allowed'}`}
+                                        width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <circle cx="15.705" cy="15.1543" r="12.5" fill="#245375" stroke="#245375" />
                                         <path d="M15.705 8.22119V22.0879" stroke="white" strokeWidth="2" strokeLinecap="round" />
                                         <path d="M8.77158 15.1543L22.6382 15.1543" stroke="white" strokeWidth="2" strokeLinecap="round" />
@@ -381,7 +527,10 @@ function Portfolio() {
             {!roundEndingAlert && <div className="z-10 w-full flex justify-center fixed bottom-0 font-[Inter] font-bold bg-figma-stone">
                 <div className="flex items-center justify-end">
                     <button className='flex rounded-full hover:scale-110 duration-200 text-white border-white border-2 py-2 px-4 m-2'
-                        onClick={() => setRoundEndingAlert(true)}>
+                        onClick={() => {
+                            setRoundEndingAlert(true);
+                            setInsufficientLiquidity(false);
+                        }}>
 
                         <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M1.86694 7.5H17.8669M17.8669 7.5L11.8669 1.5M17.8669 7.5L11.8669 13.5" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
