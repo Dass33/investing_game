@@ -8,6 +8,12 @@ interface config {
     luckLowerBound: number;
     luckUpperBound: number;
     roundsAmount: number;
+    portfolioTutorialText: string;
+    portfolioTutorial_IMG: string;
+    earningsTutorialText: string;
+    earningsTutorial_IMG: string;
+    newsTutorialText: string;
+    newsTutorial_IMG: string;
 }
 interface events {
     baseGame: string;
@@ -87,7 +93,9 @@ interface GameLoopState {
     setShowEarnings: Function,
     economyHistory: number[],
     setEconomyHistory: Function,
-    startingProductData: products[]
+    startingProductData: products[],
+    showHelp: boolean,
+    setShowHelp: Function,
 }
 
 const GameLoopContext = createContext<GameLoopState | undefined>(undefined);
@@ -141,9 +149,10 @@ export const GameLoopProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const [showPortfolio, setShowPortfolio] = useState(false);
     const [showEarnings, setShowEarnings] = useState(true);
     const [economyHistory, setEconomyHistory] = useState<number[]>([]);
+    const [showHelp, setShowHelp] = useState(false);
 
     return (
-        <GameLoopContext.Provider value={{ configData, eventData, scenarios, productData, setProductData, showSite, setShowSite, numberOfSites, liquidity, setLiquidity, portfolioItems, setPortfolioItems, newPortfolioItems, setNewPortfolioItems, oldPortfolioItems, setOldPortfolioItems, nextRound, setNextRound, portfolioItemCount, setPortfolioItemCount, eventIndex, setEventIndex, economySummary, setEconomySummary, isInitialized, figmaColors, roundStart, setRoundStart, setEarningsTutorial, earningsTutorial, setNewsTutorial, newsTutorial, setPortfolioTutorial, portfolioTutorial, showEarnings, showPortfolio, setShowEarnings, setShowPortfolio, setEconomyHistory, economyHistory, startingProductData }}>
+        <GameLoopContext.Provider value={{ configData, eventData, scenarios, productData, setProductData, showSite, setShowSite, numberOfSites, liquidity, setLiquidity, portfolioItems, setPortfolioItems, newPortfolioItems, setNewPortfolioItems, oldPortfolioItems, setOldPortfolioItems, nextRound, setNextRound, portfolioItemCount, setPortfolioItemCount, eventIndex, setEventIndex, economySummary, setEconomySummary, isInitialized, figmaColors, roundStart, setRoundStart, setEarningsTutorial, earningsTutorial, setNewsTutorial, newsTutorial, setPortfolioTutorial, portfolioTutorial, showEarnings, showPortfolio, setShowEarnings, setShowPortfolio, setEconomyHistory, economyHistory, startingProductData, showHelp, setShowHelp }}>
             {children}
         </GameLoopContext.Provider>
     );

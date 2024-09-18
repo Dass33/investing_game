@@ -98,7 +98,7 @@ function InstructionSite() {
             <img src={`${scenariosData[gameMode].IMG}`} alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
             <p className="text-center pt-8 md:pt-24 text-xl lg:text-3xl mx-auto max-w-[34rem] font-light px-6">{scenariosData[gameMode].howToPlay}</p>
             <div className="absolute bottom-10 md:bottom-20 w-full">
-                <button className="block mx-auto rounded-lg py-4 px-14 hover:scale-110 duration-200" onClick={() => setPageOne(false)}>
+                <button className="block mx-auto rounded-lg hover:scale-110 duration-200" onClick={() => setPageOne(false)}>
                     <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect x="0.875488" y="0.952637" width="39" height="39" rx="19.5" fill="#0B1F42" />
                         <rect x="0.875488" y="0.952637" width="39" height="39" rx="19.5" stroke="white" />

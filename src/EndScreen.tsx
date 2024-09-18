@@ -29,21 +29,17 @@ function EndScreen() {
     return (
         <>
             <div className="text-center text-figma-white bg-figma-black h-screen">
-                <svg className="absolute z-0" width="390" height="675" viewBox="0 0 390 675" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 0.869873V673.87" stroke="#721C7A" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M30.0164 0.869873V673.87" stroke="#721C7A" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M60.0327 0.869873V673.87" stroke="#721C7A" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M90.0491 0.869873V673.87" stroke="#721C7A" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M120.066 0.869873V673.87" stroke="#721C7A" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M150.082 0.869873V673.87" stroke="#721C7A" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M180.098 0.869873V673.87" stroke="#721C7A" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M210.115 0.869873V673.87" stroke="#721C7A" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M240.131 0.869873V673.87" stroke="#721C7A" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M270.147 0.869873V673.87" stroke="#721C7A" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M300.164 0.869873V673.87" stroke="#721C7A" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M330.18 0.869873V673.87" stroke="#721C7A" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M360.197 0.869873V673.87" stroke="#721C7A" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M390.213 0.869873V673.87" stroke="#721C7A" strokeLinecap="round" strokeLinejoin="round" />
+                <svg
+                    className="h-screen w-full absolute pr-5 pl-7 py-8 z-0"
+                    preserveAspectRatio="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <defs>
+                        <pattern id="verticalLines" patternUnits="userSpaceOnUse" width="47" height="100%">
+                            <path d="M0 0V800%" stroke="#721C7A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#verticalLines)" />
                 </svg>
                 <div className="flex relative z-10 justify-center gap-8 pt-20 mb-20">
                     <h1 className="text-2xl my-auto font-medium">SKÓRE</h1>

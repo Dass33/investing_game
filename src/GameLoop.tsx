@@ -29,7 +29,7 @@ interface events {
 function NewEvent() {
 
     const { gameMode, round } = useGame();
-    const { scenarios, setEventIndex, eventData, eventIndex, setEconomySummary, liquidity, figmaColors } = useGameLoop();
+    const { scenarios, setEventIndex, setShowHelp, eventData, eventIndex, setEconomySummary, liquidity, figmaColors } = useGameLoop();
 
     const soloGame = scenarios[gameMode].random == "TRUE";
 
@@ -45,11 +45,13 @@ function NewEvent() {
                 <>
                     <div className={`z-10 fixed top-0 py-1 text-figma-black text-xl w-full font-[Inter] bg-${figmaColors[eventData[eventIndex].color]}`}>
                         <div className="flex">
-                            <svg className="w-14 my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="15.8669" cy="15.5" r="10.5" stroke="#0B1F42" />
-                                <path d="M13.1711 12.8945C13.1711 12.8945 13.0495 10.1379 15.952 10.1379C15.952 10.1379 18.5634 10.1379 18.5635 12.8945C18.5635 15.5788 15.8428 15.5304 15.8428 18.1294" stroke="#0B1F42" strokeLinecap="round" />
-                                <path d="M15.9026 20.5477V20.8621" stroke="#0B1F42" strokeLinecap="round" />
-                            </svg>
+                            <button onClick={() => setShowHelp(true)}>
+                                <svg className="w-14 my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="15.8669" cy="15.5" r="10.5" stroke="#0B1F42" />
+                                    <path d="M13.1711 12.8945C13.1711 12.8945 13.0495 10.1379 15.952 10.1379C15.952 10.1379 18.5634 10.1379 18.5635 12.8945C18.5635 15.5788 15.8428 15.5304 15.8428 18.1294" stroke="#0B1F42" strokeLinecap="round" />
+                                    <path d="M15.9026 20.5477V20.8621" stroke="#0B1F42" strokeLinecap="round" />
+                                </svg>
+                            </button>
                             <div className="grow flex justify-center pr-4">
                                 <p className="ml-2 mr-4 my-auto font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
                                 <h1 className="font-bold my-auto text-lg mr-2">BREAKING NEWS</h1>
@@ -88,7 +90,7 @@ function NewEvent() {
                     <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1.86694 7.5H17.8669M17.8669 7.5L11.8669 1.5M17.8669 7.5L11.8669 13.5" stroke="#0B1F42" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    <span className="mx-3 text-lg">Obchod</span>
+                    <span className="mx-3 text-lg">Ekonomika</span>
                 </button>
             </div>
         </>
@@ -97,17 +99,11 @@ function NewEvent() {
 
 function NewsTutorial() {
 
-    const { setNewsTutorial } = useGameLoop();
+    const { setNewsTutorial, configData } = useGameLoop();
     return (
         <div className="bg-figma-black h-screen text-white font-medium font-[Inter]">
-            <img src="news.svg" alt="placeholder" className="mx-auto pt-12 relative z-10"></img>
-            <p className="text-center pt-8 text-lg px-7">
-                V každém kole budeš mít možnost si přečíst novinky,
-                ze kterých se dozvíš,
-                jak se momentálně daří trhu.
-                Studuj je pozorně,
-                pomůžou ti dobře se rozhodnout do čeho investovat.
-            </p>
+            <img src={configData.newsTutorial_IMG} alt="placeholder" className="mx-auto pt-12 relative z-10"></img>
+            <p className="text-center pt-8 text-lg px-7">{configData.newsTutorialText}</p>
             <div className="z-10 w-full flex justify-center fixed bottom-12 font-[Inter] font-bold ">
                 <button className='flex rounded-full hover:scale-110 duration-200 text-white border-white border-2 py-2 px-4 m-2'
                     onClick={() => { setNewsTutorial(false) }}>
@@ -161,7 +157,8 @@ function EconomyAfterEvent() {
         eventData,
         eventIndex,
         setEconomyHistory,
-        economyHistory
+        economyHistory,
+        setShowHelp
     } = useGameLoop();
 
     const [isLatestEvent, setIsLatestEvent] = useState(true);
@@ -196,17 +193,17 @@ function EconomyAfterEvent() {
 
             // Reverse apply events from economyOfRound to round - 1
             for (let i = round - 1; i >= economyOfRound; i--) {
-                const eventIndexAtRound = economyHistory[i];
-                const eventAtRound: any = eventData[eventIndexAtRound];
+                const eventAfterRound: any = eventData[economyHistory[i]];
+                const eventAtRound: any = eventData[economyHistory[i - 1]];
 
                 newProductData = newProductData.map(item => {
-                    let costChange = Number(eventAtRound[item.productName][0]);
-                    let incomeChange = Number(eventAtRound[item.productName][1]);
+                    let costChange = Number(eventAfterRound[item.productName][0]);
+                    let newIncome = Number(eventAtRound[item.productName][1]);
 
                     return {
                         ...item,
                         cost: Math.max(0, Number(item.cost) - costChange),
-                        fixedIncome: Math.max(0, Number(item.fixedIncome) - incomeChange),
+                        fixedIncome: Math.max(0, newIncome),
                     };
                 });
             }
@@ -222,12 +219,12 @@ function EconomyAfterEvent() {
             // Update productData
             const updatedProductData = productData.map(item => {
                 let costChange = Number(event[item.productName][0]);
-                let incomeChange = Number(event[item.productName][1]);
+                let newIncome = Number(event[item.productName][1]);
 
                 return {
                     ...item,
                     cost: Math.max(0, Number(item.cost) + costChange),
-                    fixedIncome: Math.max(0, Number(item.fixedIncome) + incomeChange)
+                    fixedIncome: Math.max(0, newIncome),
                 };
             });
             setProductData(updatedProductData);
@@ -235,17 +232,17 @@ function EconomyAfterEvent() {
             // Update portfolioItems
             const updatedPortfolioItems = portfolioItems.map(item => {
                 let costChange = Number(event[item.productName][0]);
-                let incomeChange = Number(event[item.productName][1]);
+                let newIncome = Number(event[item.productName][1]);
 
                 return {
                     ...item,
                     cost: Math.max(0, Number(item.cost) + costChange),
-                    fixedIncome: Math.max(0, Number(item.fixedIncome) + incomeChange)
+                    fixedIncome: Math.max(0, newIncome),
                 };
             });
             setPortfolioItems(updatedPortfolioItems);
 
-            setChangesApplied(true); // Prevent re-applying changes
+            setChangesApplied(true);
         }
     }, [isLatestEvent, changesApplied, productData, portfolioItems, eventData, eventIndex]);
 
@@ -253,11 +250,13 @@ function EconomyAfterEvent() {
         <>
             <div className="z-10 fixed top-0 py-1 text-figma-white text-xl w-full font-[Inter] bg-figma-indigo">
                 <div className="flex">
-                    <svg className="w-14 my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="15.8669" cy="15.5" r="10.5" stroke="#FFFDFD" />
-                        <path d="M13.1711 12.8945C13.1711 12.8945 13.0495 10.1379 15.952 10.1379C15.952 10.1379 18.5634 10.1379 18.5635 12.8945C18.5635 15.5788 15.8428 15.5304 15.8428 18.1294" stroke="#FFFDFD" strokeLinecap="round" />
-                        <path d="M15.9026 20.5477V20.8621" stroke="#FFFDFD" strokeLinecap="round" />
-                    </svg>
+                    <button onClick={() => setShowHelp(true)}>
+                        <svg className="w-14 my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="15.8669" cy="15.5" r="10.5" stroke="#FFFDFD" />
+                            <path d="M13.1711 12.8945C13.1711 12.8945 13.0495 10.1379 15.952 10.1379C15.952 10.1379 18.5634 10.1379 18.5635 12.8945C18.5635 15.5788 15.8428 15.5304 15.8428 18.1294" stroke="#FFFDFD" strokeLinecap="round" />
+                            <path d="M15.9026 20.5477V20.8621" stroke="#FFFDFD" strokeLinecap="round" />
+                        </svg>
+                    </button>
                     <div className="grow flex justify-center pr-4">
                         <p className="mx-4 my-auto font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
                         <h1 className="font-bold my-auto text-lg mr-2">NOVINKY</h1>
@@ -315,31 +314,31 @@ function EconomyAfterEvent() {
                 </div>
                 {displayedProductData.map(item => {
                     const costChange = (eventToShow as any)[item.productName][0];
-                    const incomeChange = (eventToShow as any)[item.productName][1];
+                    const newIncome = (eventToShow as any)[item.productName][1];
 
                     return (
                         <div
                             className={`relative z-10 mt-2 mx-3 py-2 pl-3 pr-6 flex text-figma-white text-base rounded-full font-bold 
-                            ${(((costChange > 0 && incomeChange >= 0) || (costChange >= 0 && incomeChange > 0)) && 'bg-figma-teal') ||
-                                (((costChange < 0 && incomeChange <= 0) || (costChange <= 0 && incomeChange < 0)) && 'bg-figma-berries') ||
-                                (((costChange < 0 && incomeChange > 0) || (costChange > 0 && incomeChange < 0) || (costChange == 0 && incomeChange == 0)) &&
+                            ${(((costChange > 0 && newIncome >= 0) || (costChange >= 0 && newIncome > 0)) && 'bg-figma-teal') ||
+                                (((costChange < 0 && newIncome <= 0) || (costChange <= 0 && newIncome < 0)) && 'bg-figma-berries') ||
+                                (((costChange < 0 && newIncome > 0) || (costChange > 0 && newIncome < 0) || (costChange == 0 && newIncome == 0)) &&
                                     'bg-figma-black')
                                 }`}
                             key={item.productName}
                         >
                             <div className="my-auto ml-2 mr-3">
-                                {((costChange > 0 && incomeChange >= 0) || (costChange >= 0 && incomeChange > 0)) &&
+                                {((costChange > 0 && newIncome >= 0) || (costChange >= 0 && newIncome > 0)) &&
                                     <svg width="13" height="16" viewBox="0 0 13 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M6.77746 15.18L6.77747 0.750122" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
                                         <path d="M12.0911 6.06377L6.77747 0.750122L1.46382 6.06376" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>}
-                                {((costChange < 0 && incomeChange <= 0) || (costChange <= 0 && incomeChange < 0)) &&
+                                {((costChange < 0 && newIncome <= 0) || (costChange <= 0 && newIncome < 0)) &&
                                     <svg width="13" height="17" viewBox="0 0 13 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M6.77734 1.37992L6.77734 15.8098" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
                                         <path d="M1.4637 10.4962L6.77734 15.8098L12.091 10.4962" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
                                 }
-                                {((costChange < 0 && incomeChange > 0) || (costChange > 0 && incomeChange < 0) || (costChange == 0 && incomeChange == 0))
+                                {((costChange < 0 && newIncome > 0) || (costChange > 0 && newIncome < 0) || (costChange == 0 && newIncome == 0))
                                     &&
                                     <svg width="10" height="2" viewBox="0 0 10 2" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M8.83362 1.06006L0.721069 1.06006" stroke="#FFFDFD" strokeLinecap="round" strokeLinejoin="round" />
@@ -350,7 +349,7 @@ function EconomyAfterEvent() {
                             <h3 className="my-auto flex-1 break-words font-bold text-base text-left grow">{item.productName}</h3>
                             {costChange != 0 && <h3 className="w-6 my-auto text-[10px] font-bold text-right">({costChange > 0 && '+'}{costChange})</h3>}
                             <h3 className="ml-1 min-w-6 my-auto text-lg font-bold text-right">{item.cost}</h3>
-                            {incomeChange != 0 ? <h3 className="w-6 ml-2 my-auto text-[10px] font-bold text-right">({incomeChange > 0 && '+'}{incomeChange})</h3>
+                            {newIncome != 0 ? <h3 className="w-6 ml-2 my-auto text-[10px] font-bold text-right">({newIncome > 0 && '+'}{newIncome})</h3>
                                 : <div className="w-6 ml-2"></div>
                             }
                             <h3 className="min-w-3 ml-2 my-auto text-lg font-bold text-right">{item.fixedIncome}</h3>
@@ -388,7 +387,8 @@ function Portfolio() {
         figmaColors,
         scenarios,
         setShowPortfolio,
-        setRoundStart
+        setRoundStart,
+        setShowHelp
     } = useGameLoop();
 
     const { round, setRound, gameMode } = useGame();
@@ -422,9 +422,9 @@ function Portfolio() {
         <>
             {roundEndingAlert &&
                 <div className="fixed z-0 bg-figma-black/70 h-screen w-screen backdrop-blur-sm">
-                    <img src='random-vynos.svg' alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
+                    <img src='random-vynos.svg' alt="placeholder" className="mx-auto pt-28 relative z-10"></img>
                     <p className="text-center mt-16 text-lg font-bold text-white">Ukončit Kolo ?</p>
-                    <div className="absolute flex w-full gap-8 bottom-14 justify-center text-white text-xl">
+                    <div className="absolute flex w-full gap-8 bottom-20 justify-center text-white text-xl">
                         <button className="border border-white rounded-full flex px-10 py-2" onClick={() => setRoundEndingAlert(false)}>
                             <span className="my-auto">Ne</span>
                         </button>
@@ -454,11 +454,13 @@ function Portfolio() {
             }
             <div className="z-10 fixed top-0 py-1 text-xl w-full font-[Inter] bg-figma-stone">
                 <div className="flex">
-                    <svg className="w-14 my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="15.8669" cy="15.5" r="10.5" stroke="#FFFDFD" />
-                        <path d="M13.1711 12.8945C13.1711 12.8945 13.0495 10.1379 15.952 10.1379C15.952 10.1379 18.5634 10.1379 18.5635 12.8945C18.5635 15.5788 15.8428 15.5304 15.8428 18.1294" stroke="#FFFDFD" strokeLinecap="round" />
-                        <path d="M15.9026 20.5477V20.8621" stroke="#FFFDFD" strokeLinecap="round" />
-                    </svg>
+                    <button onClick={() => setShowHelp(true)}>
+                        <svg className="w-14 my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="15.8669" cy="15.5" r="10.5" stroke="#FFFDFD" />
+                            <path d="M13.1711 12.8945C13.1711 12.8945 13.0495 10.1379 15.952 10.1379C15.952 10.1379 18.5634 10.1379 18.5635 12.8945C18.5635 15.5788 15.8428 15.5304 15.8428 18.1294" stroke="#FFFDFD" strokeLinecap="round" />
+                            <path d="M15.9026 20.5477V20.8621" stroke="#FFFDFD" strokeLinecap="round" />
+                        </svg>
+                    </button>
                     <div className="grow flex justify-center pr-4">
                         <p className="mx-5 my-auto text-white font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
                         <h1 className="text-white font-bold my-auto">OBCHOD</h1>
@@ -623,16 +625,12 @@ function Portfolio() {
 }
 
 function PortfolioTutorial() {
-    const { setPortfolioTutorial } = useGameLoop();
+    const { setPortfolioTutorial, configData } = useGameLoop();
     return (
         <>
             <div className="bg-figma-black h-screen text-white">
-                <img src='start-portfolio.svg' alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
-                <p className="text-center pt-8 lg:mt-56 text-xl lg:text-3xl font-light px-6">
-                    Na začátek jsme ti už dvě základní investice pořidili.
-                    Do startu dostaneš Spořící účet a Vzdělání.
-
-                </p>
+                <img src={configData.portfolioTutorial_IMG} alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
+                <p className="text-center pt-8 lg:mt-56 text-xl lg:text-3xl font-light px-6">{configData.portfolioTutorialText}</p>
                 <div className="absolute bottom-14 w-full">
                     <button className="mx-auto border border-white rounded-full flex pl-6 pr-10" onClick={() => {
                         setPortfolioTutorial(false);
@@ -650,7 +648,9 @@ function PortfolioTutorial() {
 }
 
 function Earnings() {
-    const { liquidity, scenarios, setShowEarnings, portfolioItems, setLiquidity, setShowSite, setNextRound, setOldPortfolioItems } = useGameLoop();
+    const { liquidity, scenarios, setShowEarnings, portfolioItems,
+        setLiquidity, setShowSite, setNextRound, setOldPortfolioItems,
+        setShowHelp } = useGameLoop();
     const { round, gameMode } = useGame();
     let incomeSum = 0;
 
@@ -678,17 +678,19 @@ function Earnings() {
         <>
             <div className="z-10 fixed top-0 py-1 text-xl w-full font-[Inter] bg-[linear-gradient(135deg,rgba(255,211,42,1)0%,rgba(255,96,48,1)25%,rgba(255,1,91,1)50%,rgba(170,75,179,1)75%,rgba(25,156,249,1)100%)]">
                 <div className="flex">
-                    <svg className="w-14 my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="15.8669" cy="15.5" r="10.5" stroke="#FFFDFD" />
-                        <path d="M13.1711 12.8945C13.1711 12.8945 13.0495 10.1379 15.952 10.1379C15.952 10.1379 18.5634 10.1379 18.5635 12.8945C18.5635 15.5788 15.8428 15.5304 15.8428 18.1294" stroke="#FFFDFD" strokeLinecap="round" />
-                        <path d="M15.9026 20.5477V20.8621" stroke="#FFFDFD" strokeLinecap="round" />
-                    </svg>
-                    <div className="grow flex justify-center pr-4">
-                        <p className="mx-5 my-auto text-white font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
-                        <h1 className="text-white font-bold my-auto">VÝNOSY</h1>
+                    <button onClick={() => setShowHelp(true)}>
+                        <svg className="w-14 my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="15.8669" cy="15.5" r="10.5" stroke="#FFFDFD" />
+                            <path d="M13.1711 12.8945C13.1711 12.8945 13.0495 10.1379 15.952 10.1379C15.952 10.1379 18.5634 10.1379 18.5635 12.8945C18.5635 15.5788 15.8428 15.5304 15.8428 18.1294" stroke="#FFFDFD" strokeLinecap="round" />
+                            <path d="M15.9026 20.5477V20.8621" stroke="#FFFDFD" strokeLinecap="round" />
+                        </svg>
+                    </button>
+                    <div className="grow flex justify-center pr-4 text-figma-white">
+                        <p className="mx-4 my-auto font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
+                        <h1 className="font-bold my-auto text-lg mr-2">VÝNOSY</h1>
                     </div>
                     <div className="bg-white rounded-md w-14 mr-6 my-1">
-                        <p className="text-center px-2 text-black font-bold text-xl">{liquidity}</p>
+                        <p className="text-center px-2 text-figma-black font-bold text-xl">{liquidity}</p>
                     </div>
                 </div>
             </div>
@@ -756,13 +758,13 @@ function Earnings() {
 
 function EarningsTutorial() {
 
-    const { setEarningsTutorial } = useGameLoop();
+    const { setEarningsTutorial, configData } = useGameLoop();
     return (
         <>
             <div className="bg-figma-black h-screen text-white">
-                <img src='random-vynos.svg' alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
+                <img src={configData.earningsTutorial_IMG} alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
                 <p className="text-center pt-8 lg:mt-56 text-xl lg:text-3xl font-light px-6">
-                    Výnosy některých investic nejsou stejné, v každém kole jsou ovlivěny nahodilými událostmi.
+                    {configData.earningsTutorialText}
                     <br></br><br></br>
                     Pojďme se podívat kolik investice vynesly.
                 </p>
@@ -784,11 +786,7 @@ function NewRound() {
     const { scenarios, setRoundStart, setShowEarnings } = useGameLoop();
     return (
         <div className="bg-[linear-gradient(135deg,rgba(255,211,42,1)0%,rgba(255,96,48,1)25%,rgba(255,1,91,1)50%,rgba(170,75,179,1)75%,rgba(25,156,249,1)100%)]
-                    h-screen flex flex-col items-center justify-center relative"
-            onClick={() => {
-                setRoundStart(false);
-                setShowEarnings(true);
-            }}>
+                    h-screen flex flex-col items-center justify-center relative" >
 
             <svg className="h-full w-full absolute px-8 py-6 z-0" width="331" height="614" viewBox="0 0 331 614" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M1 0.808472V612.894" stroke="#9FD7FF" strokeLinecap="round" strokeLinejoin="round" />
@@ -833,6 +831,79 @@ function NewRound() {
                 <path d="M261.631 144.528C261.631 144.528 262.05 146.625 263.51 146.625C264.97 146.625 265.407 144.528 265.407 144.528" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M275.092 144.528C275.092 144.528 275.511 146.625 276.971 146.625C278.431 146.625 278.868 144.528 278.868 144.528" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
+
+            <div className="absolute z-10 bottom-20 md:bottom-20 w-full">
+                <button className="block mx-auto rounded-lg hover:scale-110 duration-200" onClick={() => {
+                    setRoundStart(false);
+                    setShowEarnings(true);
+                }}>
+                    <svg width="51" height="51" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0.875488" y="0.952637" width="39" height="39" rx="19.5" />
+                        <rect x="0.875488" y="0.952637" width="39" height="39" rx="19.5" stroke="white" />
+                        <path d="M12.3755 20.4526H28.3755M28.3755 20.4526L22.3755 14.4526M28.3755 20.4526L22.3755 26.4526" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    );
+}
+
+function ShowHelp() {
+    const { gameMode } = useGame();
+    const { portfolioItems, figmaColors, scenarios, setShowHelp, configData, productData } = useGameLoop();
+
+    return (
+        <div>
+            <div className="z-10 fixed top-0 py-1 text-figma-black text-xl w-full font-[Inter] bg-figma-stone-40">
+                <div className="flex">
+                    <button onClick={() => setShowHelp(false)}>
+                        <svg className="w-14 my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="15.8669" cy="15.5" r="10.5" stroke="#0B1F42" />
+                            <path d="M13.1711 12.8945C13.1711 12.8945 13.0495 10.1379 15.952 10.1379C15.952 10.1379 18.5634 10.1379 18.5635 12.8945C18.5635 15.5788 15.8428 15.5304 15.8428 18.1294" stroke="#0B1F42" strokeLinecap="round" />
+                            <path d="M15.9026 20.5477V20.8621" stroke="#0B1F42" strokeLinecap="round" />
+                        </svg>
+                    </button>
+                    <div className="grow flex items-center justify-center pr-4">
+                        <h1 className="font-bold text-lg mr-2 mt-0.5">NÁPOVĚDA</h1>
+                    </div>
+                    <div className="mr-6 my-1 flex items-center">
+                        <button onClick={() => setShowHelp(false)}>
+                            <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3.86035 4.05005L19.2772 19.4669" stroke="#0B1F42" strokeWidth="2" strokeLinecap="round" />
+                                <path d="M3.86035 19.4673L19.2772 4.0504" stroke="#0B1F42" strokeWidth="2" strokeLinecap="round" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div className="mt-16">
+                {productData.map((item) => {
+                    return (
+                        <div className="relative z-0 mt-1 mx-3 pl-3 pr-6 text-figma-black" key={item.productName}>
+                            <h3 className={`text-lg rounded-lg font-bold pl-4 py-1 bg-${figmaColors[item.color]}`}>{item.productName}</h3>
+                            <p className="mt-4 text-base font-medium min-h-16 mb-10">{item.productDescription}</p>
+                        </div>
+                    );
+                })}
+            </div>
+            <h2 className="text-lg mb-1 text-figma-black font-bold text-center">Jak hrát investice?</h2>
+
+            <div className="relative z-0 mx-5 text-figma-black">
+                <img className="h-36 mx-auto" src={scenarios[gameMode].IMG}></img>
+                <p className="mt-4 text-center text-lg font-medium min-h-16 mb-8">{scenarios[gameMode].howToPlay}</p>
+
+                <img className="h-36 mx-auto" src={scenarios[gameMode].IMG2}></img>
+                <p className="mt-4 text-center text-lg font-medium min-h-16 mb-8">{scenarios[gameMode].howToPlay2}</p>
+
+                <img className="h-36 mx-auto" src={configData.portfolioTutorial_IMG}></img>
+                <p className="mt-4 text-center text-lg font-medium min-h-16 mb-8" >{configData.portfolioTutorialText}</p>
+
+                <img className="h-36 mx-auto" src={configData.earningsTutorial_IMG}></img>
+                <p className="mt-4 text-center text-lg font-medium min-h-16 mb-8" >{configData.earningsTutorialText}</p>
+
+                <img className="h-36 mx-auto" src={configData.newsTutorial_IMG}></img>
+                <p className="mt-4 text-center text-lg font-medium min-h-16 mb-8" >{configData.newsTutorialText}</p>
+            </div>
         </div>
     );
 }
@@ -842,7 +913,8 @@ function GameLoop() {
     const { round, setEndGame, setTotalScore, gameMode } = useGame();
     const { portfolioItems, configData, setLiquidity, setPortfolioItems, setNewPortfolioItems,
         setOldPortfolioItems, liquidity, productData, nextRound, economySummary, scenarios, roundStart,
-        earningsTutorial, portfolioTutorial, newsTutorial, showPortfolio, showEarnings } = useGameLoop();
+        earningsTutorial, portfolioTutorial, newsTutorial, showPortfolio, showEarnings, showHelp,
+    } = useGameLoop();
 
     useEffect(() => {
         if (configData) {
@@ -880,6 +952,7 @@ function GameLoop() {
 
     let content = null;
     if (roundStart) content = <NewRound />;
+    else if (showHelp) content = <ShowHelp />;
     else if (showEarnings && earningsTutorial) content = <EarningsTutorial />;
     else if (showEarnings) content = <Earnings />;
     else if (nextRound && !economySummary && newsTutorial) content = <NewsTutorial />;
