@@ -72,18 +72,18 @@ function NewEvent() {
                 </>
                 :
                 <div className="h-screen bg-figma-white text-figma-black font-medium font-[Inter]">
-                    <img src="stop.svg" alt="placeholder" className="mx-auto pt-12 relative z-10"></img>
-                    <p className="text-center pt-12 text-lg px-7">
-                        Další instrukce pro hru nalezneš na projekci.
-                        <br></br><br></br>
-                        Na pokyn učitele pokračuj dál
-                    </p>
-                    <div className="z-10 w-full flex justify-center fixed bottom-12 font-[Inter] font-bold ">
+                    <div className="md:w-[50rem] xl:w-[74rem] mx-auto md:flex md:items-center md:justify-center md:pt-36">
+                        <img src="stop.svg" alt="placeholder" className="mx-auto pt-12 relative z-10 md:w-72 md:pt-0 md:mx-0"></img>
+                        <p className="text-center pt-12 text-lg px-7 md:pt-0">
+                            Další instrukce pro hru nalezneš na projekci.
+                            <br></br><br></br>
+                            Na pokyn učitele pokračuj dál
+                        </p>
                     </div>
                 </div>
             }
 
-            <div className={`z-10 w-full flex justify-center fixed font-[Inter] font-medium ${soloGame ? 'bg-' + figmaColors[eventData[eventIndex].color] + ' bottom-0' : 'bottom-12'}`}>
+            <div className={`z-10 w-full flex justify-center fixed font-[Inter] font-medium ${soloGame ? 'bg-' + figmaColors[eventData[eventIndex].color] + ' bottom-0' : 'bottom-12 md:bottom-20'}`}>
                 <button className='flex rounded-full hover:scale-110 duration-200 text-figma-black border-figma-black border py-2 px-6 m-3'
                     onClick={() => { setEconomySummary(true); }}>
 
@@ -103,8 +103,9 @@ function NewsTutorial() {
     return (
         <div className="bg-figma-black h-screen text-white font-medium font-[Inter]">
             <img src={configData.newsTutorial_IMG} alt="placeholder" className="mx-auto pt-12 relative z-10"></img>
-            <p className="text-center pt-8 text-lg px-7">{configData.newsTutorialText}</p>
-            <div className="z-10 w-full flex justify-center fixed bottom-12 font-[Inter] font-bold ">
+            <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{configData.newsTutorialText}</p>
+
+            <div className="z-10 w-full flex justify-center fixed bottom-14 md:bottom-20 font-[Inter] font-bold ">
                 <button className='flex rounded-full hover:scale-110 duration-200 text-white border-white border-2 py-2 px-4 m-2'
                     onClick={() => { setNewsTutorial(false) }}>
 
@@ -268,94 +269,96 @@ function EconomyAfterEvent() {
             </div>
 
             <div className="pt-12 pb-28 bg-figma-white h-full">
-                <h1 className="font-bold text-lg text-center text-figma-black mx-auto min-h-20 max-w-80 pt-4 pb-1">
-                    {eventToShow.eventName}
-                </h1>
-                <div className="justify-center flex gap-4 mb-2">
-                    <button onClick={() => setEconomyOfRound(economyOfRound - 1)} disabled={economyOfRound <= 1}>
-                        <svg className="my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g opacity={economyOfRound > 1 ? '1' : '0.2'}>
-                                <circle cx="15.2888" cy="15.2925" r="14.5" fill="#EEF1F4" stroke="#0B1F42" />
-                                <g clipPath="url(#clip0_5954_123572)">
-                                    <path d="M22.3154 15.064L7.8855 15.064" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M13.1991 9.75032L7.8855 15.064L13.1991 20.3776" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
+                <div className="max-w-[40rem] mx-auto">
+                    <h1 className="font-bold text-lg text-center text-figma-black mx-auto min-h-20 max-w-80 pt-4 pb-1">
+                        {eventToShow.eventName}
+                    </h1>
+                    <div className="justify-center flex gap-4 mb-2">
+                        <button onClick={() => setEconomyOfRound(economyOfRound - 1)} disabled={economyOfRound <= 1}>
+                            <svg className="my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g opacity={economyOfRound > 1 ? '1' : '0.2'}>
+                                    <circle cx="15.2888" cy="15.2925" r="14.5" fill="#EEF1F4" stroke="#0B1F42" />
+                                    <g clipPath="url(#clip0_5954_123572)">
+                                        <path d="M22.3154 15.064L7.8855 15.064" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
+                                        <path d="M13.1991 9.75032L7.8855 15.064L13.1991 20.3776" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
+                                    </g>
                                 </g>
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_5954_123572">
-                                    <rect width="12" height="16" fill="white" transform="translate(23.0603 9.06396) rotate(90)" />
-                                </clipPath>
-                            </defs>
-                        </svg>
-                    </button>
+                                <defs>
+                                    <clipPath id="clip0_5954_123572">
+                                        <rect width="12" height="16" fill="white" transform="translate(23.0603 9.06396) rotate(90)" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                        </button>
 
-                    <span className="text-figma-black text-center font-bold text-6xl min-w-16">{economyOfRound}</span>
+                        <span className="text-figma-black text-center font-bold text-6xl min-w-16">{economyOfRound}</span>
 
-                    <button onClick={() => setEconomyOfRound(economyOfRound + 1)} disabled={economyOfRound >= round}>
-                        <svg className="my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g opacity={isLatestEvent ? '0.2' : '1'}>
-                                <circle cx="15" cy="15" r="14.5" transform="matrix(-1 0 0 1 30.2888 0.29248)" fill="#EEF1F4" stroke="#0B1F42" />
-                                <g clipPath="url(#clip0_5954_123573)">
-                                    <path d="M8.26225 15.064L22.6921 15.064" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M17.3785 9.75032L22.6921 15.064L17.3785 20.3776" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
+                        <button onClick={() => setEconomyOfRound(economyOfRound + 1)} disabled={economyOfRound >= round}>
+                            <svg className="my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g opacity={isLatestEvent ? '0.2' : '1'}>
+                                    <circle cx="15" cy="15" r="14.5" transform="matrix(-1 0 0 1 30.2888 0.29248)" fill="#EEF1F4" stroke="#0B1F42" />
+                                    <g clipPath="url(#clip0_5954_123573)">
+                                        <path d="M8.26225 15.064L22.6921 15.064" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
+                                        <path d="M17.3785 9.75032L22.6921 15.064L17.3785 20.3776" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
+                                    </g>
                                 </g>
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_5954_123573">
-                                    <rect width="12" height="16" fill="white" transform="matrix(4.37114e-08 1 1 -4.37114e-08 7.51733 9.06396)" />
-                                </clipPath>
-                            </defs>
-                        </svg>
-                    </button>
-                </div>
-                <div className="flex justify-end w-full text-[10px] font-bold text-figma-black px-6">
-                    <span className="mr-5 text-center">NÁKUP<br />PRODEJ</span>
-                    <span className="my-auto">VÝNOS</span>
-                </div>
-                {displayedProductData.map(item => {
-                    const costChange = (eventToShow as any)[item.productName][0];
-                    const newIncome = (eventToShow as any)[item.productName][1];
+                                <defs>
+                                    <clipPath id="clip0_5954_123573">
+                                        <rect width="12" height="16" fill="white" transform="matrix(4.37114e-08 1 1 -4.37114e-08 7.51733 9.06396)" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                        </button>
+                    </div>
+                    <div className="flex justify-end w-full text-[10px] font-bold text-figma-black px-6">
+                        <span className="mr-5 text-center">NÁKUP<br />PRODEJ</span>
+                        <span className="my-auto">VÝNOS</span>
+                    </div>
+                    {displayedProductData.map(item => {
+                        const costChange = (eventToShow as any)[item.productName][0];
+                        const newIncome = (eventToShow as any)[item.productName][1];
 
-                    return (
-                        <div
-                            className={`relative z-10 mt-2 mx-3 py-2 pl-3 pr-6 flex text-figma-white text-base rounded-full font-bold 
+                        return (
+                            <div
+                                className={`relative z-10 mt-2 mx-3 py-2 pl-3 pr-6 flex text-figma-white text-base rounded-full font-bold 
                             ${(((costChange > 0 && newIncome >= 0) || (costChange >= 0 && newIncome > 0)) && 'bg-figma-teal') ||
-                                (((costChange < 0 && newIncome <= 0) || (costChange <= 0 && newIncome < 0)) && 'bg-figma-berries') ||
-                                (((costChange < 0 && newIncome > 0) || (costChange > 0 && newIncome < 0) || (costChange == 0 && newIncome == 0)) &&
-                                    'bg-figma-black')
-                                }`}
-                            key={item.productName}
-                        >
-                            <div className="my-auto ml-2 mr-3">
-                                {((costChange > 0 && newIncome >= 0) || (costChange >= 0 && newIncome > 0)) &&
-                                    <svg width="13" height="16" viewBox="0 0 13 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M6.77746 15.18L6.77747 0.750122" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
-                                        <path d="M12.0911 6.06377L6.77747 0.750122L1.46382 6.06376" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>}
-                                {((costChange < 0 && newIncome <= 0) || (costChange <= 0 && newIncome < 0)) &&
-                                    <svg width="13" height="17" viewBox="0 0 13 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M6.77734 1.37992L6.77734 15.8098" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
-                                        <path d="M1.4637 10.4962L6.77734 15.8098L12.091 10.4962" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                }
-                                {((costChange < 0 && newIncome > 0) || (costChange > 0 && newIncome < 0) || (costChange == 0 && newIncome == 0))
-                                    &&
-                                    <svg width="10" height="2" viewBox="0 0 10 2" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M8.83362 1.06006L0.721069 1.06006" stroke="#FFFDFD" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                }
-                            </div>
+                                    (((costChange < 0 && newIncome <= 0) || (costChange <= 0 && newIncome < 0)) && 'bg-figma-berries') ||
+                                    (((costChange < 0 && newIncome > 0) || (costChange > 0 && newIncome < 0) || (costChange == 0 && newIncome == 0)) &&
+                                        'bg-figma-black')
+                                    }`}
+                                key={item.productName}
+                            >
+                                <div className="my-auto ml-2 mr-3">
+                                    {((costChange > 0 && newIncome >= 0) || (costChange >= 0 && newIncome > 0)) &&
+                                        <svg width="13" height="16" viewBox="0 0 13 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M6.77746 15.18L6.77747 0.750122" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                                            <path d="M12.0911 6.06377L6.77747 0.750122L1.46382 6.06376" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>}
+                                    {((costChange < 0 && newIncome <= 0) || (costChange <= 0 && newIncome < 0)) &&
+                                        <svg width="13" height="17" viewBox="0 0 13 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M6.77734 1.37992L6.77734 15.8098" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                                            <path d="M1.4637 10.4962L6.77734 15.8098L12.091 10.4962" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    }
+                                    {((costChange < 0 && newIncome > 0) || (costChange > 0 && newIncome < 0) || (costChange == 0 && newIncome == 0))
+                                        &&
+                                        <svg width="10" height="2" viewBox="0 0 10 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M8.83362 1.06006L0.721069 1.06006" stroke="#FFFDFD" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    }
+                                </div>
 
-                            <h3 className="my-auto flex-1 break-words font-bold text-base text-left grow">{item.productName}</h3>
-                            {costChange != 0 && <h3 className="w-6 my-auto text-[10px] font-bold text-right">({costChange > 0 && '+'}{costChange})</h3>}
-                            <h3 className="ml-1 min-w-6 my-auto text-lg font-bold text-right">{item.cost}</h3>
-                            {newIncome != 0 ? <h3 className="w-6 ml-2 my-auto text-[10px] font-bold text-right">({newIncome > 0 && '+'}{newIncome})</h3>
-                                : <div className="w-6 ml-2"></div>
-                            }
-                            <h3 className="min-w-3 ml-2 my-auto text-lg font-bold text-right">{item.fixedIncome}</h3>
-                        </div>
-                    );
-                })}
+                                <h3 className="my-auto flex-1 break-words font-bold text-base text-left grow">{item.productName}</h3>
+                                {costChange != 0 && <h3 className="w-6 my-auto text-[10px] font-bold text-right">({costChange > 0 && '+'}{costChange})</h3>}
+                                <h3 className="ml-1 min-w-6 my-auto text-lg font-bold text-right">{item.cost}</h3>
+                                {newIncome != 0 ? <h3 className="w-6 ml-2 my-auto text-[10px] font-bold text-right">({newIncome > 0 && '+'}{newIncome})</h3>
+                                    : <div className="w-6 ml-2"></div>
+                                }
+                                <h3 className="min-w-3 ml-2 my-auto text-lg font-bold text-right">{item.fixedIncome}</h3>
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
 
             <div className="z-10 w-full flex justify-center fixed font-[Inter] font-medium bottom-0 bg-figma-indigo">
@@ -471,141 +474,145 @@ function Portfolio() {
                 </div>
             </div>
 
-            <div className="font-[Inter] bg-figma-black pb-20">
-                <h1 className="mx-5 pt-20 text-lg font-medium text-white">Moje Portfolio</h1>
-                {/* Map over productData with products in portfolio first */}
-                {[...uniquePortfolioItems, ...productData.filter(product => !portfolioItems.some(item => item.productName === product.productName))].map((product, index) => {
-                    const itemsInPortfolio = portfolioItems.filter(
-                        (item) => item.productName === product.productName
-                    );
+            <div className="font-[Inter] bg-figma-black pb-20 h-full">
+                <div className="md:mx-5">
+                    <h1 className="mx-auto w-96 lg:w-fit pt-20 md:pb-2 text-lg font-medium text-white">Moje Portfolio</h1>
+                    {/* Map over productData with products in portfolio first */}
+                    <div className="grid lg:grid-cols-2 xl:grid-cols-3 flex-col justify-center pb-24">
+                        {[...uniquePortfolioItems, ...productData.filter(product => !portfolioItems.some(item => item.productName === product.productName))].map((product, index) => {
+                            const itemsInPortfolio = portfolioItems.filter(
+                                (item) => item.productName === product.productName
+                            );
 
-                    const count = itemsInPortfolio.length;
-                    const oldCount = oldPortfolioItems.filter(
-                        (item) => item.productName === product.productName
-                    ).length;
+                            const count = itemsInPortfolio.length;
+                            const oldCount = oldPortfolioItems.filter(
+                                (item) => item.productName === product.productName
+                            ).length;
 
-                    // Ensure cost and fixedIncome are valid
-                    const adjustedCost = Math.max(product.cost, 1);
-                    const isTimeToSellValid = product.timeToSell > -1;
+                            // Ensure cost and fixedIncome are valid
+                            const adjustedCost = Math.max(product.cost, 1);
+                            const isTimeToSellValid = product.timeToSell > -1;
 
-                    return (
-                        <div className={`${count <= 0 && 'flex'} mt-4 mx-6`}>
-                            <div className={`${count > 0 ? 'max-w-96' : 'w-72'}`} key={`${product.productName}-${index}`}>
-                                <div className={`rounded-t-xl ${count > 0 ? `bg-${figmaColors[product.color]}` : 'bg-figma-light-gray'} pt-2 pb-1 flex`}>
-                                    <h2 className="text-xl font-bold mx-3 text-figma-black grow"> {product.productName} </h2>
-                                    <h2 className={`text-2xl font-bold ${count > 0 ? 'mr-6' : 'mr-0'} text-figma-black`}>{adjustedCost}</h2>
-                                    {/* Buy Button */}
-                                    <button className="mx-3"
-                                        onClick={() => {
-                                            if ((liquidity ?? 0) >= adjustedCost) {
-                                                const newItem = { ...product, autoSellIn: -1 };
-                                                setPortfolioItems([...portfolioItems, newItem]);
-                                                setLiquidity((liquidity ?? 0) - adjustedCost);
-                                            } else {
-                                                setInsufficientLiquidity(true);
-                                                setRoundEndingAlert(false);
-                                            }
-                                        }}>
-                                        <svg
-                                            className={`${(liquidity ?? 0) < adjustedCost && 'cursor-not-allowed'}
+                            return (
+                                <div className={`${count <= 0 && 'flex'} mt-4 min-w-96 mx-auto h-fit`}>
+                                    <div className={`${count > 0 ? 'max-w-96' : 'w-72'}`} key={`${product.productName}-${index}`}>
+                                        <div className={`rounded-t-xl ${count > 0 ? `bg-${figmaColors[product.color]}` : 'bg-figma-light-gray'} pt-2 pb-1 flex`}>
+                                            <h2 className="text-xl font-bold mx-3 text-figma-black grow"> {product.productName} </h2>
+                                            <h2 className={`text-2xl font-bold ${count > 0 ? 'mr-6' : 'mr-0'} text-figma-black`}>{adjustedCost}</h2>
+                                            {/* Buy Button */}
+                                            <button className="mx-3"
+                                                onClick={() => {
+                                                    if ((liquidity ?? 0) >= adjustedCost) {
+                                                        const newItem = { ...product, autoSellIn: -1 };
+                                                        setPortfolioItems([...portfolioItems, newItem]);
+                                                        setLiquidity((liquidity ?? 0) - adjustedCost);
+                                                    } else {
+                                                        setInsufficientLiquidity(true);
+                                                        setRoundEndingAlert(false);
+                                                    }
+                                                }}>
+                                                <svg
+                                                    className={`${(liquidity ?? 0) < adjustedCost && 'cursor-not-allowed'}
                                     ${count <= 0 && 'hidden'}`}
-                                            width="31" height="30" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <circle cx="15.572" cy="15" r="12.5" fill="#0B1F42" stroke="#0B1F42" />
-                                            <path d="M15.572 8.06665V21.9333" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                                            <path d="M8.63852 15L22.5052 15" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div className="rounded-b-xl bg-[#FFFDFD]">
-                                    {itemsInPortfolio.map((item, itemIndex) => {
-                                        return (
-                                            <div key={`${product.productName}-${index}-${itemIndex}`} className="flex items-center space-x-2 mx-3 py-2 ">
-                                                <div className="flex grow border-figma-stone/40 border rounded-lg mr-2 p-2 font-bold">
+                                                    width="31" height="30" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <circle cx="15.572" cy="15" r="12.5" fill="#0B1F42" stroke="#0B1F42" />
+                                                    <path d="M15.572 8.06665V21.9333" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                                                    <path d="M8.63852 15L22.5052 15" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div className="rounded-b-xl bg-[#FFFDFD]">
+                                            {itemsInPortfolio.map((item, itemIndex) => {
+                                                return (
+                                                    <div key={`${product.productName}-${index}-${itemIndex}`} className="flex items-center space-x-2 mx-3 py-2 ">
+                                                        <div className="flex grow border-figma-stone/40 border rounded-lg mr-2 p-2 font-bold">
+                                                            <h2 className="text-[12px] my-auto text-figma-stone">VÝNOS:</h2>
+                                                            <h2 className="text-xl my-auto grow flex"><span className="mx-3">+</span>{item.fixedIncome > 0 && item.fixedIncome}{item.diceValues[5] > 0 &&
+                                                                <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <rect x="5.82291" y="5.36719" width="19.2341" height="19.2341" rx="2" stroke="#0B1F42" strokeLinejoin="round" />
+                                                                    <circle cx="10.8362" cy="10.5508" r="2" transform="rotate(-45 10.8362 10.5508)" fill="#0B1F42" />
+                                                                    <circle cx="15.5904" cy="15.3047" r="2" transform="rotate(-45 15.5904 15.3047)" fill="#0B1F42" />
+                                                                    <circle cx="20.0437" cy="19.7578" r="2" transform="rotate(-45 20.0437 19.7578)" fill="#0B1F42" />
+                                                                </svg>}
+                                                                {item.fixedIncome <= 0 && item.diceValues[5] <= 0 && 0}
+                                                            </h2>
+                                                            <h2 className="my-auto text-[11px] text-figma-stone">PRODEJ</h2>
+                                                            <h2 className="my-auto text-xl ml-6 mr-[14px] text-center">{item.cost}</h2>
+                                                        </div>
+                                                        {/* Sell Button */}
+                                                        <button
+                                                            className={`${(isTimeToSellValid || count > oldCount) && count > 0
+                                                                ? 'border-black text-black'
+                                                                : 'border-black/30 text-black/30 cursor-not-allowed'
+                                                                }`}
+                                                            onClick={() => {
+                                                                if ((isTimeToSellValid || count > oldCount) && count > 0) {
+                                                                    const indexToSell = portfolioItems.findIndex(
+                                                                        (item) => item.productName === product.productName
+                                                                    );
+
+                                                                    if (indexToSell !== -1) {
+                                                                        const updatedPortfolioItems = [...portfolioItems];
+                                                                        updatedPortfolioItems.splice(indexToSell, 1);
+                                                                        setPortfolioItems(updatedPortfolioItems);
+                                                                        setLiquidity((liquidity ?? 0) + adjustedCost);
+                                                                    }
+                                                                }
+                                                            }}
+                                                            disabled={!((isTimeToSellValid || count > oldCount) && count > 0)}
+                                                        >
+                                                            <svg width="31" height="30" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <circle cx="15.572" cy="15" r="12.5" fill="#FFFDFD" stroke="#0B1F42" />
+                                                                <path d="M11.572 15L19.572 15" stroke="#0B1F42" strokeWidth="2" strokeLinecap="round" />
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                );
+                                            })}
+                                            {count <= 0 &&
+                                                <div className="flex justify-center rounded-lg mr-2 py-5 font-bold">
                                                     <h2 className="text-[12px] my-auto text-figma-stone">VÝNOS:</h2>
-                                                    <h2 className="text-xl my-auto grow flex"><span className="mx-3">+</span>{item.fixedIncome > 0 && item.fixedIncome}{item.diceValues[5] > 0 &&
+                                                    <h2 className="text-xl my-auto flex"><span className="mx-3">+</span>{product.fixedIncome > 0 && product.fixedIncome}{product.diceValues[5] > 0 &&
                                                         <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                             <rect x="5.82291" y="5.36719" width="19.2341" height="19.2341" rx="2" stroke="#0B1F42" strokeLinejoin="round" />
                                                             <circle cx="10.8362" cy="10.5508" r="2" transform="rotate(-45 10.8362 10.5508)" fill="#0B1F42" />
                                                             <circle cx="15.5904" cy="15.3047" r="2" transform="rotate(-45 15.5904 15.3047)" fill="#0B1F42" />
                                                             <circle cx="20.0437" cy="19.7578" r="2" transform="rotate(-45 20.0437 19.7578)" fill="#0B1F42" />
                                                         </svg>}
-                                                        {item.fixedIncome <= 0 && item.diceValues[5] <= 0 && 0}
+                                                        {product.fixedIncome <= 0 && product.diceValues[5] <= 0 && 0}
                                                     </h2>
-                                                    <h2 className="my-auto text-[11px] text-figma-stone">PRODEJ</h2>
-                                                    <h2 className="my-auto text-xl ml-6 mr-[14px] text-center">{item.cost}</h2>
                                                 </div>
-                                                {/* Sell Button */}
-                                                <button
-                                                    className={`${(isTimeToSellValid || count > oldCount) && count > 0
-                                                        ? 'border-black text-black'
-                                                        : 'border-black/30 text-black/30 cursor-not-allowed'
-                                                        }`}
-                                                    onClick={() => {
-                                                        if ((isTimeToSellValid || count > oldCount) && count > 0) {
-                                                            const indexToSell = portfolioItems.findIndex(
-                                                                (item) => item.productName === product.productName
-                                                            );
-
-                                                            if (indexToSell !== -1) {
-                                                                const updatedPortfolioItems = [...portfolioItems];
-                                                                updatedPortfolioItems.splice(indexToSell, 1);
-                                                                setPortfolioItems(updatedPortfolioItems);
-                                                                setLiquidity((liquidity ?? 0) + adjustedCost);
-                                                            }
-                                                        }
-                                                    }}
-                                                    disabled={!((isTimeToSellValid || count > oldCount) && count > 0)}
-                                                >
-                                                    <svg width="31" height="30" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <circle cx="15.572" cy="15" r="12.5" fill="#FFFDFD" stroke="#0B1F42" />
-                                                        <path d="M11.572 15L19.572 15" stroke="#0B1F42" strokeWidth="2" strokeLinecap="round" />
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        );
-                                    })}
-                                    {count <= 0 &&
-                                        <div className="flex justify-center rounded-lg mr-2 py-5 font-bold">
-                                            <h2 className="text-[12px] my-auto text-figma-stone">VÝNOS:</h2>
-                                            <h2 className="text-xl my-auto flex"><span className="mx-3">+</span>{product.fixedIncome > 0 && product.fixedIncome}{product.diceValues[5] > 0 &&
-                                                <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <rect x="5.82291" y="5.36719" width="19.2341" height="19.2341" rx="2" stroke="#0B1F42" strokeLinejoin="round" />
-                                                    <circle cx="10.8362" cy="10.5508" r="2" transform="rotate(-45 10.8362 10.5508)" fill="#0B1F42" />
-                                                    <circle cx="15.5904" cy="15.3047" r="2" transform="rotate(-45 15.5904 15.3047)" fill="#0B1F42" />
-                                                    <circle cx="20.0437" cy="19.7578" r="2" transform="rotate(-45 20.0437 19.7578)" fill="#0B1F42" />
-                                                </svg>}
-                                                {product.fixedIncome <= 0 && product.diceValues[5] <= 0 && 0}
-                                            </h2>
+                                            }
                                         </div>
-                                    }
-                                </div>
-                            </div>
-                            {/* Buy Button */}
-                            {count <= 0 &&
-                                <button className="my-auto mx-auto pr-[2px]"
-                                    onClick={() => {
-                                        if ((liquidity ?? 0) >= adjustedCost) {
-                                            const newItem = { ...product, autoSellIn: -1 };
-                                            setPortfolioItems([...portfolioItems, newItem]);
-                                            setLiquidity((liquidity ?? 0) - adjustedCost);
-                                        } else {
-                                            setInsufficientLiquidity(true);
-                                            setRoundEndingAlert(false);
-                                        }
+                                    </div>
+                                    {/* Buy Button */}
+                                    {count <= 0 &&
+                                        <button className="my-auto mx-auto pr-[2px]"
+                                            onClick={() => {
+                                                if ((liquidity ?? 0) >= adjustedCost) {
+                                                    const newItem = { ...product, autoSellIn: -1 };
+                                                    setPortfolioItems([...portfolioItems, newItem]);
+                                                    setLiquidity((liquidity ?? 0) - adjustedCost);
+                                                } else {
+                                                    setInsufficientLiquidity(true);
+                                                    setRoundEndingAlert(false);
+                                                }
 
-                                    }}>
-                                    <svg className={`${(liquidity ?? 0) < adjustedCost && 'cursor-not-allowed'}`}
-                                        width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <circle cx="15.705" cy="15.1543" r="12.5" fill="#245375" stroke="#245375" />
-                                        <path d="M15.705 8.22119V22.0879" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                                        <path d="M8.77158 15.1543L22.6382 15.1543" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                                    </svg>
-                                </button>}
-                        </div>
-                    );
-                })}
+                                            }}>
+                                            <svg className={`${(liquidity ?? 0) < adjustedCost && 'cursor-not-allowed'}`}
+                                                width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <circle cx="15.705" cy="15.1543" r="12.5" fill="#245375" stroke="#245375" />
+                                                <path d="M15.705 8.22119V22.0879" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                                                <path d="M8.77158 15.1543L22.6382 15.1543" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                                            </svg>
+                                        </button>}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
             </div>
-            {!roundEndingAlert && <div className="z-10 w-full flex justify-center fixed bottom-0 font-[Inter] font-bold bg-figma-stone">
+            {!roundEndingAlert && <div className="z-10 w-full flex justify-center fixed bottom-0 font-[Inter] font-bold bg-figma-stone md:pb-4">
                 <div className="flex items-center justify-end">
                     <button className='flex rounded-full hover:scale-110 duration-200 text-white border-white border-2 py-2 px-4 m-2'
                         onClick={() => {
@@ -616,7 +623,7 @@ function Portfolio() {
                         <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M1.86694 7.5H17.8669M17.8669 7.5L11.8669 1.5M17.8669 7.5L11.8669 13.5" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
-                        <span className="mx-3 text-lg">Ukončit kolo</span>
+                        <span className="mx-3 text-lgm">Ukončit kolo</span>
                     </button>
                 </div>
             </div>}
@@ -630,8 +637,8 @@ function PortfolioTutorial() {
         <>
             <div className="bg-figma-black h-screen text-white">
                 <img src={configData.portfolioTutorial_IMG} alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
-                <p className="text-center pt-8 lg:mt-56 text-xl lg:text-3xl font-light px-6">{configData.portfolioTutorialText}</p>
-                <div className="absolute bottom-14 w-full">
+                <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{configData.portfolioTutorialText}</p>
+                <div className="absolute bottom-14 md:bottom-20 w-full">
                     <button className="mx-auto border border-white rounded-full flex pl-6 pr-10" onClick={() => {
                         setPortfolioTutorial(false);
                         localStorage.setItem("tutorial", "false");
@@ -697,45 +704,53 @@ function Earnings() {
 
             <div className="relative z-0 h-screen flex flex-col justify-center custom-radial-gradient">
                 <h1 className="mb-6 text-xl text-white text-center -mt-10">Tvoje výnosy za {round}. kolo</h1>
-                <div className="border border-white rounded-t-xl mx-8 bg-figma-black pb-6 pt-1">
+                <div className="flex justify-center">
+                    <div className="w-full max-w-[609px] min-w-80">
+                        <div className="border border-white rounded-t-xl mx-8 bg-figma-black pb-6 pt-1">
+                            {Object.entries(groupedItems).map(([productName, items], index) => {
+                                const count = items.length;
+                                const fixedIncome = Number(items[0].fixedIncome);
+                                const randomDice = Math.floor(Math.random() * 6); // 0-5
+                                const totalIncome = count * (fixedIncome + items[0].diceValues[randomDice]);
+                                incomeSum += totalIncome;
+                                ++sumDelay;
 
-                    {Object.entries(groupedItems).map(([productName, items], index) => {
-                        const count = items.length;
-                        const fixedIncome = Number(items[0].fixedIncome);
-                        const randomDice = Math.floor(Math.random() * 6); // 0-5
-                        const totalIncome = count * (fixedIncome + items[0].diceValues[randomDice]);
-                        incomeSum += totalIncome;
-                        ++sumDelay;
-
-                        return (
-                            <div className="mt-2 mx-4 flex justify-between text-white text-base font-medium" key={productName}>
-
-                                <h3 className="my-auto flex-1 break-words text-lg grow">{productName}</h3>
-                                {items[0].diceValues[5] > 0 &&
-                                    <div className="size-10">
-                                        <RiveDice diceValue={randomDice + 1} diceColor={items[0].color} throwDelayIndex={index} />
-                                    </div>}
-                                <h3 className="text-center w-12 my-auto text-lg font-bold pop-in"
-                                    style={{ animationDelay: `${(index + 1) * popInDelay}s` }}>
-                                    +{count * (fixedIncome + Number(items[0].diceValues[randomDice]))}
-                                </h3>
+                                return (
+                                    <div className="mt-2 mx-4 flex justify-between text-white text-base font-medium" key={productName}>
+                                        <h3 className="my-auto flex-1 break-words text-lg grow">{productName}</h3>
+                                        {items[0].diceValues[5] > 0 && (
+                                            <div className="size-10">
+                                                <RiveDice diceValue={randomDice + 1} diceColor={items[0].color} throwDelayIndex={index} />
+                                            </div>
+                                        )}
+                                        <h3
+                                            className="text-center w-12 my-auto text-lg font-bold pop-in"
+                                            style={{ animationDelay: `${(index + 1) * popInDelay}s` }}
+                                        >
+                                            +{count * (fixedIncome + Number(items[0].diceValues[randomDice]))}
+                                        </h3>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        <div className="mx-8 text-base bg-white rounded-b-xl flex pl-6 pr-7 py-3 text-figma-black font-medium">
+                            <div style={{ clear: 'both' }}></div>
+                            <div className="flex w-full">
+                                <h2 className="my-auto grow">CELKEM</h2>
+                                <h2
+                                    className="text-2xl font-bold pop-in"
+                                    style={{ animationDelay: `${sumDelay * popInDelay}s` }}
+                                >
+                                    +{incomeSum}
+                                </h2>
                             </div>
-                        );
-                    })}
-                </div>
-                <div className="mx-8 text-base bg-white rounded-b-xl flex pl-6 pr-7 py-3 text-figma-black font-medium">
-                    <div style={{ clear: 'both' }}></div>
-                    <div className="flex w-full ">
-                        <h2 className="my-auto grow">CELKEM</h2>
-                        <h2 className="text-2xl font-bold pop-in"
-                            style={{ animationDelay: `${sumDelay * popInDelay}s` }}
-                        >+{incomeSum}</h2>
+                        </div>
                     </div>
                 </div>
             </div>
             <div className="z-10 w-full flex justify-center fixed bottom-0 font-[Inter] font-bold 
                 bg-[linear-gradient(135deg,rgba(255,211,42,1)0%,rgba(255,96,48,1)25%,rgba(255,1,91,1)50%,rgba(170,75,179,1)75%,rgba(25,156,249,1)100%)]">
-                <div className="flex items-center justify-end py-1">
+                <div className="flex items-center justify-end py-1 md:pb-4">
                     <button className='flex rounded-full hover:scale-110 duration-200 text-white border-white border-2 py-2 px-4 m-2'
                         onClick={() => {
                             setLiquidity((prevLiquidity: number) => (prevLiquidity ?? 0) + incomeSum);
@@ -763,12 +778,12 @@ function EarningsTutorial() {
         <>
             <div className="bg-figma-black h-screen text-white">
                 <img src={configData.earningsTutorial_IMG} alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
-                <p className="text-center pt-8 lg:mt-56 text-xl lg:text-3xl font-light px-6">
+                <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">
                     {configData.earningsTutorialText}
                     <br></br><br></br>
                     Pojďme se podívat kolik investice vynesly.
                 </p>
-                <div className="absolute bottom-14 w-full">
+                <div className="absolute bottom-14 md:bottom-20 w-full">
                     <button className="mx-auto border border-white rounded-full flex pl-6 pr-10" onClick={() => setEarningsTutorial(false)}>
                         <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12.3755 20.4526H28.3755M28.3755 20.4526L22.3755 14.4526M28.3755 20.4526L22.3755 26.4526" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -785,18 +800,19 @@ function NewRound() {
     const { round, gameMode } = useGame();
     const { scenarios, setRoundStart, setShowEarnings } = useGameLoop();
     return (
-        <div className="bg-[linear-gradient(135deg,rgba(255,211,42,1)0%,rgba(255,96,48,1)25%,rgba(255,1,91,1)50%,rgba(170,75,179,1)75%,rgba(25,156,249,1)100%)]
+        <div className="bg-[linear-gradient(135deg,rgba(255,211,42,1)0%,rgba(255,96,48,1)25%,rgba(225,1,91,1)50%,rgba(170,75,179,1)75%,rgba(25,156,249,1)100%)]
                     h-screen flex flex-col items-center justify-center relative" >
-
-            <svg className="h-full w-full absolute px-8 py-6 z-0" width="331" height="614" viewBox="0 0 331 614" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 0.808472V612.894" stroke="#9FD7FF" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M48.0264 0.808472V612.894" stroke="#9FD7FF" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M95.0518 0.808472V612.894" stroke="#9FD7FF" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M142.078 0.808472V612.894" stroke="#9FD7FF" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M189.104 0.808472V612.894" stroke="#9FD7FF" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M236.13 0.808472V612.894" stroke="#9FD7FF" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M283.157 0.808472V612.894" stroke="#9FD7FF" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M330.183 0.808472V612.894" stroke="#9FD7FF" strokeLinecap="round" strokeLinejoin="round" />
+            <svg
+                className="h-screen w-full absolute px-6 py-8 z-0"
+                preserveAspectRatio="none"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <defs>
+                    <pattern id="verticalLines" patternUnits="userSpaceOnUse" width="47" height="100%">
+                        <path d="M0 0V800%" stroke="#9FD7FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#verticalLines)" />
             </svg>
 
             <svg className="relative z-10" width="284" height="150" viewBox="0 0 284 150" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -832,14 +848,12 @@ function NewRound() {
                 <path d="M275.092 144.528C275.092 144.528 275.511 146.625 276.971 146.625C278.431 146.625 278.868 144.528 278.868 144.528" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
 
-            <div className="absolute z-10 bottom-20 md:bottom-20 w-full">
-                <button className="block mx-auto rounded-lg hover:scale-110 duration-200" onClick={() => {
+            <div className="absolute z-10 bottom-16 w-full">
+                <button className="block mx-auto  hover:scale-110 duration-200" onClick={() => {
                     setRoundStart(false);
                     setShowEarnings(true);
                 }}>
-                    <svg width="51" height="51" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="0.875488" y="0.952637" width="39" height="39" rx="19.5" />
-                        <rect x="0.875488" y="0.952637" width="39" height="39" rx="19.5" stroke="white" />
+                    <svg className="size-20" width="41" height="41" viewBox="10 10 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12.3755 20.4526H28.3755M28.3755 20.4526L22.3755 14.4526M28.3755 20.4526L22.3755 26.4526" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                 </button>
@@ -850,7 +864,7 @@ function NewRound() {
 
 function ShowHelp() {
     const { gameMode } = useGame();
-    const { portfolioItems, figmaColors, scenarios, setShowHelp, configData, productData } = useGameLoop();
+    const { figmaColors, scenarios, setShowHelp, configData, productData } = useGameLoop();
 
     return (
         <div>
@@ -876,7 +890,7 @@ function ShowHelp() {
                     </div>
                 </div>
             </div>
-            <div className="mt-16">
+            <div className="mt-16 max-w-[40rem] mx-auto md:mt-20">
                 {productData.map((item) => {
                     return (
                         <div className="relative z-0 mt-1 mx-3 pl-3 pr-6 text-figma-black" key={item.productName}>
@@ -885,24 +899,24 @@ function ShowHelp() {
                         </div>
                     );
                 })}
-            </div>
-            <h2 className="text-lg mb-1 text-figma-black font-bold text-center">Jak hrát investice?</h2>
+                <h2 className="text-lg mb-1 text-figma-black font-bold text-center">Jak hrát investice?</h2>
 
-            <div className="relative z-0 mx-5 text-figma-black">
-                <img className="h-36 mx-auto" src={scenarios[gameMode].IMG}></img>
-                <p className="mt-4 text-center text-lg font-medium min-h-16 mb-8">{scenarios[gameMode].howToPlay}</p>
+                <div className="relative z-0 mx-5 text-figma-black">
+                    <img className="h-36 mx-auto" src={scenarios[gameMode].IMG}></img>
+                    <p className="mt-4 text-center text-lg font-medium min-h-16 mb-8">{scenarios[gameMode].howToPlay}</p>
 
-                <img className="h-36 mx-auto" src={scenarios[gameMode].IMG2}></img>
-                <p className="mt-4 text-center text-lg font-medium min-h-16 mb-8">{scenarios[gameMode].howToPlay2}</p>
+                    <img className="h-36 mx-auto" src={scenarios[gameMode].IMG2}></img>
+                    <p className="mt-4 text-center text-lg font-medium min-h-16 mb-8">{scenarios[gameMode].howToPlay2}</p>
 
-                <img className="h-36 mx-auto" src={configData.portfolioTutorial_IMG}></img>
-                <p className="mt-4 text-center text-lg font-medium min-h-16 mb-8" >{configData.portfolioTutorialText}</p>
+                    <img className="h-36 mx-auto" src={configData.portfolioTutorial_IMG}></img>
+                    <p className="mt-4 text-center text-lg font-medium min-h-16 mb-8" >{configData.portfolioTutorialText}</p>
 
-                <img className="h-36 mx-auto" src={configData.earningsTutorial_IMG}></img>
-                <p className="mt-4 text-center text-lg font-medium min-h-16 mb-8" >{configData.earningsTutorialText}</p>
+                    <img className="h-36 mx-auto" src={configData.earningsTutorial_IMG}></img>
+                    <p className="mt-4 text-center text-lg font-medium min-h-16 mb-8" >{configData.earningsTutorialText}</p>
 
-                <img className="h-36 mx-auto" src={configData.newsTutorial_IMG}></img>
-                <p className="mt-4 text-center text-lg font-medium min-h-16 mb-8" >{configData.newsTutorialText}</p>
+                    <img className="h-36 mx-auto" src={configData.newsTutorial_IMG}></img>
+                    <p className="mt-4 text-center text-lg font-medium min-h-16 mb-8" >{configData.newsTutorialText}</p>
+                </div>
             </div>
         </div>
     );

@@ -40,7 +40,7 @@ function LandingSite() {
     if (!scenariosData) {
         return (
             <div className="bg-figma-black h-screen">
-                <h1 className="text-center pt-36 lg:mt-56 text-white">Loading...</h1>
+                <h1 className="text-center pt-36 lg:pt-56 text-white">Loading...</h1>
             </div>
         );
     }
@@ -88,7 +88,7 @@ function InstructionSite() {
     if (!scenariosData) {
         return (
             <div className="bg-figma-black h-screen">
-                <h1 className="text-center pt-36 lg:mt-56 text-white">Loading...</h1>
+                <h1 className="text-center pt-36 lg:pt-56 text-white">Loading...</h1>
             </div>
         );
     }
@@ -96,7 +96,7 @@ function InstructionSite() {
     if (pageOne) return (
         <div className="bg-figma-black h-screen text-white">
             <img src={`${scenariosData[gameMode].IMG}`} alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
-            <p className="text-center pt-8 md:pt-24 text-xl lg:text-3xl mx-auto max-w-[34rem] font-light px-6">{scenariosData[gameMode].howToPlay}</p>
+            <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6" dangerouslySetInnerHTML={{ __html: scenariosData[gameMode].howToPlay }} />
             <div className="absolute bottom-10 md:bottom-20 w-full">
                 <button className="block mx-auto rounded-lg hover:scale-110 duration-200" onClick={() => setPageOne(false)}>
                     <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -112,8 +112,8 @@ function InstructionSite() {
         <>
             <div className="bg-figma-black h-screen text-white">
                 <img src={`${scenariosData[gameMode].IMG2}`} alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
-                <p className="text-center pt-8 lg:mt-56 text-xl lg:text-3xl font-light px-6">{scenariosData[gameMode].howToPlay2}</p>
-                <div className="absolute bottom-14 w-full">
+                <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6" dangerouslySetInnerHTML={{ __html: scenariosData[gameMode].howToPlay2 }} />
+                <div className="absolute bottom-14 md:bottom-20 w-full">
                     <button className="mx-auto border border-white rounded-full flex pl-6 pr-10" onClick={() => setShowWelcomeSite(false)}>
                         <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12.3755 20.4526H28.3755M28.3755 20.4526L22.3755 14.4526M28.3755 20.4526L22.3755 26.4526" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
