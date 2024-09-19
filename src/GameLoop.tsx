@@ -14,6 +14,7 @@ interface products {
     timeToSell: number;
     sellingForLastRounds: number;
     diceValues: number[];
+    id: string;
 }
 
 interface events {
@@ -29,22 +30,10 @@ interface events {
 function NewEvent() {
 
     const { gameMode, round } = useGame();
-    const { scenarios, setEventIndex, setShowHelp, eventData, eventIndex, setEconomySummary, liquidity, figmaColors } = useGameLoop();
+    const { scenarios, setShowHelp, eventData, eventIndex, setEconomySummary, liquidity, figmaColors } = useGameLoop();
 
     const soloGame = scenarios[gameMode].random == "TRUE";
-    const [isNewIndex, setIsNewIndex] = useState(false);
 
-    useEffect(() => {
-        if (soloGame) setEventIndex(Math.floor(Math.random() * eventData.length));
-        else setEventIndex(
-            (eventData as any[]).findIndex((item: events) => item.eventName === scenarios[gameMode].eventOrder[round - 1]));
-    }, []);
-
-    useEffect(() => setIsNewIndex(true), [eventIndex]);
-
-    if (!isNewIndex) return (
-        <div className="bg-figma-white h-screen"></div>
-    );
 
     return (
         <>
@@ -805,7 +794,18 @@ function EarningsTutorial() {
 
 function NewRound() {
     const { round, gameMode } = useGame();
-    const { scenarios, setRoundStart, setShowEarnings } = useGameLoop();
+    const { scenarios, setEventIndex, eventData, setRoundStart, setShowEarnings, setShowBankrupcy } = useGameLoop();
+
+    const soloGame = scenarios[gameMode].random == "TRUE";
+
+    useEffect(() => {
+        let newEvent;
+        if (soloGame) newEvent = Math.floor(Math.random() * eventData.length);
+        else newEvent = (eventData as any[]).findIndex((item: events) => item.eventName === scenarios[gameMode].eventOrder[round - 1]);
+        setEventIndex(newEvent);
+        if (eventData[newEvent].bankroupcy === "TRUE") setShowBankrupcy(true);
+    }, []);
+
     return (
         <div className="bg-[linear-gradient(135deg,rgba(255,211,42,1)0%,rgba(255,96,48,1)25%,rgba(225,1,91,1)50%,rgba(170,75,179,1)75%,rgba(25,156,249,1)100%)]
                     h-screen flex flex-col items-center justify-center relative" >
@@ -929,13 +929,102 @@ function ShowHelp() {
     );
 }
 
+function Bankrupcy() {
+
+    const { gameMode, round } = useGame();
+    const { portfolioItems, setPortfolioItems, scenarios, setShowHelp, eventData, eventIndex, liquidity, figmaColors, setShowBankrupcy } = useGameLoop();
+
+    const [rollingDices, SetRollingDices] = useState(false);
+    const [bancruptItems, setBancruptItems] = useState<products[]>([]);
+    const whiteDice = 8;
+
+    useEffect(() => {
+        const updatedPorftoliItems = portfolioItems.filter(item => {
+            const randomDice = Math.floor(Math.random() * 18) + 1;
+            const isBancrupt = item.minToPreventBankrupcy >= randomDice && item.minToPreventBankrupcy > 0;
+            let containsItem = false;
+
+            if (isBancrupt) {
+                bancruptItems.forEach(bancruptItem => {
+                    if (bancruptItem.productName === item.productName) containsItem = true;
+                });
+                if (containsItem === false) setBancruptItems([...bancruptItems, item]);
+            }
+            return !isBancrupt;
+        });
+        setPortfolioItems(updatedPorftoliItems);
+    }, []);
+
+
+    return (
+        <>
+            <div className={`z-10 fixed top-0 py-1 text-figma-black text-xl w-full font-[Inter] bg-${figmaColors[eventData[eventIndex].color]}`}>
+                <div className="flex">
+                    <button onClick={() => setShowHelp(true)}>
+                        <svg className="w-14 my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="15.8669" cy="15.5" r="10.5" stroke="#0B1F42" />
+                            <path d="M13.1711 12.8945C13.1711 12.8945 13.0495 10.1379 15.952 10.1379C15.952 10.1379 18.5634 10.1379 18.5635 12.8945C18.5635 15.5788 15.8428 15.5304 15.8428 18.1294" stroke="#0B1F42" strokeLinecap="round" />
+                            <path d="M15.9026 20.5477V20.8621" stroke="#0B1F42" strokeLinecap="round" />
+                        </svg>
+                    </button>
+                    <div className="grow flex justify-center pr-4">
+                        <p className="ml-2 mr-4 my-auto font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
+                        <h1 className="font-bold my-auto text-lg mr-2">BREAKING NEWS</h1>
+                    </div>
+                    <div className="bg-white rounded-md w-14 mr-6 my-1">
+                        <p className="text-center px-2 text-figma-black font-bold text-xl">{liquidity}</p>
+                    </div>
+                </div>
+            </div>
+            {!rollingDices ?
+                <>
+                    <div className="mt-8 text-figma-black max-w-[39rem] mx-auto">
+                        <div className="relative">
+                            <img src={`events/${eventData[eventIndex].IMG}.png`}></img>
+                            <p className={`absolute font-bold text-base bottom-5 w-[90%] mx-5 px-3 text-figma-black bg-${figmaColors[eventData[eventIndex].color]}`}>BREAKING NEWS</p>
+                        </div>
+                        <h1 className="text-2xl font-bold mx-4 mt-7 leading-7">{eventData[eventIndex].eventName}</h1>
+                        <p className="text-lg mx-4 mt-3 leading-6">{eventData[eventIndex].eventText}</p>
+                    </div>
+
+                </>
+                :
+                <div className="bg-figma-black h-screen">
+                    <h1 className="pt-40 font-bold text-lg text-figma-white text-center">Propukla krize</h1>
+                    <div className="pt-12">
+                        <div className="size-10 mx-auto">
+                            <RiveDice diceValue={1} diceColor={whiteDice} throwDelayIndex={0} />
+                        </div>
+                        <h2 className="pt-16 font-medium text-lg text-figma-white text-center">Tyto investice ti bohužel zkrachovaly</h2>
+                        <div className="py-10 my-8 rounded-lg mx-6 font-bold text-lg text-figma-white border border-figma-white text-center">
+                            {bancruptItems.map(item => <p>{item.productName}</p>)}
+                        </div>
+                    </div>
+
+                </div>}
+            <div className={`z-10 w-full flex justify-center fixed bottom-0 font-[Inter] font-medium md:pb-3 ${'bg-' + figmaColors[eventData[eventIndex].color]}`}>
+                <button className='flex rounded-full hover:scale-110 duration-200 text-figma-black border-figma-black border py-2 px-6 m-3'
+                    onClick={() => { !rollingDices ? SetRollingDices(true) : setShowBankrupcy(false) }}>
+
+                    <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1.86694 7.5H17.8669M17.8669 7.5L11.8669 1.5M17.8669 7.5L11.8669 13.5" stroke="#0B1F42" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <span className="mx-3 text-lg">Krize</span>
+                </button>
+            </div>
+        </>
+    );
+}
+
 function GameLoop() {
 
     const { round, setEndGame, setTotalScore, gameMode } = useGame();
     const { portfolioItems, configData, setLiquidity, setPortfolioItems, setNewPortfolioItems,
         setOldPortfolioItems, liquidity, productData, nextRound, economySummary, scenarios, roundStart,
         earningsTutorial, portfolioTutorial, newsTutorial, showPortfolio, showEarnings, showHelp,
-    } = useGameLoop();
+        showBankrupcy } = useGameLoop();
+
+    const soloGame = scenarios[gameMode].random == "TRUE";
 
     useEffect(() => {
         if (configData) {
@@ -973,11 +1062,12 @@ function GameLoop() {
 
     let content = null;
     if (roundStart) content = <NewRound />;
+    else if (showBankrupcy) content = <Bankrupcy />;
     else if (showHelp) content = <ShowHelp />;
     else if (showEarnings && earningsTutorial) content = <EarningsTutorial />;
     else if (showEarnings) content = <Earnings />;
     else if (nextRound && !economySummary && newsTutorial) content = <NewsTutorial />;
-    else if (nextRound && !economySummary) content = <NewEvent />;
+    else if (nextRound && !economySummary && !soloGame) content = <NewEvent />;
     else if (nextRound) content = <EconomyAfterEvent />;
     else if (showPortfolio && portfolioTutorial) content = <PortfolioTutorial />;
     else if (showPortfolio) content = <Portfolio />;

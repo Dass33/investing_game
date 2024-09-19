@@ -23,6 +23,7 @@ interface events {
     eventValue: number;
     IMG: string;
     color: number;
+    bankroupcy: string;
 }
 
 interface products {
@@ -96,6 +97,9 @@ interface GameLoopState {
     startingProductData: products[],
     showHelp: boolean,
     setShowHelp: Function,
+    showBankrupcy: boolean,
+    setShowBankrupcy: Function,
+
 }
 
 const GameLoopContext = createContext<GameLoopState | undefined>(undefined);
@@ -150,9 +154,10 @@ export const GameLoopProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const [showEarnings, setShowEarnings] = useState(true);
     const [economyHistory, setEconomyHistory] = useState<number[]>([]);
     const [showHelp, setShowHelp] = useState(false);
+    const [showBankrupcy, setShowBankrupcy] = useState(false);
 
     return (
-        <GameLoopContext.Provider value={{ configData, eventData, scenarios, productData, setProductData, showSite, setShowSite, numberOfSites, liquidity, setLiquidity, portfolioItems, setPortfolioItems, newPortfolioItems, setNewPortfolioItems, oldPortfolioItems, setOldPortfolioItems, nextRound, setNextRound, portfolioItemCount, setPortfolioItemCount, eventIndex, setEventIndex, economySummary, setEconomySummary, isInitialized, figmaColors, roundStart, setRoundStart, setEarningsTutorial, earningsTutorial, setNewsTutorial, newsTutorial, setPortfolioTutorial, portfolioTutorial, showEarnings, showPortfolio, setShowEarnings, setShowPortfolio, setEconomyHistory, economyHistory, startingProductData, showHelp, setShowHelp }}>
+        <GameLoopContext.Provider value={{ configData, eventData, scenarios, productData, setProductData, showSite, setShowSite, numberOfSites, liquidity, setLiquidity, portfolioItems, setPortfolioItems, newPortfolioItems, setNewPortfolioItems, oldPortfolioItems, setOldPortfolioItems, nextRound, setNextRound, portfolioItemCount, setPortfolioItemCount, eventIndex, setEventIndex, economySummary, setEconomySummary, isInitialized, figmaColors, roundStart, setRoundStart, setEarningsTutorial, earningsTutorial, setNewsTutorial, newsTutorial, setPortfolioTutorial, portfolioTutorial, showEarnings, showPortfolio, setShowEarnings, setShowPortfolio, setEconomyHistory, economyHistory, startingProductData, showHelp, setShowHelp, showBankrupcy, setShowBankrupcy }}>
             {children}
         </GameLoopContext.Provider>
     );
