@@ -935,23 +935,22 @@ function Bankrupcy() {
     const { portfolioItems, setPortfolioItems, scenarios, setShowHelp, eventData, eventIndex, liquidity, figmaColors, setShowBankrupcy } = useGameLoop();
 
     const [rollingDices, SetRollingDices] = useState(false);
-    const [bancruptItems, setBancruptItems] = useState<products[]>([]);
+    const [bancruptItems, setBancruptItems] = useState<string[]>([]);
     const whiteDice = 8;
 
     useEffect(() => {
+        const updatedBancruptCategories: string[] = [];
         const updatedPorftoliItems = portfolioItems.filter(item => {
             const randomDice = Math.floor(Math.random() * 18) + 1;
             const isBancrupt = item.minToPreventBankrupcy >= randomDice && item.minToPreventBankrupcy > 0;
-            let containsItem = false;
 
             if (isBancrupt) {
-                bancruptItems.forEach(bancruptItem => {
-                    if (bancruptItem.productName === item.productName) containsItem = true;
-                });
-                if (containsItem === false) setBancruptItems([...bancruptItems, item]);
+                if (updatedBancruptCategories.indexOf(item.productName) === -1) updatedBancruptCategories.push(item.productName);
             }
             return !isBancrupt;
         });
+
+        setBancruptItems(updatedBancruptCategories);
         setPortfolioItems(updatedPorftoliItems);
     }, []);
 
@@ -996,8 +995,9 @@ function Bankrupcy() {
                             <RiveDice diceValue={1} diceColor={whiteDice} throwDelayIndex={0} />
                         </div>
                         <h2 className="pt-16 font-medium text-lg text-figma-white text-center">Tyto investice ti bohužel zkrachovaly</h2>
-                        <div className="py-10 my-8 rounded-lg mx-6 font-bold text-lg text-figma-white border border-figma-white text-center">
-                            {bancruptItems.map(item => <p>{item.productName}</p>)}
+                        <div className="py-10 my-8 rounded-lg font-bold text-lg max-w-72 sm:max-w-96 mx-auto text-figma-white border border-figma-white text-center">
+                            {bancruptItems.map(item => <p>{item}</p>)}
+                            {bancruptItems.length === 0 && <p>Žádné</p>}
                         </div>
                     </div>
 
@@ -1029,6 +1029,7 @@ function GameLoop() {
     useEffect(() => {
         if (configData) {
             setLiquidity(configData.startingMoney);
+            // setLiquidity(9999);
 
             const initialPortfolioItems = configData.startingProducts.map((productName: string) => {
                 const product = productData.find((p: products) => p.productName === productName);
