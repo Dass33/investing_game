@@ -36,7 +36,7 @@ function EndScreen() {
                 >
                     <defs>
                         <pattern id="verticalLines" patternUnits="userSpaceOnUse" width="47" height="100%">
-                            <path d="M0 0V800%" stroke="#721C7A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            <path d="M0 0V100000%" stroke="#721C7A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </pattern>
                     </defs>
                     <rect width="100%" height="100%" fill="url(#verticalLines)" />

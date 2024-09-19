@@ -47,13 +47,13 @@ function LandingSite() {
     return (
         <div className="bg-figma-black h-screen relative text-white">
             <svg
-                className="h-screen w-full absolute pr-5 pl-7 py-8 z-0"
+                className="h-screen w-full absolute pr-5 pl-7 my-auto py-8 z-0"
                 preserveAspectRatio="none"
                 xmlns="http://www.w3.org/2000/svg"
             >
                 <defs>
-                    <pattern id="verticalLines" patternUnits="userSpaceOnUse" width="47" height="100%">
-                        <path d="M0 0V800%" stroke="#721C7A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <pattern id="verticalLines" patternUnits="userSpaceOnUse" width="47" height="100vh">
+                        <path d="M0 0V100000vh" stroke="#721C7A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </pattern>
                 </defs>
                 <rect width="100%" height="100%" fill="url(#verticalLines)" />

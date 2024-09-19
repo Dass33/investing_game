@@ -32,12 +32,19 @@ function NewEvent() {
     const { scenarios, setEventIndex, setShowHelp, eventData, eventIndex, setEconomySummary, liquidity, figmaColors } = useGameLoop();
 
     const soloGame = scenarios[gameMode].random == "TRUE";
+    const [isNewIndex, setIsNewIndex] = useState(false);
 
     useEffect(() => {
         if (soloGame) setEventIndex(Math.floor(Math.random() * eventData.length));
         else setEventIndex(
             (eventData as any[]).findIndex((item: events) => item.eventName === scenarios[gameMode].eventOrder[round - 1]));
     }, []);
+
+    useEffect(() => setIsNewIndex(true), [eventIndex]);
+
+    if (!isNewIndex) return (
+        <div className="bg-figma-white h-screen"></div>
+    );
 
     return (
         <>
@@ -61,7 +68,7 @@ function NewEvent() {
                             </div>
                         </div>
                     </div>
-                    <div className="mt-8 text-figma-black">
+                    <div className="mt-8 text-figma-black max-w-[39rem] mx-auto">
                         <div className="relative">
                             <img src={`events/${eventData[eventIndex].IMG}.png`}></img>
                             <p className={`absolute font-bold text-base bottom-5 w-[90%] mx-5 px-3 text-figma-black bg-${figmaColors[eventData[eventIndex].color]}`}>BREAKING NEWS</p>
@@ -71,8 +78,8 @@ function NewEvent() {
                     </div>
                 </>
                 :
-                <div className="h-screen bg-figma-white text-figma-black font-medium font-[Inter]">
-                    <div className="md:w-[50rem] xl:w-[74rem] mx-auto md:flex md:items-center md:justify-center md:pt-36">
+                <div className="h-screen bg-figma-white text-figma-black font-medium font-[Inter] md:flex md:items-center md:justify-center">
+                    <div className="md:w-[50rem] xl:w-[74rem] mx-auto md:flex md:items-center md:justify-center md:pb-40 md:gap-16">
                         <img src="stop.svg" alt="placeholder" className="mx-auto pt-12 relative z-10 md:w-72 md:pt-0 md:mx-0"></img>
                         <p className="text-center pt-12 text-lg px-7 md:pt-0">
                             Další instrukce pro hru nalezneš na projekci.
@@ -474,9 +481,9 @@ function Portfolio() {
                 </div>
             </div>
 
-            <div className="font-[Inter] bg-figma-black pb-20 h-full">
+            <div className="font-[Inter] bg-figma-black min-h-screen">
                 <div className="md:mx-5">
-                    <h1 className="mx-auto w-96 lg:w-fit pt-20 md:pb-2 text-lg font-medium text-white">Moje Portfolio</h1>
+                    <h1 className="mx-auto w-80 sm:w-96 lg:w-fit pt-20 text-lg font-medium text-white">Moje Portfolio</h1>
                     {/* Map over productData with products in portfolio first */}
                     <div className="grid lg:grid-cols-2 xl:grid-cols-3 flex-col justify-center pb-24">
                         {[...uniquePortfolioItems, ...productData.filter(product => !portfolioItems.some(item => item.productName === product.productName))].map((product, index) => {
@@ -494,8 +501,8 @@ function Portfolio() {
                             const isTimeToSellValid = product.timeToSell > -1;
 
                             return (
-                                <div className={`${count <= 0 && 'flex'} mt-4 min-w-96 mx-auto h-fit`}>
-                                    <div className={`${count > 0 ? 'max-w-96' : 'w-72'}`} key={`${product.productName}-${index}`}>
+                                <div className={`${count <= 0 && 'flex'} mt-4 min-w-80 sm:min-w-96 mx-auto h-fit`}>
+                                    <div className={`${count > 0 ? 'max-w-96' : 'w-[17rem] sm:w-72'}`} key={`${product.productName}-${index}`}>
                                         <div className={`rounded-t-xl ${count > 0 ? `bg-${figmaColors[product.color]}` : 'bg-figma-light-gray'} pt-2 pb-1 flex`}>
                                             <h2 className="text-xl font-bold mx-3 text-figma-black grow"> {product.productName} </h2>
                                             <h2 className={`text-2xl font-bold ${count > 0 ? 'mr-6' : 'mr-0'} text-figma-black`}>{adjustedCost}</h2>
@@ -809,7 +816,7 @@ function NewRound() {
             >
                 <defs>
                     <pattern id="verticalLines" patternUnits="userSpaceOnUse" width="47" height="100%">
-                        <path d="M0 0V800%" stroke="#9FD7FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M0 0V100000%" stroke="#9FD7FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </pattern>
                 </defs>
                 <rect width="100%" height="100%" fill="url(#verticalLines)" />
