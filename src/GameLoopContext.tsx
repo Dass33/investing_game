@@ -37,7 +37,7 @@ interface products {
     timeToSell: number;
     sellingForLastRounds: number;
     diceValues: number[];
-    id: string;
+    autoSellIn: number;
 }
 
 interface scenarios {

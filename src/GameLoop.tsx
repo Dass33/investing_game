@@ -14,7 +14,7 @@ interface products {
     timeToSell: number;
     sellingForLastRounds: number;
     diceValues: number[];
-    id: string;
+    autoSellIn: number;
 }
 
 interface events {
@@ -146,6 +146,7 @@ function EconomyAfterEvent() {
         setProductData,
         portfolioItems,
         setPortfolioItems,
+        setLiquidity,
         scenarios,
         liquidity,
         setEconomySummary,
@@ -264,7 +265,7 @@ function EconomyAfterEvent() {
                 </div>
             </div>
 
-            <div className="pt-12 pb-28 bg-figma-white h-screen">
+            <div className="pt-12 bg-figma-white h-screen">
                 <div className="max-w-[40rem] mx-auto">
                     <h1 className="font-bold text-lg text-center text-figma-black mx-auto min-h-20 max-w-80 pt-4 pb-1">
                         {eventToShow.eventName}
@@ -310,56 +311,74 @@ function EconomyAfterEvent() {
                         <span className="mr-5 text-center">NÁKUP<br />PRODEJ</span>
                         <span className="my-auto">VÝNOS</span>
                     </div>
-                    {displayedProductData.map(item => {
-                        const costChange = (eventToShow as any)[item.productName][0];
-                        const newIncome = (eventToShow as any)[item.productName][1];
+                    <div className="pb-24">
+                        {displayedProductData.map(item => {
+                            const costChange = (eventToShow as any)[item.productName][0];
+                            const newIncome = (eventToShow as any)[item.productName][1];
 
-                        return (
-                            <div
-                                className={`relative z-10 mt-2 mx-3 py-2 pl-3 pr-6 flex text-figma-white text-base rounded-full font-bold 
+                            return (
+                                <div
+                                    className={`relative z-10 mt-2 mx-3 py-2 pl-3 pr-6 flex text-figma-white text-base rounded-full font-bold 
                             ${(((costChange > 0 && newIncome >= 0) || (costChange >= 0 && newIncome > 0)) && 'bg-figma-teal') ||
-                                    (((costChange < 0 && newIncome <= 0) || (costChange <= 0 && newIncome < 0)) && 'bg-figma-berries') ||
-                                    (((costChange < 0 && newIncome > 0) || (costChange > 0 && newIncome < 0) || (costChange == 0 && newIncome == 0)) &&
-                                        'bg-figma-black')
-                                    }`}
-                                key={item.productName}
-                            >
-                                <div className="my-auto ml-2 mr-3">
-                                    {((costChange > 0 && newIncome >= 0) || (costChange >= 0 && newIncome > 0)) &&
-                                        <svg width="13" height="16" viewBox="0 0 13 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M6.77746 15.18L6.77747 0.750122" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
-                                            <path d="M12.0911 6.06377L6.77747 0.750122L1.46382 6.06376" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>}
-                                    {((costChange < 0 && newIncome <= 0) || (costChange <= 0 && newIncome < 0)) &&
-                                        <svg width="13" height="17" viewBox="0 0 13 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M6.77734 1.37992L6.77734 15.8098" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
-                                            <path d="M1.4637 10.4962L6.77734 15.8098L12.091 10.4962" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                    }
-                                    {((costChange < 0 && newIncome > 0) || (costChange > 0 && newIncome < 0) || (costChange == 0 && newIncome == 0))
-                                        &&
-                                        <svg width="10" height="2" viewBox="0 0 10 2" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M8.83362 1.06006L0.721069 1.06006" stroke="#FFFDFD" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                    }
-                                </div>
+                                        (((costChange < 0 && newIncome <= 0) || (costChange <= 0 && newIncome < 0)) && 'bg-figma-berries') ||
+                                        (((costChange < 0 && newIncome > 0) || (costChange > 0 && newIncome < 0) || (costChange == 0 && newIncome == 0)) &&
+                                            'bg-figma-black')
+                                        }`}
+                                    key={item.productName}
+                                >
+                                    <div className="my-auto ml-2 mr-3">
+                                        {((costChange > 0 && newIncome >= 0) || (costChange >= 0 && newIncome > 0)) &&
+                                            <svg width="13" height="16" viewBox="0 0 13 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6.77746 15.18L6.77747 0.750122" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                                                <path d="M12.0911 6.06377L6.77747 0.750122L1.46382 6.06376" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>}
+                                        {((costChange < 0 && newIncome <= 0) || (costChange <= 0 && newIncome < 0)) &&
+                                            <svg width="13" height="17" viewBox="0 0 13 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6.77734 1.37992L6.77734 15.8098" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                                                <path d="M1.4637 10.4962L6.77734 15.8098L12.091 10.4962" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                        }
+                                        {((costChange < 0 && newIncome > 0) || (costChange > 0 && newIncome < 0) || (costChange == 0 && newIncome == 0))
+                                            &&
+                                            <svg width="10" height="2" viewBox="0 0 10 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M8.83362 1.06006L0.721069 1.06006" stroke="#FFFDFD" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                        }
+                                    </div>
 
-                                <h3 className="my-auto flex-1 break-words font-bold text-base text-left grow">{item.productName}</h3>
-                                {costChange != 0 && <h3 className="w-6 my-auto text-[10px] font-bold text-right">({costChange > 0 && '+'}{costChange})</h3>}
-                                <h3 className="ml-1 min-w-6 my-auto text-lg font-bold text-right">{item.cost}</h3>
-                                {newIncome != 0 ? <h3 className="w-6 ml-2 my-auto text-[10px] font-bold text-right">({newIncome > 0 && '+'}{newIncome})</h3>
-                                    : <div className="w-6 ml-2"></div>
-                                }
-                                <h3 className="min-w-3 ml-2 my-auto text-lg font-bold text-right">{item.fixedIncome}</h3>
-                            </div>
-                        );
-                    })}
+                                    <h3 className="my-auto flex-1 break-words font-bold text-base text-left grow">{item.productName}</h3>
+                                    {costChange != 0 && <h3 className="w-6 my-auto text-[10px] font-bold text-right">({costChange > 0 && '+'}{costChange})</h3>}
+                                    <h3 className="ml-1 min-w-6 my-auto text-lg font-bold text-right">{item.cost}</h3>
+                                    {newIncome != 0 ? <h3 className="w-6 ml-2 my-auto text-[10px] font-bold text-right">({newIncome > 0 && '+'}{newIncome})</h3>
+                                        : <div className="w-6 ml-2"></div>
+                                    }
+                                    <h3 className="min-w-3 ml-2 my-auto text-lg font-bold text-right">{item.fixedIncome}</h3>
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
 
             <div className="z-10 w-full flex justify-center fixed font-[Inter] font-medium bottom-0 bg-figma-indigo">
                 <button className='flex rounded-full hover:scale-110 duration-200 text-figma-white border-figma-white border py-2 px-6 m-3'
                     onClick={() => {
+                        const updatedPortfolioItems = [...portfolioItems];
+                        let addLiquidity = 0;
+
+                        for (let i = portfolioItems.length - 1; i >= 0; i--) {
+                            if (updatedPortfolioItems[i].autoSellIn === 1) {
+                                // if (portfolioItems[i].sellingForLastRounds) {
+                                // }
+                                // else 
+                                addLiquidity += portfolioItems[i].cost;
+                                updatedPortfolioItems.splice(i, 1);
+                            }
+                            else if (portfolioItems[i].autoSellIn > 1) --portfolioItems[i].autoSellIn;
+                        }
+                        setPortfolioItems(updatedPortfolioItems);
+                        setLiquidity((liquidity ?? 0) + addLiquidity);
+
                         setEconomySummary(false);
                         setNextRound(false);
                         setShowPortfolio(true);
@@ -393,6 +412,7 @@ function Portfolio() {
     const { round, setRound, gameMode } = useGame();
     const [roundEndingAlert, setRoundEndingAlert] = useState(false);
     const [insufficientLiquidity, setInsufficientLiquidity] = useState(false);
+    const [rerenderTrigger, setRerenderTrigger] = useState(false);
 
     const uniquePortfolioItems = portfolioItems.filter((item, index, self) =>
         index === self.findIndex((t) => t.productName === item.productName));
@@ -521,7 +541,7 @@ function Portfolio() {
                                             {itemsInPortfolio.map((item, itemIndex) => {
                                                 return (
                                                     <div key={`${product.productName}-${index}-${itemIndex}`} className="flex items-center space-x-2 mx-3 py-2 ">
-                                                        <div className="flex grow border-figma-stone/40 border rounded-lg mr-2 p-2 font-bold">
+                                                        <div className={`flex grow border-figma-stone/40 border ${item.autoSellIn > 0 ? 'border-dashed' : 'border-solid'} rounded-lg mr-2 p-2 font-bold`}>
                                                             <h2 className="text-[12px] my-auto text-figma-stone">VÝNOS:</h2>
                                                             <h2 className="text-xl my-auto grow flex"><span className="mx-3">+</span>{item.fixedIncome > 0 && item.fixedIncome}{item.diceValues[5] > 0 &&
                                                                 <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -533,35 +553,44 @@ function Portfolio() {
                                                                 {item.fixedIncome <= 0 && item.diceValues[5] <= 0 && 0}
                                                             </h2>
                                                             <h2 className="my-auto text-[11px] text-figma-stone">PRODEJ</h2>
-                                                            <h2 className="my-auto text-xl ml-6 mr-[14px] text-center">{item.cost}</h2>
+                                                            <h2 className="my-auto text-xl ml-4 mr-[14px] text-center">{item.cost}</h2>
                                                         </div>
                                                         {/* Sell Button */}
-                                                        <button
-                                                            className={`${(isTimeToSellValid || count > oldCount) && count > 0
-                                                                ? 'border-black text-black'
-                                                                : 'border-black/30 text-black/30 cursor-not-allowed'
-                                                                }`}
-                                                            onClick={() => {
-                                                                if ((isTimeToSellValid || count > oldCount) && count > 0) {
-                                                                    const indexToSell = portfolioItems.findIndex(
-                                                                        (item) => item.productName === product.productName
-                                                                    );
-
-                                                                    if (indexToSell !== -1) {
-                                                                        const updatedPortfolioItems = [...portfolioItems];
-                                                                        updatedPortfolioItems.splice(indexToSell, 1);
-                                                                        setPortfolioItems(updatedPortfolioItems);
-                                                                        setLiquidity((liquidity ?? 0) + adjustedCost);
+                                                        {item.autoSellIn > 0
+                                                            ?
+                                                            <p className="size-[31px] font-bold text-figma-black text-center text-[8px] leading-tight">
+                                                                Prodej za {item.autoSellIn} {item.autoSellIn > 1 ? 'kola' : 'kolo'}</p>
+                                                            :
+                                                            <button
+                                                                className={`${(isTimeToSellValid || count > oldCount) && count > 0
+                                                                    ? 'border-black text-black'
+                                                                    : 'border-black/30 text-black/30 cursor-not-allowed'
+                                                                    }`}
+                                                                onClick={() => {
+                                                                    if ((item.timeToSell > 0 || count > oldCount) && count > 0) {
+                                                                        item.autoSellIn = Math.ceil(Math.floor(Math.random() * 6 + 1) / item.timeToSell);
+                                                                        setRerenderTrigger(!rerenderTrigger);
                                                                     }
-                                                                }
-                                                            }}
-                                                            disabled={!((isTimeToSellValid || count > oldCount) && count > 0)}
-                                                        >
-                                                            <svg width="31" height="30" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                <circle cx="15.572" cy="15" r="12.5" fill="#FFFDFD" stroke="#0B1F42" />
-                                                                <path d="M11.572 15L19.572 15" stroke="#0B1F42" strokeWidth="2" strokeLinecap="round" />
-                                                            </svg>
-                                                        </button>
+                                                                    else if ((isTimeToSellValid || count > oldCount) && count > 0) {
+                                                                        const indexToSell = portfolioItems.findIndex(
+                                                                            (item) => item.productName === product.productName
+                                                                        );
+
+                                                                        if (indexToSell !== -1 && indexToSell) {
+                                                                            const updatedPortfolioItems = [...portfolioItems];
+                                                                            updatedPortfolioItems.splice(indexToSell, 1);
+                                                                            setPortfolioItems(updatedPortfolioItems);
+                                                                            setLiquidity((liquidity ?? 0) + adjustedCost);
+                                                                        }
+                                                                    }
+                                                                }}
+                                                                disabled={!((isTimeToSellValid || count > oldCount) && count > 0)}
+                                                            >
+                                                                <svg width="31" height="30" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <circle cx="15.572" cy="15" r="12.5" fill="#FFFDFD" stroke="#0B1F42" />
+                                                                    <path d="M11.572 15L19.572 15" stroke="#0B1F42" strokeWidth="2" strokeLinecap="round" />
+                                                                </svg>
+                                                            </button>}
                                                     </div>
                                                 );
                                             })}
@@ -997,7 +1026,7 @@ function Bankrupcy() {
                         <h2 className="pt-16 font-medium text-lg text-figma-white text-center">Tyto investice ti bohužel zkrachovaly</h2>
                         <div className="py-10 my-8 rounded-lg font-bold text-lg max-w-72 sm:max-w-96 mx-auto text-figma-white border border-figma-white text-center">
                             {bancruptItems.map(item => <p>{item}</p>)}
-                            {bancruptItems.length === 0 && <p>Žádné</p>}
+                            {bancruptItems.length === 0 && <p>Tentokrat nic nezkrachovalo.</p>}
                         </div>
                     </div>
 
