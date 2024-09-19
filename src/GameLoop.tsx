@@ -275,7 +275,7 @@ function EconomyAfterEvent() {
                 </div>
             </div>
 
-            <div className="pt-12 pb-28 bg-figma-white h-full">
+            <div className="pt-12 pb-28 bg-figma-white h-screen">
                 <div className="max-w-[40rem] mx-auto">
                     <h1 className="font-bold text-lg text-center text-figma-black mx-auto min-h-20 max-w-80 pt-4 pb-1">
                         {eventToShow.eventName}
