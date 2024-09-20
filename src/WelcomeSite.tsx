@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getJsObjects } from "./fetchJson";
 import { useGame } from "./GameContext";
+import { useGameLoop } from "./GameLoopContext";
 
 interface scenarios {
     baseGame: string;
@@ -37,7 +38,8 @@ function useJson(index: number) {
 function LandingSite() {
     const scenariosData: scenarios[] = useJson(3);
     const { setGameMode, setShowWelcomeSite, setShowLandingSite } = useGame();
-    if (!scenariosData) {
+    const { configData } = useGameLoop();
+    if (!scenariosData || configData === null) {
         return (
             <div className="bg-figma-black h-screen">
                 <h1 className="text-center pt-36 lg:pt-56 text-white">Loading...</h1>
@@ -73,9 +75,9 @@ function LandingSite() {
                     onClick={() => {
                         if (localStorage.getItem("tutorial") === "false") setShowWelcomeSite(false);
                         else setShowLandingSite(false);
-                    }}>Hrát</button>
+                    }}>{configData.buttonPlayText}</button>
             </div>
-            <h3 className="text-center text-[11px] relative z-10 mt-8">2024 Skoala</h3>
+            <h3 className="text-center text-[11px] relative z-10 mt-8">{configData.copryight}</h3>
         </div>
     );
 }
@@ -83,9 +85,10 @@ function LandingSite() {
 function InstructionSite() {
     const scenariosData: scenarios[] = useJson(3);
     const { gameMode, setShowWelcomeSite } = useGame();
+    const { configData } = useGameLoop();
     const [pageOne, setPageOne] = useState(true);
 
-    if (!scenariosData) {
+    if (!scenariosData || configData === null) {
         return (
             <div className="bg-figma-black h-screen">
                 <h1 className="text-center pt-36 lg:pt-56 text-white">Loading...</h1>
@@ -118,7 +121,7 @@ function InstructionSite() {
                         <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12.3755 20.4526H28.3755M28.3755 20.4526L22.3755 14.4526M28.3755 20.4526L22.3755 26.4526" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
-                        <span className="my-auto">Začít investovat</span>
+                        <span className="my-auto">{configData.buttonStartText}</span>
                     </button>
                 </div>
             </div>

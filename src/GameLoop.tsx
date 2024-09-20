@@ -10,7 +10,7 @@ interface products {
     color: number;
     cost: number;
     fixedIncome: number;
-    minToPreventBankrupcy: number;
+    minToPreventBankruptcy: number;
     timeToSell: number;
     sellingForLastRounds: number;
     diceValues: number[];
@@ -30,7 +30,8 @@ interface events {
 function NewEvent() {
 
     const { gameMode, round } = useGame();
-    const { scenarios, setShowHelp, eventData, eventIndex, setEconomySummary, liquidity, figmaColors } = useGameLoop();
+    const { scenarios, setShowHelp, eventData, eventIndex, setEconomySummary,
+        liquidity, figmaColors, configData } = useGameLoop();
 
     const soloGame = scenarios[gameMode].random == "TRUE";
 
@@ -69,12 +70,8 @@ function NewEvent() {
                 :
                 <div className="h-screen bg-figma-white text-figma-black font-medium font-[Inter] md:flex md:items-center md:justify-center">
                     <div className="md:w-[50rem] xl:w-[74rem] mx-auto md:flex md:items-center md:justify-center md:pb-40 md:gap-16">
-                        <img src="stop.svg" alt="placeholder" className="mx-auto pt-12 relative z-10 md:w-72 md:pt-0 md:mx-0"></img>
-                        <p className="text-center pt-12 text-lg px-7 md:pt-0">
-                            Další instrukce pro hru nalezneš na projekci.
-                            <br></br><br></br>
-                            Na pokyn učitele pokračuj dál
-                        </p>
+                        <img src={configData.campaignInstruction_IMG} alt="placeholder" className="mx-auto pt-12 relative z-10 md:w-72 md:pt-0 md:mx-0"></img>
+                        <p className="text-center pt-12 text-lg px-7 md:pt-0" dangerouslySetInnerHTML={{ __html: configData.campaignInstructionText }} />
                     </div>
                 </div>
             }
@@ -86,7 +83,7 @@ function NewEvent() {
                     <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1.86694 7.5H17.8669M17.8669 7.5L11.8669 1.5M17.8669 7.5L11.8669 13.5" stroke="#0B1F42" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    <span className="mx-3 text-lg">Ekonomika</span>
+                    <span className="mx-3 text-lg">{configData.buttonNewsText}</span>
                 </button>
             </div>
         </>
@@ -108,7 +105,7 @@ function NewsTutorial() {
                     <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1.86694 7.5H17.8669M17.8669 7.5L11.8669 1.5M17.8669 7.5L11.8669 13.5" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    <span className="mx-3 text-lg">Novinky</span>
+                    <span className="mx-3 text-lg">{configData.buttonNewsText}</span>
                 </button>
             </div>
         </div>
@@ -156,7 +153,8 @@ function EconomyAfterEvent() {
         eventIndex,
         setEconomyHistory,
         economyHistory,
-        setShowHelp
+        setShowHelp,
+        configData
     } = useGameLoop();
 
     const [isLatestEvent, setIsLatestEvent] = useState(true);
@@ -257,7 +255,7 @@ function EconomyAfterEvent() {
                     </button>
                     <div className="grow flex justify-center pr-4">
                         <p className="mx-4 my-auto font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
-                        <h1 className="font-bold my-auto text-lg mr-2">NOVINKY</h1>
+                        <h1 className="font-bold my-auto text-lg mr-2">{configData.buttonNewsText.toUpperCase()}</h1>
                     </div>
                     <div className="bg-white rounded-md w-14 mr-6 my-1">
                         <p className="text-center px-2 text-figma-black font-bold text-xl">{liquidity}</p>
@@ -308,8 +306,8 @@ function EconomyAfterEvent() {
                         </button>
                     </div>
                     <div className="flex justify-end w-full text-[10px] font-bold text-figma-black px-6">
-                        <span className="mr-5 text-center">NÁKUP<br />PRODEJ</span>
-                        <span className="my-auto">VÝNOS</span>
+                        <span className="mr-5 text-center" dangerouslySetInnerHTML={{ __html: configData.buySellNewsText }} />
+                        <span className="my-auto" dangerouslySetInnerHTML={{ __html: configData.earningsNewsText }} />
                     </div>
                     <div className="pb-24">
                         {displayedProductData.map(item => {
@@ -387,7 +385,7 @@ function EconomyAfterEvent() {
                     <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1.86694 7.5H17.8669M17.8669 7.5L11.8669 1.5M17.8669 7.5L11.8669 13.5" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    <span className="mx-3 text-lg">Obchod</span>
+                    <span className="mx-3 text-lg">{configData.buttonPortfolioText}</span>
                 </button>
             </div>
         </>
@@ -406,12 +404,16 @@ function Portfolio() {
         scenarios,
         setShowPortfolio,
         setRoundStart,
-        setShowHelp
+        setShowHelp,
+        configData
     } = useGameLoop();
 
     const { round, setRound, gameMode } = useGame();
     const [roundEndingAlert, setRoundEndingAlert] = useState(false);
     const [insufficientLiquidity, setInsufficientLiquidity] = useState(false);
+    const [delaydSellAlert, setDelayedSellAlert] = useState(false);
+    const [delaydSellAlertShown, setDelayedSellAlertShown] = useState(false);
+    const [productIndexToDelaySell, setPoductIndexToDelaySell] = useState<number>(-1);
     const [rerenderTrigger, setRerenderTrigger] = useState(false);
 
     const uniquePortfolioItems = portfolioItems.filter((item, index, self) =>
@@ -424,7 +426,6 @@ function Portfolio() {
             </div>
         );
     }
-
     //scrolling prevention
     useEffect(() => {
         if (roundEndingAlert || insufficientLiquidity) {
@@ -435,24 +436,45 @@ function Portfolio() {
         return () => {
             document.body.classList.remove('overflow-hidden');
         };
-    }, [roundEndingAlert, insufficientLiquidity]);
+    }, [roundEndingAlert, insufficientLiquidity, delaydSellAlert]);
 
     return (
         <>
             {roundEndingAlert &&
                 <div className="fixed z-0 bg-figma-black/70 h-screen w-screen backdrop-blur-sm">
-                    <img src='random-vynos.svg' alt="placeholder" className="mx-auto pt-28 relative z-10"></img>
-                    <p className="text-center mt-16 text-lg font-bold text-white">Ukončit Kolo ?</p>
+                    <img src={configData.endRound_IMG} alt="placeholder" className="mx-auto pt-28 relative z-10"></img>
+                    <p className="text-center mt-16 text-lg font-bold text-white">{configData.endRoundText}</p>
                     <div className="absolute flex w-full gap-8 bottom-20 justify-center text-white text-xl">
                         <button className="border border-white rounded-full flex px-10 py-2" onClick={() => setRoundEndingAlert(false)}>
-                            <span className="my-auto">Ne</span>
+                            <span className="my-auto">{configData.buttonNoText}</span>
                         </button>
                         <button className="border border-white rounded-full flex px-10 py-2" onClick={() => {
                             setShowPortfolio(false);
                             setRoundStart(true);
                             setRound(round + 1);
                         }}>
-                            <span className="my-auto">Ano</span>
+                            <span className="my-auto">{configData.buttonYesText}</span>
+                        </button>
+                    </div>
+                </div>
+            }
+            {delaydSellAlert &&
+                <div className="fixed z-0 bg-figma-black/70 h-screen w-screen backdrop-blur-sm">
+                    <img src={configData.reallySell_IMG} alt="placeholder" className="mx-auto pt-28 relative z-10"></img>
+                    <p className="text-center mt-16 text-lg font-bold text-white">{configData.reallySell_1_Text} {portfolioItems[productIndexToDelaySell].productName}. <br />{configData.reallySell_2_Text}</p>
+                    <div className="absolute flex w-full gap-8 bottom-20 justify-center text-white text-xl">
+                        <button className="border border-white rounded-full flex px-10 py-2" onClick={() => setDelayedSellAlert(false)}>
+                            <span className="my-auto">{configData.buttonNoText}</span>
+                        </button>
+                        <button className="border border-white rounded-full flex px-10 py-2" onClick={() => {
+                            if (productIndexToDelaySell != -1) {
+                                const item = portfolioItems[productIndexToDelaySell]
+                                item.autoSellIn = Math.ceil(Math.floor(Math.random() * 6 + 1) / Number(item.timeToSell));
+                                setDelayedSellAlertShown(true);
+                                setDelayedSellAlert(false);
+                            }
+                        }}>
+                            <span className="my-auto">{configData.buttonYesText}</span>
                         </button>
                     </div>
                 </div>
@@ -466,8 +488,8 @@ function Portfolio() {
                                 <path d="M3.93018 19.4268L19.3471 4.00988" stroke="#0B1F42" strokeWidth="2" strokeLinecap="round" />
                             </svg>
                         </button>
-                        <img src='nofunds.svg' alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
-                        <p className="text-center mt-5 text-lg font-bold text-figma-black">Na tuto investici bohužel nemáš dostatečné prostředky. Pokud ji opravdu chceš, budeš muset prodat něco ze svého portfolia.</p>
+                        <img src={configData.noBudget_IMG} alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
+                        <p className="text-center mt-5 text-lg font-bold text-figma-black">{configData.noBudgetText}</p>
                     </div>
                 </div>
             }
@@ -482,7 +504,7 @@ function Portfolio() {
                     </button>
                     <div className="grow flex justify-center pr-4">
                         <p className="mx-5 my-auto text-white font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
-                        <h1 className="text-white font-bold my-auto">OBCHOD</h1>
+                        <h1 className="text-white font-bold my-auto">{configData.buttonPortfolioText.toUpperCase()}</h1>
                     </div>
                     <div className="bg-white rounded-md w-14 mr-6 my-1">
                         <p className="text-center px-2 text-black font-bold text-xl">{liquidity}</p>
@@ -492,7 +514,7 @@ function Portfolio() {
 
             <div className="font-[Inter] bg-figma-black min-h-screen">
                 <div className="md:mx-5">
-                    <h1 className="mx-auto w-80 sm:w-96 lg:w-fit pt-20 text-lg font-medium text-white">Moje Portfolio</h1>
+                    <h1 className="mx-auto w-80 sm:w-96 lg:w-fit pt-20 text-lg font-medium text-white">{configData.portfolioTitleText}</h1>
                     {/* Map over productData with products in portfolio first */}
                     <div className="grid lg:grid-cols-2 xl:grid-cols-3 flex-col justify-center pb-24">
                         {[...uniquePortfolioItems, ...productData.filter(product => !portfolioItems.some(item => item.productName === product.productName))].map((product, index) => {
@@ -507,7 +529,7 @@ function Portfolio() {
 
                             // Ensure cost and fixedIncome are valid
                             const adjustedCost = Math.max(product.cost, 1);
-                            const isTimeToSellValid = product.timeToSell > -1;
+                            const isTimeToSellValid = Number(product.timeToSell) > -1;
 
                             return (
                                 <div className={`${count <= 0 && 'flex'} mt-4 min-w-80 sm:min-w-96 mx-auto h-fit`}>
@@ -542,7 +564,7 @@ function Portfolio() {
                                                 return (
                                                     <div key={`${product.productName}-${index}-${itemIndex}`} className="flex items-center space-x-2 mx-3 py-2 ">
                                                         <div className={`flex grow border-figma-stone/40 border ${item.autoSellIn > 0 ? 'border-dashed' : 'border-solid'} rounded-lg mr-2 p-2 font-bold`}>
-                                                            <h2 className="text-[12px] my-auto text-figma-stone">VÝNOS:</h2>
+                                                            <h2 className="text-[12px] my-auto text-figma-stone">{configData.earningsPortfolioText}</h2>
                                                             <h2 className="text-xl my-auto grow flex"><span className="mx-3">+</span>{item.fixedIncome > 0 && item.fixedIncome}{item.diceValues[5] > 0 &&
                                                                 <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                     <rect x="5.82291" y="5.36719" width="19.2341" height="19.2341" rx="2" stroke="#0B1F42" strokeLinejoin="round" />
@@ -552,7 +574,7 @@ function Portfolio() {
                                                                 </svg>}
                                                                 {item.fixedIncome <= 0 && item.diceValues[5] <= 0 && 0}
                                                             </h2>
-                                                            <h2 className="my-auto text-[11px] text-figma-stone">PRODEJ</h2>
+                                                            <h2 className="my-auto text-[11px] text-figma-stone">{configData.sellPortfolioText}</h2>
                                                             <h2 className="my-auto text-xl ml-4 mr-[14px] text-center">{item.cost}</h2>
                                                         </div>
                                                         {/* Sell Button */}
@@ -567,9 +589,16 @@ function Portfolio() {
                                                                     : 'border-black/30 text-black/30 cursor-not-allowed'
                                                                     }`}
                                                                 onClick={() => {
-                                                                    if ((item.timeToSell > 0 || count > oldCount) && count > 0) {
-                                                                        item.autoSellIn = Math.ceil(Math.floor(Math.random() * 6 + 1) / item.timeToSell);
-                                                                        setRerenderTrigger(!rerenderTrigger);
+                                                                    if ((Number(item.timeToSell) > 0) && count > 0) {
+                                                                        if (delaydSellAlertShown) {
+                                                                            item.autoSellIn = Math.ceil(Math.floor(Math.random() * 6 + 1) / Number(item.timeToSell));
+                                                                            setRerenderTrigger(!rerenderTrigger);
+                                                                        } else {
+                                                                            setPoductIndexToDelaySell(portfolioItems.findIndex((item) => item.productName === product.productName));
+                                                                            setDelayedSellAlert(true);
+                                                                            setRoundEndingAlert(false);
+                                                                            setInsufficientLiquidity(false);
+                                                                        }
                                                                     }
                                                                     else if ((isTimeToSellValid || count > oldCount) && count > 0) {
                                                                         const indexToSell = portfolioItems.findIndex(
@@ -596,7 +625,7 @@ function Portfolio() {
                                             })}
                                             {count <= 0 &&
                                                 <div className="flex justify-center rounded-lg mr-2 py-5 font-bold">
-                                                    <h2 className="text-[12px] my-auto text-figma-stone">VÝNOS:</h2>
+                                                    <h2 className="text-[12px] my-auto text-figma-stone">{configData.earningsPortfolioText}</h2>
                                                     <h2 className="text-xl my-auto flex"><span className="mx-3">+</span>{product.fixedIncome > 0 && product.fixedIncome}{product.diceValues[5] > 0 &&
                                                         <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                             <rect x="5.82291" y="5.36719" width="19.2341" height="19.2341" rx="2" stroke="#0B1F42" strokeLinejoin="round" />
@@ -637,7 +666,7 @@ function Portfolio() {
                     </div>
                 </div>
             </div>
-            {!roundEndingAlert && <div className="z-10 w-full flex justify-center fixed bottom-0 font-[Inter] font-bold bg-figma-stone md:pb-4">
+            {!roundEndingAlert && !delaydSellAlert && <div className="z-10 w-full flex justify-center fixed bottom-0 font-[Inter] font-bold bg-figma-stone md:pb-4">
                 <div className="flex items-center justify-end">
                     <button className='flex rounded-full hover:scale-110 duration-200 text-white border-white border-2 py-2 px-4 m-2'
                         onClick={() => {
@@ -648,7 +677,7 @@ function Portfolio() {
                         <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M1.86694 7.5H17.8669M17.8669 7.5L11.8669 1.5M17.8669 7.5L11.8669 13.5" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
-                        <span className="mx-3 text-lgm">Ukončit kolo</span>
+                        <span className="mx-3 text-lgm">{configData.buttonEndRoundText}</span>
                     </button>
                 </div>
             </div>}
@@ -671,7 +700,7 @@ function PortfolioTutorial() {
                         <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12.3755 20.4526H28.3755M28.3755 20.4526L22.3755 14.4526M28.3755 20.4526L22.3755 26.4526" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
-                        <span className="my-auto">Obchod</span>
+                        <span className="my-auto">{configData.buttonPortfolioText}</span>
                     </button>
                 </div>
             </div>
@@ -682,7 +711,7 @@ function PortfolioTutorial() {
 function Earnings() {
     const { liquidity, scenarios, setShowEarnings, portfolioItems,
         setLiquidity, setShowSite, setNextRound, setOldPortfolioItems,
-        setShowHelp } = useGameLoop();
+        setShowHelp, configData } = useGameLoop();
     const { round, gameMode } = useGame();
     let incomeSum = 0;
 
@@ -719,7 +748,7 @@ function Earnings() {
                     </button>
                     <div className="grow flex justify-center pr-4 text-figma-white">
                         <p className="mx-4 my-auto font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
-                        <h1 className="font-bold my-auto text-lg mr-2">VÝNOSY</h1>
+                        <h1 className="font-bold my-auto text-lg mr-2">{configData.buttonEarningsText.toUpperCase()}</h1>
                     </div>
                     <div className="bg-white rounded-md w-14 mr-6 my-1">
                         <p className="text-center px-2 text-figma-black font-bold text-xl">{liquidity}</p>
@@ -728,7 +757,7 @@ function Earnings() {
             </div>
 
             <div className="relative z-0 h-screen flex flex-col justify-center custom-radial-gradient">
-                <h1 className="mb-6 text-xl text-white text-center -mt-10">Tvoje výnosy za {round}. kolo</h1>
+                <h1 className="mb-6 text-xl text-white text-center -mt-10">{configData.yourEarningsText} {round}. {configData.roundText}</h1>
                 <div className="flex justify-center">
                     <div className="w-full max-w-[609px] min-w-80">
                         <div className="border border-white rounded-t-xl mx-8 bg-figma-black pb-6 pt-1">
@@ -761,7 +790,7 @@ function Earnings() {
                         <div className="mx-8 text-base bg-white rounded-b-xl flex pl-6 pr-7 py-3 text-figma-black font-medium">
                             <div style={{ clear: 'both' }}></div>
                             <div className="flex w-full">
-                                <h2 className="my-auto grow">CELKEM</h2>
+                                <h2 className="my-auto grow">{configData.earningsSumText}</h2>
                                 <h2
                                     className="text-2xl font-bold pop-in"
                                     style={{ animationDelay: `${sumDelay * popInDelay}s` }}
@@ -788,7 +817,7 @@ function Earnings() {
                         <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M1.86694 7.5H17.8669M17.8669 7.5L11.8669 1.5M17.8669 7.5L11.8669 13.5" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
-                        <span className="mx-3 text-lg">Novinky</span>
+                        <span className="mx-3 text-lg">{configData.buttonNewsText}</span>
                     </button>
                 </div>
             </div>
@@ -806,14 +835,14 @@ function EarningsTutorial() {
                 <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">
                     {configData.earningsTutorialText}
                     <br></br><br></br>
-                    Pojďme se podívat kolik investice vynesly.
+                    {configData.earningsTutorailPromptText}
                 </p>
                 <div className="absolute bottom-14 md:bottom-20 w-full">
                     <button className="mx-auto border border-white rounded-full flex pl-6 pr-10" onClick={() => setEarningsTutorial(false)}>
                         <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12.3755 20.4526H28.3755M28.3755 20.4526L22.3755 14.4526M28.3755 20.4526L22.3755 26.4526" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
-                        <span className="my-auto">Výnosy</span>
+                        <span className="my-auto">{configData.buttonEarningsText}</span>
                     </button>
                 </div>
             </div>
@@ -823,7 +852,7 @@ function EarningsTutorial() {
 
 function NewRound() {
     const { round, gameMode } = useGame();
-    const { scenarios, setEventIndex, eventData, setRoundStart, setShowEarnings, setShowBankrupcy } = useGameLoop();
+    const { scenarios, setEventIndex, eventData, setRoundStart, setShowEarnings, setShowBankruptcy } = useGameLoop();
 
     const soloGame = scenarios[gameMode].random == "TRUE";
 
@@ -832,7 +861,7 @@ function NewRound() {
         if (soloGame) newEvent = Math.floor(Math.random() * eventData.length);
         else newEvent = (eventData as any[]).findIndex((item: events) => item.eventName === scenarios[gameMode].eventOrder[round - 1]);
         setEventIndex(newEvent);
-        if (eventData[newEvent].bankroupcy === "TRUE") setShowBankrupcy(true);
+        if (eventData[newEvent].bankrouptcy === "TRUE") setShowBankruptcy(true);
     }, []);
 
     return (
@@ -914,7 +943,7 @@ function ShowHelp() {
                         </svg>
                     </button>
                     <div className="grow flex items-center justify-center pr-4">
-                        <h1 className="font-bold text-lg mr-2 mt-0.5">NÁPOVĚDA</h1>
+                        <h1 className="font-bold text-lg mr-2 mt-0.5">{configData.helpHeadlineText}</h1>
                     </div>
                     <div className="mr-6 my-1 flex items-center">
                         <button onClick={() => setShowHelp(false)}>
@@ -935,7 +964,7 @@ function ShowHelp() {
                         </div>
                     );
                 })}
-                <h2 className="text-lg mb-1 text-figma-black font-bold text-center">Jak hrát investice?</h2>
+                <h2 className="text-lg mb-1 text-figma-black font-bold text-center">{configData.helpHowToPlayText}</h2>
 
                 <div className="relative z-0 mx-5 text-figma-black">
                     <img className="h-36 mx-auto" src={scenarios[gameMode].IMG}></img>
@@ -958,28 +987,29 @@ function ShowHelp() {
     );
 }
 
-function Bankrupcy() {
+function Bankruptcy() {
 
     const { gameMode, round } = useGame();
-    const { portfolioItems, setPortfolioItems, scenarios, setShowHelp, eventData, eventIndex, liquidity, figmaColors, setShowBankrupcy } = useGameLoop();
+    const { portfolioItems, setPortfolioItems, scenarios,
+        setShowHelp, eventData, eventIndex, liquidity,
+        figmaColors, setShowBankruptcy, configData } = useGameLoop();
 
     const [rollingDices, SetRollingDices] = useState(false);
-    const [bancruptItems, setBancruptItems] = useState<string[]>([]);
+    const [bankruptItems, setBankruptItems] = useState<string[]>([]);
     const whiteDice = 8;
 
     useEffect(() => {
-        const updatedBancruptCategories: string[] = [];
+        const updatedBankruptCatergories: string[] = [];
         const updatedPorftoliItems = portfolioItems.filter(item => {
             const randomDice = Math.floor(Math.random() * 18) + 1;
-            const isBancrupt = item.minToPreventBankrupcy >= randomDice && item.minToPreventBankrupcy > 0;
+            const isBankrupt = item.minToPreventBankruptcy >= randomDice && item.minToPreventBankruptcy > 0;
 
-            if (isBancrupt) {
-                if (updatedBancruptCategories.indexOf(item.productName) === -1) updatedBancruptCategories.push(item.productName);
+            if (isBankrupt) {
+                if (updatedBankruptCatergories.indexOf(item.productName) === -1) updatedBankruptCatergories.push(item.productName);
             }
-            return !isBancrupt;
+            return !isBankrupt;
         });
-
-        setBancruptItems(updatedBancruptCategories);
+        setBankruptItems(updatedBankruptCatergories);
         setPortfolioItems(updatedPorftoliItems);
     }, []);
 
@@ -997,7 +1027,7 @@ function Bankrupcy() {
                     </button>
                     <div className="grow flex justify-center pr-4">
                         <p className="ml-2 mr-4 my-auto font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
-                        <h1 className="font-bold my-auto text-lg mr-2">BREAKING NEWS</h1>
+                        <h1 className="font-bold my-auto text-lg mr-2">{configData.crisisNewsHeadlineText}</h1>
                     </div>
                     <div className="bg-white rounded-md w-14 mr-6 my-1">
                         <p className="text-center px-2 text-figma-black font-bold text-xl">{liquidity}</p>
@@ -1009,7 +1039,7 @@ function Bankrupcy() {
                     <div className="mt-8 text-figma-black max-w-[39rem] mx-auto">
                         <div className="relative">
                             <img src={`events/${eventData[eventIndex].IMG}.png`}></img>
-                            <p className={`absolute font-bold text-base bottom-5 w-[90%] mx-5 px-3 text-figma-black bg-${figmaColors[eventData[eventIndex].color]}`}>BREAKING NEWS</p>
+                            <p className={`absolute font-bold text-base bottom-5 w-[90%] mx-5 px-3 text-figma-black bg-${figmaColors[eventData[eventIndex].color]}`}>{configData.crisisNewsHeadlineText}</p>
                         </div>
                         <h1 className="text-2xl font-bold mx-4 mt-7 leading-7">{eventData[eventIndex].eventName}</h1>
                         <p className="text-lg mx-4 mt-3 leading-6">{eventData[eventIndex].eventText}</p>
@@ -1018,22 +1048,22 @@ function Bankrupcy() {
                 </>
                 :
                 <div className="bg-figma-black h-screen">
-                    <h1 className="pt-40 font-bold text-lg text-figma-white text-center">Propukla krize</h1>
+                    <h1 className="pt-40 font-bold text-lg text-figma-white text-center">{configData.crisisHeadlineText}</h1>
                     <div className="pt-12">
                         <div className="size-10 mx-auto">
                             <RiveDice diceValue={1} diceColor={whiteDice} throwDelayIndex={0} />
                         </div>
-                        <h2 className="pt-16 font-medium text-lg text-figma-white text-center">Tyto investice ti bohužel zkrachovaly</h2>
+                        <h2 className="pt-16 font-medium text-lg text-figma-white text-center">{configData.crisisBankruptcyText}</h2>
                         <div className="py-10 my-8 rounded-lg font-bold text-lg max-w-72 sm:max-w-96 mx-auto text-figma-white border border-figma-white text-center">
-                            {bancruptItems.map(item => <p>{item}</p>)}
-                            {bancruptItems.length === 0 && <p>Tentokrat nic nezkrachovalo.</p>}
+                            {bankruptItems.length === 0 && <p>{configData.crisisNoBankruptcyText}</p>}
+                            {bankruptItems.map(item => <p key={item}>{item}</p>)}
                         </div>
                     </div>
 
                 </div>}
             <div className={`z-10 w-full flex justify-center fixed bottom-0 font-[Inter] font-medium md:pb-3 ${'bg-' + figmaColors[eventData[eventIndex].color]}`}>
                 <button className='flex rounded-full hover:scale-110 duration-200 text-figma-black border-figma-black border py-2 px-6 m-3'
-                    onClick={() => { !rollingDices ? SetRollingDices(true) : setShowBankrupcy(false) }}>
+                    onClick={() => { !rollingDices ? SetRollingDices(true) : setShowBankruptcy(false) }}>
 
                     <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1.86694 7.5H17.8669M17.8669 7.5L11.8669 1.5M17.8669 7.5L11.8669 13.5" stroke="#0B1F42" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -1051,7 +1081,7 @@ function GameLoop() {
     const { portfolioItems, configData, setLiquidity, setPortfolioItems, setNewPortfolioItems,
         setOldPortfolioItems, liquidity, productData, nextRound, economySummary, scenarios, roundStart,
         earningsTutorial, portfolioTutorial, newsTutorial, showPortfolio, showEarnings, showHelp,
-        showBankrupcy } = useGameLoop();
+        showBankruptcy } = useGameLoop();
 
     const soloGame = scenarios[gameMode].random == "TRUE";
 
@@ -1092,7 +1122,7 @@ function GameLoop() {
 
     let content = null;
     if (roundStart) content = <NewRound />;
-    else if (showBankrupcy) content = <Bankrupcy />;
+    else if (showBankruptcy) content = <Bankruptcy />;
     else if (showHelp) content = <ShowHelp />;
     else if (showEarnings && earningsTutorial) content = <EarningsTutorial />;
     else if (showEarnings) content = <Earnings />;

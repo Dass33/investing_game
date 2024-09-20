@@ -8,7 +8,7 @@ interface products {
     color: number;
     cost: number;
     fixedIncome: number;
-    minToPreventBankrupcy: number;
+    minToPreventBankruptcy: number;
     timeToSell: number;
     sellingForLastRounds: number;
     diceValues: number[];
@@ -16,7 +16,7 @@ interface products {
 
 function EndScreen() {
     const { totalScore, gameMode } = useGame();
-    const { portfolioItems, figmaColors, scenarios, liquidity } = useGameLoop();
+    const { portfolioItems, figmaColors, scenarios, liquidity, configData } = useGameLoop();
     const groupedItems = portfolioItems.reduce((acc: { [key: string]: products[] }, item) => {
         if (!acc[item.productName]) {
             acc[item.productName] = [];
@@ -43,7 +43,7 @@ function EndScreen() {
                 </svg>
                 <div className="mx-auto max-w-[40rem]">
                     <div className="flex relative z-10 justify-center gap-8 pt-20 md:pt-24 lg:pt-28 mb-20">
-                        <h1 className="text-2xl my-auto font-medium">SKÓRE</h1>
+                        <h1 className="text-2xl my-auto font-medium">{configData.scoreText}</h1>
                         <h1 className="text-6xl leading-[0.7] tracking-widest">{totalScore}</h1>
                     </div>
                     {Object.entries(groupedItems).map(([productName, items]) => {
@@ -64,7 +64,7 @@ function EndScreen() {
                         <h3 className="w-16 my-auto text-lg font-bold text-right">{liquidity}</h3>
                     </div>
 
-                    <h1 className="text-lg font-medium mt-10 relative z-10">Gratulujeme. Nějaká větička na závěr.</h1>
+                    <h1 className="text-lg font-medium mt-10 relative z-10">{configData.endText}</h1>
                     {soloGame && <div className="z-10 w-full flex mt-8 justify-center font-[Inter] font-bold">
                         <button className='bg-figma-black relative z-10 bg flex rounded-full hover:scale-110 duration-200 text-white border-white border py-2 px-4 m-2'
                             onClick={() => window.location.replace(window.location.href)}>  {/*temporary way to restart the game*/}

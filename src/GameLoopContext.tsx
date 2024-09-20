@@ -14,6 +14,43 @@ interface config {
     earningsTutorial_IMG: string;
     newsTutorialText: string;
     newsTutorial_IMG: string;
+    copryight: string;
+    crisisHeadlineText: string;
+    crisisBankruptcyText: string;
+    crisisNoBankruptcyText: string;
+    buttonPlayText: string;
+    buttonStartText: string;
+    buttonEarningsText: string;
+    buttonNewsText: string;
+    buttonPortfolioText: string;
+    buttonEndRoundText: string;
+    portfolioTitleText: string;
+    endRoundText: string;
+    endRound_IMG: string;
+    reallySell_1_Text: string;
+    reallySell_2_Text: string;
+    reallySell_IMG: string;
+    noBudgetText: string;
+    noBudget_IMG: string;
+    buttonYesText: string;
+    buttonNoText: string;
+    scoreText: string;
+    endText: string;
+    campaignInstructionText: string;
+    campaignInstruction_IMG: string;
+    buySellNewsText: string;
+    earningsNewsText: string;
+    earningsPortfolioText: string;
+    sellPortfolioText: string;
+    earningsTutorailPromptText: string;
+    crisisNewsHeadlineText: string;
+    earningsSumText: string;
+    helpHeadlineText: string;
+    helpHowToPlayText: string;
+    roundText: string;
+    roundsText: string;
+    yourEarningsText: string;
+    sellInRoundsText: string;
 }
 interface events {
     baseGame: string;
@@ -23,7 +60,7 @@ interface events {
     eventValue: number;
     IMG: string;
     color: number;
-    bankroupcy: string;
+    bankrouptcy: string;
 }
 
 interface products {
@@ -33,7 +70,7 @@ interface products {
     color: number;
     cost: number;
     fixedIncome: number;
-    minToPreventBankrupcy: number;
+    minToPreventBankruptcy: number;
     timeToSell: number;
     sellingForLastRounds: number;
     diceValues: number[];
@@ -97,8 +134,8 @@ interface GameLoopState {
     startingProductData: products[],
     showHelp: boolean,
     setShowHelp: Function,
-    showBankrupcy: boolean,
-    setShowBankrupcy: Function,
+    showBankruptcy: boolean,
+    setShowBankruptcy: Function,
 
 }
 
@@ -154,10 +191,10 @@ export const GameLoopProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const [showEarnings, setShowEarnings] = useState(true);
     const [economyHistory, setEconomyHistory] = useState<number[]>([]);
     const [showHelp, setShowHelp] = useState(false);
-    const [showBankrupcy, setShowBankrupcy] = useState(false);
+    const [showBankruptcy, setShowBankruptcy] = useState(false);
 
     return (
-        <GameLoopContext.Provider value={{ configData, eventData, scenarios, productData, setProductData, showSite, setShowSite, numberOfSites, liquidity, setLiquidity, portfolioItems, setPortfolioItems, newPortfolioItems, setNewPortfolioItems, oldPortfolioItems, setOldPortfolioItems, nextRound, setNextRound, portfolioItemCount, setPortfolioItemCount, eventIndex, setEventIndex, economySummary, setEconomySummary, isInitialized, figmaColors, roundStart, setRoundStart, setEarningsTutorial, earningsTutorial, setNewsTutorial, newsTutorial, setPortfolioTutorial, portfolioTutorial, showEarnings, showPortfolio, setShowEarnings, setShowPortfolio, setEconomyHistory, economyHistory, startingProductData, showHelp, setShowHelp, showBankrupcy, setShowBankrupcy }}>
+        <GameLoopContext.Provider value={{ configData, eventData, scenarios, productData, setProductData, showSite, setShowSite, numberOfSites, liquidity, setLiquidity, portfolioItems, setPortfolioItems, newPortfolioItems, setNewPortfolioItems, oldPortfolioItems, setOldPortfolioItems, nextRound, setNextRound, portfolioItemCount, setPortfolioItemCount, eventIndex, setEventIndex, economySummary, setEconomySummary, isInitialized, figmaColors, roundStart, setRoundStart, setEarningsTutorial, earningsTutorial, setNewsTutorial, newsTutorial, setPortfolioTutorial, portfolioTutorial, showEarnings, showPortfolio, setShowEarnings, setShowPortfolio, setEconomyHistory, economyHistory, startingProductData, showHelp, setShowHelp, showBankruptcy, setShowBankruptcy }}>
             {children}
         </GameLoopContext.Provider>
     );
