@@ -665,7 +665,7 @@ function Portfolio() {
                                                                             (item) => item.productName === product.productName
                                                                         );
 
-                                                                        if (indexToSell !== -1 && indexToSell) {
+                                                                        if (indexToSell !== -1 && indexToSell != undefined) {
                                                                             const updatedPortfolioItems = [...portfolioItems];
                                                                             updatedPortfolioItems.splice(indexToSell, 1);
                                                                             setPortfolioItems(updatedPortfolioItems);
