@@ -404,7 +404,7 @@ function EconomyAfterEvent() {
                                     <h3 className="my-auto flex-1 break-words font-bold text-base text-left grow">{item.productName}</h3>
                                     {costChange != 0 && <h3 className="w-6 my-auto text-[10px] font-bold text-right">({costChange > 0 && '+'}{costChange})</h3>}
                                     <h3 className="ml-1 min-w-6 my-auto text-lg font-bold text-right">{item.cost}</h3>
-                                    {lastRoundIncome != undefined ?
+                                    {lastRoundIncome != undefined && newIncome != lastRoundIncome ?
                                         <h3 className="w-6 ml-3 my-auto text-[10px] font-bold text-right">({newIncome - lastRoundIncome > 0 && '+'}{newIncome - lastRoundIncome})</h3>
                                         : <div className="w-6 ml-2"></div>
                                     }
