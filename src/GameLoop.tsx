@@ -53,7 +53,7 @@ function NewEvent() {
                                 <p className="ml-2 mr-4 my-auto font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
                                 <h1 className="font-bold my-auto text-lg mr-2">BREAKING NEWS</h1>
                             </div>
-                            <div className="bg-white rounded-md w-14 mr-6 my-1">
+                            <div className="bg-white rounded-md min-w-14 mr-6 my-1">
                                 <p className="text-center px-2 text-figma-black font-bold text-xl">{liquidity}</p>
                             </div>
                         </div>
@@ -157,7 +157,8 @@ function EconomyAfterEvent() {
         setEconomyHistory,
         economyHistory,
         setShowHelp,
-        configData
+        configData,
+        productHistory,
     } = useGameLoop();
 
     const productDataNoIncomeChange = productData.filter(item => item.incomeChanges === "FALSE");
@@ -197,27 +198,24 @@ function EconomyAfterEvent() {
 
             // Reverse apply events from economyOfRound to round - 1
             for (let i = round - 1; i >= economyOfRound; i--) {
-                const eventAfterRound: any = eventData[economyHistory[i]];
                 const eventAtRound: any = eventData[economyHistory[i - 1]];
 
                 newProductData = newProductData.map(item => {
-                    let costChange = Number(eventAfterRound[item.productName][0]);
                     let newIncome = Number(eventAtRound[item.productName][1]);
 
                     return {
                         ...item,
-                        cost: Math.max(0, Number(item.cost) - costChange),
+                        cost: productHistory[i].filter(product => product.productName === item.productName)[0].cost,
                         fixedIncome: Math.max(0, newIncome),
                     };
                 });
 
                 newProductDataIncome = newProductDataIncome.map(item => {
-                    let costChange = Number(eventAfterRound[item.productName][0]);
                     let newIncome = Number(eventAtRound[item.productName][1]);
 
                     return {
                         ...item,
-                        cost: Math.max(0, Number(item.cost) - costChange),
+                        cost: productHistory[i].filter(product => product.productName === item.productName)[0].cost,
                         fixedIncome: Math.max(0, newIncome),
                     };
                 });
@@ -239,7 +237,7 @@ function EconomyAfterEvent() {
 
                 return {
                     ...item,
-                    cost: Math.max(0, Number(item.cost) + costChange),
+                    cost: Math.max(1, Number(item.cost) + costChange),
                     fixedIncome: Math.max(0, newIncome),
                 };
             });
@@ -277,7 +275,7 @@ function EconomyAfterEvent() {
                         <p className="mx-4 my-auto font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
                         <h1 className="font-bold my-auto text-lg mr-2">{configData.buttonNewsText.toUpperCase()}</h1>
                     </div>
-                    <div className="bg-white rounded-md w-14 mr-6 my-1">
+                    <div className="bg-white rounded-md min-w-14 mr-6 my-1">
                         <p className="text-center px-2 text-figma-black font-bold text-xl">{liquidity}</p>
                     </div>
                 </div>
@@ -465,7 +463,9 @@ function Portfolio() {
         setShowPortfolio,
         setRoundStart,
         setShowHelp,
-        configData
+        configData,
+        setProductHistory,
+        productHistory
     } = useGameLoop();
 
     const { round, setRound, gameMode } = useGame();
@@ -497,6 +497,10 @@ function Portfolio() {
             document.body.classList.remove('overflow-hidden');
         };
     }, [roundEndingAlert, insufficientLiquidity, delaydSellAlert]);
+
+    useEffect(() => {
+        setProductHistory([...productHistory, productData]);
+    }, [productData]);
 
     return (
         <>
@@ -566,7 +570,7 @@ function Portfolio() {
                         <p className="mx-5 my-auto text-white font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
                         <h1 className="text-white font-bold my-auto">{configData.buttonPortfolioText.toUpperCase()}</h1>
                     </div>
-                    <div className="bg-white rounded-md w-14 mr-6 my-1">
+                    <div className="bg-white rounded-md min-w-14 mr-6 my-1">
                         <p className="text-center px-2 text-black font-bold text-xl">{liquidity}</p>
                     </div>
                 </div>
@@ -809,7 +813,7 @@ function Earnings() {
                         <p className="mx-4 my-auto font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
                         <h1 className="font-bold my-auto text-lg mr-2">{configData.buttonEarningsText.toUpperCase()}</h1>
                     </div>
-                    <div className="bg-white rounded-md w-14 mr-6 my-1">
+                    <div className="bg-white rounded-md min-w-14 mr-6 my-1">
                         <p className="text-center px-2 text-figma-black font-bold text-xl">{liquidity}</p>
                     </div>
                 </div>
@@ -1088,7 +1092,7 @@ function Bankruptcy() {
                         <p className="ml-2 mr-4 my-auto font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
                         <h1 className="font-bold my-auto text-lg mr-2">{configData.crisisNewsHeadlineText}</h1>
                     </div>
-                    <div className="bg-white rounded-md w-14 mr-6 my-1">
+                    <div className="bg-white rounded-md min-w-14 mr-6 my-1">
                         <p className="text-center px-2 text-figma-black font-bold text-xl">{liquidity}</p>
                     </div>
                 </div>
@@ -1180,7 +1184,7 @@ function GameLoop() {
     }
 
     let content = null;
-    if (roundStart) content = <NewRound />;
+    if (roundStart && round <= scenarios[gameMode].scenarioLength) content = <NewRound />;
     else if (showBankruptcy) content = <Bankruptcy />;
     else if (showHelp) content = <ShowHelp />;
     else if (portfolioTutorial) content = <PortfolioTutorial />;
