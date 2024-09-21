@@ -325,8 +325,8 @@ function EconomyAfterEvent() {
                             </svg>
                         </button>
                     </div>
-                    <div className="flex justify-end w-full text-[10px] font-bold text-figma-black px-6">
-                        <span className="mr-16 text-center" dangerouslySetInnerHTML={{ __html: configData.buySellNewsText }} />
+                    <div className="flex justify-end w-full text-[10px] font-bold text-figma-black px-12">
+                        <span className="mr-14 text-center" dangerouslySetInnerHTML={{ __html: configData.buySellNewsText }} />
                     </div>
                     <div className="pb-24">
                         {displayedProductData.map(item => {
@@ -335,7 +335,7 @@ function EconomyAfterEvent() {
                             return (
                                 <div
                                     className={`relative z-10 mt-2 mx-3 py-2 pl-3 pr-6 flex text-figma-white text-base rounded-full font-bold duration-300
-                            ${(costChange > 0 && 'bg-figma-teal') || (costChange < 0 && 'bg-figma-berries') || (costChange == 0 && 'bg-figma-black')}`}
+                                    ${(costChange > 0 && 'bg-figma-teal') || (costChange < 0 && 'bg-figma-berries') || (costChange == 0 && 'bg-figma-black')}`}
                                     key={item.productName}
                                 >
                                     <div className="my-auto ml-2 mr-3">
@@ -359,12 +359,12 @@ function EconomyAfterEvent() {
 
                                     <h3 className="my-auto flex-1 break-words font-bold text-base text-left grow">{item.productName}</h3>
                                     {costChange != 0 && <h3 className="w-6 my-auto text-[10px] font-bold text-right">({costChange > 0 && '+'}{costChange})</h3>}
-                                    <h3 className="ml-1 mr-14 min-w-6 my-auto text-lg font-bold text-right">{item.cost}</h3>
+                                    <h3 className="ml-1 mr-[4.25rem] min-w-6 my-auto text-lg font-bold text-right">{item.cost}</h3>
                                 </div>
                             );
                         })}
-                        <div className="flex justify-end w-full text-[10px] font-bold text-figma-black px-6 pt-2">
-                            <span className="mr-5 text-center" dangerouslySetInnerHTML={{ __html: configData.buySellNewsText }} />
+                        <div className="flex justify-end w-full text-[10px] font-bold text-figma-black px-9 pt-2">
+                            <span className="mr-8 text-center" dangerouslySetInnerHTML={{ __html: configData.buySellNewsText }} />
                             <span className="my-auto" dangerouslySetInnerHTML={{ __html: configData.earningsNewsText }} />
                         </div>
                         {displayedProductDataIncomeChange.map(item => {
@@ -407,10 +407,10 @@ function EconomyAfterEvent() {
                                     {costChange != 0 && <h3 className="w-6 my-auto text-[10px] font-bold text-right">({costChange > 0 && '+'}{costChange})</h3>}
                                     <h3 className="ml-1 min-w-6 my-auto text-lg font-bold text-right">{item.cost}</h3>
                                     {lastRoundIncome != undefined ?
-                                        <h3 className="w-6 ml-2 my-auto text-[10px] font-bold text-right">({newIncome - lastRoundIncome > 0 && '+'}{newIncome - lastRoundIncome})</h3>
+                                        <h3 className="w-6 ml-3 my-auto text-[10px] font-bold text-right">({newIncome - lastRoundIncome > 0 && '+'}{newIncome - lastRoundIncome})</h3>
                                         : <div className="w-6 ml-2"></div>
                                     }
-                                    <h3 className="min-w-3 ml-2 my-auto text-lg font-bold text-right">{item.fixedIncome}</h3>
+                                    <h3 className="min-w-3 ml-2 mr-3 my-auto text-lg font-bold text-right">{item.fixedIncome}</h3>
                                 </div>
                             );
                         })}
