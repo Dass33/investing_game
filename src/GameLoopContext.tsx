@@ -64,7 +64,7 @@ interface events {
 }
 
 interface products {
-    baseGame: string;
+    incomeChanges: string;
     productName: string;
     productDescription: string;
     color: number;

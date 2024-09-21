@@ -4,7 +4,7 @@ import { useGame } from "./GameContext";
 import { useGameLoop } from "./GameLoopContext";
 
 interface products {
-    baseGame: string;
+    incomeChanges: string;
     productName: string;
     productDescription: string;
     color: number;
@@ -100,7 +100,10 @@ function NewsTutorial() {
 
             <div className="z-10 w-full flex justify-center fixed bottom-14 md:bottom-20 font-[Inter] font-bold ">
                 <button className='flex rounded-full hover:scale-110 duration-200 text-white border-white border-2 py-2 px-4 m-2'
-                    onClick={() => { setNewsTutorial(false) }}>
+                    onClick={() => {
+                        setNewsTutorial(false)
+                        localStorage.setItem("tutorial", "false");
+                    }}>
 
                     <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1.86694 7.5H17.8669M17.8669 7.5L11.8669 1.5M17.8669 7.5L11.8669 13.5" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -157,11 +160,14 @@ function EconomyAfterEvent() {
         configData
     } = useGameLoop();
 
+    const productDataNoIncomeChange = productData.filter(item => item.incomeChanges === "FALSE");
+    const productDataIncomeChange = productData.filter(item => item.incomeChanges === "TRUE");
     const [isLatestEvent, setIsLatestEvent] = useState(true);
     const [economyOfRound, setEconomyOfRound] = useState(round);
     const [eventToShow, setEventToShow] = useState(eventData[eventIndex]);
     const [changesApplied, setChangesApplied] = useState(false);
-    const [displayedProductData, setDisplayedProductData] = useState(productData);
+    const [displayedProductData, setDisplayedProductData] = useState(productDataNoIncomeChange);
+    const [displayedProductDataIncomeChange, setDisplayedProductDataIncomeChange] = useState(productData);
 
     useEffect(() => {
         setEconomyHistory([...economyHistory, eventIndex]);
@@ -182,10 +188,12 @@ function EconomyAfterEvent() {
     useEffect(() => {
         if (economyOfRound === round) {
             // Latest data
-            setDisplayedProductData(productData);
+            setDisplayedProductData(productDataNoIncomeChange);
+            setDisplayedProductDataIncomeChange(productDataIncomeChange);
         } else if (economyOfRound < round) {
             // Start from latest productData and reverse apply events to reach the selected round
-            let newProductData = productData.map(item => ({ ...item }));
+            let newProductData = productDataNoIncomeChange.map(item => ({ ...item }));
+            let newProductDataIncome = productDataIncomeChange.map(item => ({ ...item }));
 
             // Reverse apply events from economyOfRound to round - 1
             for (let i = round - 1; i >= economyOfRound; i--) {
@@ -202,8 +210,20 @@ function EconomyAfterEvent() {
                         fixedIncome: Math.max(0, newIncome),
                     };
                 });
+
+                newProductDataIncome = newProductDataIncome.map(item => {
+                    let costChange = Number(eventAfterRound[item.productName][0]);
+                    let newIncome = Number(eventAtRound[item.productName][1]);
+
+                    return {
+                        ...item,
+                        cost: Math.max(0, Number(item.cost) - costChange),
+                        fixedIncome: Math.max(0, newIncome),
+                    };
+                });
             }
             setDisplayedProductData(newProductData);
+            setDisplayedProductDataIncomeChange(newProductDataIncome);
         }
     }, [economyOfRound, productData, economyHistory, eventData, round]);
 
@@ -306,37 +326,76 @@ function EconomyAfterEvent() {
                         </button>
                     </div>
                     <div className="flex justify-end w-full text-[10px] font-bold text-figma-black px-6">
-                        <span className="mr-5 text-center" dangerouslySetInnerHTML={{ __html: configData.buySellNewsText }} />
-                        <span className="my-auto" dangerouslySetInnerHTML={{ __html: configData.earningsNewsText }} />
+                        <span className="mr-16 text-center" dangerouslySetInnerHTML={{ __html: configData.buySellNewsText }} />
                     </div>
                     <div className="pb-24">
                         {displayedProductData.map(item => {
                             const costChange = (eventToShow as any)[item.productName][0];
-                            const newIncome = (eventToShow as any)[item.productName][1];
 
                             return (
                                 <div
-                                    className={`relative z-10 mt-2 mx-3 py-2 pl-3 pr-6 flex text-figma-white text-base rounded-full font-bold 
-                            ${(((costChange > 0 && newIncome >= 0) || (costChange >= 0 && newIncome > 0)) && 'bg-figma-teal') ||
-                                        (((costChange < 0 && newIncome <= 0) || (costChange <= 0 && newIncome < 0)) && 'bg-figma-berries') ||
-                                        (((costChange < 0 && newIncome > 0) || (costChange > 0 && newIncome < 0) || (costChange == 0 && newIncome == 0)) &&
-                                            'bg-figma-black')
-                                        }`}
+                                    className={`relative z-10 mt-2 mx-3 py-2 pl-3 pr-6 flex text-figma-white text-base rounded-full font-bold duration-300
+                            ${(costChange > 0 && 'bg-figma-teal') || (costChange < 0 && 'bg-figma-berries') || (costChange == 0 && 'bg-figma-black')}`}
                                     key={item.productName}
                                 >
                                     <div className="my-auto ml-2 mr-3">
-                                        {((costChange > 0 && newIncome >= 0) || (costChange >= 0 && newIncome > 0)) &&
+                                        {costChange > 0 &&
                                             <svg width="13" height="16" viewBox="0 0 13 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M6.77746 15.18L6.77747 0.750122" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
                                                 <path d="M12.0911 6.06377L6.77747 0.750122L1.46382 6.06376" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
                                             </svg>}
-                                        {((costChange < 0 && newIncome <= 0) || (costChange <= 0 && newIncome < 0)) &&
+                                        {costChange < 0 &&
                                             <svg width="13" height="17" viewBox="0 0 13 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M6.77734 1.37992L6.77734 15.8098" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
                                                 <path d="M1.4637 10.4962L6.77734 15.8098L12.091 10.4962" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
                                             </svg>
                                         }
-                                        {((costChange < 0 && newIncome > 0) || (costChange > 0 && newIncome < 0) || (costChange == 0 && newIncome == 0))
+                                        {costChange == 0 &&
+                                            <svg width="10" height="2" viewBox="0 0 10 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M8.83362 1.06006L0.721069 1.06006" stroke="#FFFDFD" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                        }
+                                    </div>
+
+                                    <h3 className="my-auto flex-1 break-words font-bold text-base text-left grow">{item.productName}</h3>
+                                    {costChange != 0 && <h3 className="w-6 my-auto text-[10px] font-bold text-right">({costChange > 0 && '+'}{costChange})</h3>}
+                                    <h3 className="ml-1 mr-14 min-w-6 my-auto text-lg font-bold text-right">{item.cost}</h3>
+                                </div>
+                            );
+                        })}
+                        <div className="flex justify-end w-full text-[10px] font-bold text-figma-black px-6 pt-2">
+                            <span className="mr-5 text-center" dangerouslySetInnerHTML={{ __html: configData.buySellNewsText }} />
+                            <span className="my-auto" dangerouslySetInnerHTML={{ __html: configData.earningsNewsText }} />
+                        </div>
+                        {displayedProductDataIncomeChange.map(item => {
+                            const costChange = (eventToShow as any)[item.productName][0];
+                            const newIncome = (eventToShow as any)[item.productName][1];
+
+                            let lastRoundIncome: number = 0
+                            if (economyOfRound >= 2)
+                                lastRoundIncome = (eventData[economyHistory[economyOfRound - 2]] as any)[item.productName][1];
+
+                            return (
+                                <div
+                                    className={`relative z-10 mt-2 mx-3 py-2 pl-3 pr-6 flex text-figma-white text-base rounded-full font-bold duration-300
+                                ${(((costChange < 0 && newIncome > 0) || (costChange > 0 && newIncome < 0) || (costChange == 0 && newIncome == lastRoundIncome)) && 'bg-figma-black') ||
+                                        (((costChange < 0 && newIncome <= 0) || (costChange <= 0 && newIncome < lastRoundIncome)) && 'bg-figma-berries') ||
+                                        (((costChange > 0 && newIncome >= 0) || (costChange >= 0 && newIncome > lastRoundIncome)) && 'bg-figma-teal')}`}
+                                    key={item.productName}
+                                >
+                                    <div className="my-auto ml-2 mr-3">
+                                        {((costChange > 0 && newIncome >= 0) || (costChange >= 0 && newIncome > lastRoundIncome)) &&
+                                            <svg width="13" height="16" viewBox="0 0 13 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6.77746 15.18L6.77747 0.750122" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                                                <path d="M12.0911 6.06377L6.77747 0.750122L1.46382 6.06376" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>}
+                                        {((costChange < 0 && newIncome <= 0) || (costChange <= 0 && newIncome < lastRoundIncome)) &&
+                                            <svg width="13" height="17" viewBox="0 0 13 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6.77734 1.37992L6.77734 15.8098" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                                                <path d="M1.4637 10.4962L6.77734 15.8098L12.091 10.4962" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                        }
+                                        {((costChange < 0 && newIncome > 0) || (costChange > 0 && newIncome < 0) || (costChange == 0 && newIncome == lastRoundIncome))
                                             &&
                                             <svg width="10" height="2" viewBox="0 0 10 2" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M8.83362 1.06006L0.721069 1.06006" stroke="#FFFDFD" strokeLinecap="round" strokeLinejoin="round" />
@@ -347,7 +406,8 @@ function EconomyAfterEvent() {
                                     <h3 className="my-auto flex-1 break-words font-bold text-base text-left grow">{item.productName}</h3>
                                     {costChange != 0 && <h3 className="w-6 my-auto text-[10px] font-bold text-right">({costChange > 0 && '+'}{costChange})</h3>}
                                     <h3 className="ml-1 min-w-6 my-auto text-lg font-bold text-right">{item.cost}</h3>
-                                    {newIncome != 0 ? <h3 className="w-6 ml-2 my-auto text-[10px] font-bold text-right">({newIncome > 0 && '+'}{newIncome})</h3>
+                                    {lastRoundIncome != undefined ?
+                                        <h3 className="w-6 ml-2 my-auto text-[10px] font-bold text-right">({newIncome - lastRoundIncome > 0 && '+'}{newIncome - lastRoundIncome})</h3>
                                         : <div className="w-6 ml-2"></div>
                                     }
                                     <h3 className="min-w-3 ml-2 my-auto text-lg font-bold text-right">{item.fixedIncome}</h3>
@@ -695,7 +755,6 @@ function PortfolioTutorial() {
                 <div className="absolute bottom-14 md:bottom-20 w-full">
                     <button className="mx-auto border border-white rounded-full flex pl-6 pr-10" onClick={() => {
                         setPortfolioTutorial(false);
-                        localStorage.setItem("tutorial", "false");
                     }}>
                         <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12.3755 20.4526H28.3755M28.3755 20.4526L22.3755 14.4526M28.3755 20.4526L22.3755 26.4526" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -1124,12 +1183,12 @@ function GameLoop() {
     if (roundStart) content = <NewRound />;
     else if (showBankruptcy) content = <Bankruptcy />;
     else if (showHelp) content = <ShowHelp />;
+    else if (portfolioTutorial) content = <PortfolioTutorial />;
     else if (showEarnings && earningsTutorial) content = <EarningsTutorial />;
     else if (showEarnings) content = <Earnings />;
     else if (nextRound && !economySummary && newsTutorial) content = <NewsTutorial />;
     else if (nextRound && !economySummary && !soloGame) content = <NewEvent />;
     else if (nextRound) content = <EconomyAfterEvent />;
-    else if (showPortfolio && portfolioTutorial) content = <PortfolioTutorial />;
     else if (showPortfolio) content = <Portfolio />;
 
     return content;
