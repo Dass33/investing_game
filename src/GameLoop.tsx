@@ -1101,7 +1101,7 @@ function Bankruptcy() {
                 <>
                     <div className="mt-8 text-figma-black max-w-[39rem] mx-auto">
                         <div className="relative">
-                            <img src={`events/${eventData[eventIndex].IMG}.png`}></img>
+                            <img src={`events/${eventData[eventIndex].IMG}`}></img>
                             <p className={`absolute font-bold text-base bottom-5 w-[90%] mx-5 px-3 text-figma-black bg-${figmaColors[eventData[eventIndex].color]}`}>{configData.crisisNewsHeadlineText}</p>
                         </div>
                         <h1 className="text-2xl font-bold mx-4 mt-7 leading-7">{eventData[eventIndex].eventName}</h1>
