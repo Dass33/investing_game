@@ -39,8 +39,8 @@ interface config {
     campaignInstructionText: string;
     campaignInstruction_IMG: string;
     buySellNewsText: string;
-    earningsNewsText: string;
-    earningsPortfolioText: string;
+    earningsText: string;
+    earningsColonText: string;
     sellPortfolioText: string;
     earningsTutorailPromptText: string;
     crisisNewsHeadlineText: string;

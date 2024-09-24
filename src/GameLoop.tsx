@@ -139,7 +139,7 @@ function RiveDice({ diceValue, diceColor, throwDelayIndex }: { diceValue: number
 }
 
 function EconomyAfterEvent() {
-    const { round, gameMode } = useGame();
+    const { round, gameMode, setEndGame, setTotalScore } = useGame();
 
     const {
         productData,
@@ -363,7 +363,7 @@ function EconomyAfterEvent() {
                         })}
                         <div className="flex justify-end w-full text-[10px] font-bold text-figma-black px-9 pt-2">
                             <span className="mr-8 text-center" dangerouslySetInnerHTML={{ __html: configData.buySellNewsText }} />
-                            <span className="my-auto" dangerouslySetInnerHTML={{ __html: configData.earningsNewsText }} />
+                            <span className="my-auto" dangerouslySetInnerHTML={{ __html: configData.earningsText }} />
                         </div>
                         {displayedProductDataIncomeChange.map(item => {
                             const costChange = (eventToShow as any)[item.productName][0];
@@ -421,6 +421,13 @@ function EconomyAfterEvent() {
                     onClick={() => {
                         const updatedPortfolioItems = [...portfolioItems];
                         let addLiquidity = 0;
+
+                        // calculating the total score at the end of the game
+                        if (round >= scenarios[gameMode].scenarioLength) {
+                            let score = portfolioItems.reduce((acc, item) => acc + Number(item.cost), 0);
+                            setTotalScore((liquidity ?? 0) + score);
+                            setEndGame(true);
+                        }
 
                         for (let i = portfolioItems.length - 1; i >= 0; i--) {
                             if (updatedPortfolioItems[i].autoSellIn === 1) {
@@ -628,7 +635,7 @@ function Portfolio() {
                                                 return (
                                                     <div key={`${product.productName}-${index}-${itemIndex}`} className="flex items-center space-x-2 mx-3 py-2 ">
                                                         <div className={`flex grow border-figma-stone/40 border ${item.autoSellIn > 0 ? 'border-dashed' : 'border-solid'} rounded-lg mr-2 p-2 font-bold`}>
-                                                            <h2 className="text-[12px] my-auto text-figma-stone">{configData.earningsPortfolioText}</h2>
+                                                            <h2 className="text-[12px] my-auto text-figma-stone">{configData.earningsColonText}</h2>
                                                             <h2 className="text-xl my-auto grow flex"><span className="mx-3">+</span>{item.fixedIncome > 0 && item.fixedIncome}{item.diceValues[5] > 0 &&
                                                                 <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                     <rect x="5.82291" y="5.36719" width="19.2341" height="19.2341" rx="2" stroke="#0B1F42" strokeLinejoin="round" />
@@ -689,7 +696,7 @@ function Portfolio() {
                                             })}
                                             {count <= 0 &&
                                                 <div className="flex justify-center rounded-lg mr-2 py-5 font-bold">
-                                                    <h2 className="text-[12px] my-auto text-figma-stone">{configData.earningsPortfolioText}</h2>
+                                                    <h2 className="text-[12px] my-auto text-figma-stone">{configData.earningsColonText}</h2>
                                                     <h2 className="text-xl my-auto flex"><span className="mx-3">+</span>{product.fixedIncome > 0 && product.fixedIncome}{product.diceValues[5] > 0 &&
                                                         <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                             <rect x="5.82291" y="5.36719" width="19.2341" height="19.2341" rx="2" stroke="#0B1F42" strokeLinejoin="round" />
@@ -1021,10 +1028,31 @@ function ShowHelp() {
             <div className="mt-16 max-w-[40rem] mx-auto md:mt-20">
                 {productData.map((item) => {
                     return (
-                        <div className="relative z-0 mt-1 mx-3 pl-3 pr-6 text-figma-black" key={item.productName}>
-                            <h3 className={`text-lg rounded-lg font-bold pl-4 py-1 bg-${figmaColors[item.color]}`}>{item.productName}</h3>
-                            <p className="mt-4 text-base font-medium min-h-16 mb-10">{item.productDescription}</p>
-                        </div>
+                        <>
+                            <div className="relative z-0 mt-1 mx-3 pl-3 pr-6 text-figma-black mb-10" key={item.productName}>
+                                <h3 className={`text-lg rounded-lg font-bold pl-4 py-1 bg-${figmaColors[item.color]}`}>{item.productName}</h3>
+                                <p className="mt-4 text-base font-medium min-h-14 mb-1">{item.productDescription}</p>
+                                {item.diceValues[5] > 0 &&
+                                    <>
+                                        <div className="grid grid-cols-7 grid-rows-2 gap-y-1 mt-4 text-center">
+                                            <p className="row-span-2 pt-9 text-xs">{configData.earningsText}</p>
+                                            <img src="dices/dice1.svg" className="mx-auto"></img>
+                                            <img src="dices/dice2.svg" className="mx-auto"></img>
+                                            <img src="dices/dice3.svg" className="mx-auto"></img>
+                                            <img src="dices/dice4.svg" className="mx-auto"></img>
+                                            <img src="dices/dice5.svg" className="mx-auto"></img>
+                                            <img src="dices/dice6.svg" className="mx-auto"></img>
+                                            <p>{item.diceValues[0] > 0 ? '+' + item.diceValues[0] : '-'}</p>
+                                            <p>{item.diceValues[1] > 0 ? '+' + item.diceValues[1] : '-'}</p>
+                                            <p>{item.diceValues[2] > 0 ? '+' + item.diceValues[2] : '-'}</p>
+                                            <p>{item.diceValues[3] > 0 ? '+' + item.diceValues[3] : '-'}</p>
+                                            <p>{item.diceValues[4] > 0 ? '+' + item.diceValues[4] : '-'}</p>
+                                            <p>{item.diceValues[5] > 0 ? '+' + item.diceValues[5] : '-'}</p>
+                                        </div>
+                                    </>
+                                }
+                            </div>
+                        </>
                     );
                 })}
                 <h2 className="text-lg mb-1 text-figma-black font-bold text-center">{configData.helpHowToPlayText}</h2>
@@ -1140,7 +1168,7 @@ function Bankruptcy() {
 
 function GameLoop() {
 
-    const { round, setEndGame, setTotalScore, gameMode } = useGame();
+    const { round, gameMode } = useGame();
     const { portfolioItems, configData, setLiquidity, setPortfolioItems, setNewPortfolioItems,
         setOldPortfolioItems, liquidity, productData, nextRound, economySummary, scenarios, roundStart,
         earningsTutorial, portfolioTutorial, newsTutorial, showPortfolio, showEarnings, showHelp,
@@ -1168,12 +1196,6 @@ function GameLoop() {
         }
     }, []);
 
-    // calculating the total score at the end of the game
-    if (round > scenarios[gameMode].scenarioLength) {
-        let score = portfolioItems.reduce((acc, item) => acc + Number(item.cost), 0);
-        setTotalScore((liquidity ?? 0) + score);
-        setEndGame(true);
-    }
 
     if (!productData || portfolioItems === null || liquidity === null) {
         return (
@@ -1192,7 +1214,7 @@ function GameLoop() {
     else if (showEarnings) content = <Earnings />;
     else if (nextRound && !economySummary && newsTutorial) content = <NewsTutorial />;
     else if (nextRound && !economySummary && !soloGame) content = <NewEvent />;
-    else if (nextRound) content = <EconomyAfterEvent />;
+    else if (nextRound) content = <EconomyAfterEvent />; // end game loop logic here
     else if (showPortfolio) content = <Portfolio />;
 
     return content;
