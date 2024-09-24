@@ -450,7 +450,7 @@ function EconomyAfterEvent() {
                     <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1.86694 7.5H17.8669M17.8669 7.5L11.8669 1.5M17.8669 7.5L11.8669 13.5" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    <span className="mx-3 text-lg">{configData.buttonPortfolioText}</span>
+                    <span className="mx-3 text-lg">{round < scenarios[gameMode].scenarioLength ? configData.buttonPortfolioText : configData.endGame}</span>
                 </button>
             </div>
         </>

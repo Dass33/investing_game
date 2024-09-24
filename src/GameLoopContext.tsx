@@ -51,6 +51,7 @@ interface config {
     roundsText: string;
     yourEarningsText: string;
     sellInRoundsText: string;
+    endGame: string;
 }
 interface events {
     baseGame: string;
