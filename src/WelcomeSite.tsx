@@ -11,6 +11,7 @@ interface scenarios {
     scenarioLength: number;
     howToPlay: string;
     howToPlay2: string;
+    howToPlay3: string;
     IMG: string;
     IMG2: string;
     eventOrder: string[];
@@ -99,7 +100,7 @@ function InstructionSite() {
     if (pageOne) return (
         <div className="bg-figma-black h-screen text-white">
             <img src={`${scenariosData[gameMode].IMG}`} alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
-            <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6" dangerouslySetInnerHTML={{ __html: scenariosData[gameMode].howToPlay }} />
+            <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{scenariosData[gameMode].howToPlay}</p>
             <div className="absolute bottom-10 md:bottom-20 w-full">
                 <button className="block mx-auto rounded-lg hover:scale-110 duration-200" onClick={() => setPageOne(false)}>
                     <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -115,7 +116,8 @@ function InstructionSite() {
         <>
             <div className="bg-figma-black h-screen text-white">
                 <img src={`${scenariosData[gameMode].IMG2}`} alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
-                <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6" dangerouslySetInnerHTML={{ __html: scenariosData[gameMode].howToPlay2 }} />
+                <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{scenariosData[gameMode].howToPlay2}</p>
+                <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{scenariosData[gameMode].howToPlay3}</p>
                 <div className="absolute bottom-14 md:bottom-20 w-full">
                     <button className="mx-auto border border-white rounded-full flex pl-6 pr-10" onClick={() => setShowWelcomeSite(false)}>
                         <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">

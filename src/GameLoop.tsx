@@ -71,7 +71,10 @@ function NewEvent() {
                 <div className="h-screen bg-figma-white text-figma-black font-medium font-[Inter] md:flex md:items-center md:justify-center">
                     <div className="md:w-[50rem] xl:w-[74rem] mx-auto md:flex md:items-center md:justify-center md:pb-40 md:gap-16">
                         <img src={configData.campaignInstruction_IMG} alt="placeholder" className="mx-auto pt-12 relative z-10 md:w-72 md:pt-0 md:mx-0"></img>
-                        <p className="text-center pt-12 text-lg px-7 md:pt-0" dangerouslySetInnerHTML={{ __html: configData.campaignInstructionText }} />
+                        <div>
+                            <p className="text-center pt-12 text-lg px-7 md:pt-0">{configData.campaignInstructionText}</p>
+                            <p className="text-center pt-12 text-lg px-7 md:pt-0">{configData.campaignInstructionText2}</p>
+                        </div>
                     </div>
                 </div>
             }
@@ -324,7 +327,7 @@ function EconomyAfterEvent() {
                         </button>
                     </div>
                     <div className="flex justify-end w-full text-[10px] font-bold text-figma-black px-12">
-                        <span className="mr-14 text-center" dangerouslySetInnerHTML={{ __html: configData.buySellNewsText }} />
+                        <span className="mr-14 text-center">{configData.buySellNewsText}</span>
                     </div>
                     <div className="pb-24">
                         {displayedProductData.map(item => {
@@ -362,8 +365,8 @@ function EconomyAfterEvent() {
                             );
                         })}
                         <div className="flex justify-end w-full text-[10px] font-bold text-figma-black px-9 pt-2">
-                            <span className="mr-8 text-center" dangerouslySetInnerHTML={{ __html: configData.buySellNewsText }} />
-                            <span className="my-auto" dangerouslySetInnerHTML={{ __html: configData.earningsText }} />
+                            <span className="mr-8 text-center">{configData.buySellNewsText}</span>
+                            <span className="mr-8 text-center">{configData.earningsText}</span>
                         </div>
                         {displayedProductDataIncomeChange.map(item => {
                             const costChange = (eventToShow as any)[item.productName][0];

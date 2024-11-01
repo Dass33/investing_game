@@ -37,6 +37,7 @@ interface config {
     scoreText: string;
     endText: string;
     campaignInstructionText: string;
+    campaignInstructionText2: string;
     campaignInstruction_IMG: string;
     buySellNewsText: string;
     earningsText: string;
