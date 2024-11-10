@@ -1035,25 +1035,6 @@ function ShowHelp() {
                             <div className="relative z-0 mt-1 mx-3 pl-3 pr-6 text-figma-black mb-10" key={item.productName}>
                                 <h3 className={`text-lg rounded-lg font-bold pl-4 py-1 bg-${figmaColors[item.color]}`}>{item.productName}</h3>
                                 <p className="mt-4 text-base font-medium min-h-14 mb-1">{item.productDescription}</p>
-                                {item.diceValues[5] > 0 &&
-                                    <>
-                                        <div className="grid grid-cols-7 grid-rows-2 gap-y-1 mt-4 text-center">
-                                            <p className="row-span-2 pt-9 text-xs">{configData.earningsText}</p>
-                                            <img src="dices/dice1.svg" className="mx-auto"></img>
-                                            <img src="dices/dice2.svg" className="mx-auto"></img>
-                                            <img src="dices/dice3.svg" className="mx-auto"></img>
-                                            <img src="dices/dice4.svg" className="mx-auto"></img>
-                                            <img src="dices/dice5.svg" className="mx-auto"></img>
-                                            <img src="dices/dice6.svg" className="mx-auto"></img>
-                                            <p>{item.diceValues[0] > 0 ? '+' + item.diceValues[0] : '-'}</p>
-                                            <p>{item.diceValues[1] > 0 ? '+' + item.diceValues[1] : '-'}</p>
-                                            <p>{item.diceValues[2] > 0 ? '+' + item.diceValues[2] : '-'}</p>
-                                            <p>{item.diceValues[3] > 0 ? '+' + item.diceValues[3] : '-'}</p>
-                                            <p>{item.diceValues[4] > 0 ? '+' + item.diceValues[4] : '-'}</p>
-                                            <p>{item.diceValues[5] > 0 ? '+' + item.diceValues[5] : '-'}</p>
-                                        </div>
-                                    </>
-                                }
                             </div>
                         </>
                     );
