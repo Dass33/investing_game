@@ -38,7 +38,7 @@ function useJson(index: number) {
 
 function LandingSite() {
     const scenariosData: scenarios[] = useJson(3);
-    const { setGameMode, setShowWelcomeSite, setShowLandingSite } = useGame();
+    const { setShowWelcomeSite, setShowLandingSite } = useGame();
     const { configData } = useGameLoop();
     if (!scenariosData || configData === null) {
         return (
@@ -63,15 +63,6 @@ function LandingSite() {
             </svg>
             <img src="cover.svg" alt="placeholder" className="mx-auto pt-28 relative z-10"></img>
             <div className="relative z-10">
-                <select
-                    className="block mx-auto text-lg lg:text-2xl bg-figma-black border-figma-white border rounded-lg py-4 px-6 hover:scale-110 duration-200 mt-16"
-                    onChange={(e) => setGameMode(e.target.value)}
-                >
-                    {scenariosData.map((scenario, index) => (
-                        <option key={index} value={index}>{scenario.scenarioName}</option>
-                    ))}
-                </select>
-
                 <button className="block mt-12 mx-auto text-3xl bg-figma-black lg:text-4xl border-white border rounded-full py-2 px-7 font-bold hover:scale-110 duration-200"
                     onClick={() => {
                         if (localStorage.getItem("tutorial") === "false") setShowWelcomeSite(false);
@@ -133,7 +124,18 @@ function InstructionSite() {
 }
 
 function WelcomeSite() {
-    const { showLandingSite } = useGame()
+    const { setGameMode, showLandingSite } = useGame()
+    const urlParams = new URLSearchParams(window.location.search);
+    const scenariosData: scenarios[] = useJson(3);
+
+    useEffect(() => {
+        const urlGameMode = urlParams.get('gameMode');
+
+        if (scenariosData && urlGameMode && scenariosData.length > parseInt(urlGameMode)) {
+            setGameMode(urlGameMode);
+        }
+    }, [scenariosData]);
+
     return (
         <>
             {showLandingSite && <LandingSite />}
