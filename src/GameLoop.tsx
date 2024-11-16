@@ -925,7 +925,7 @@ function EarningsTutorial() {
 
 function NewRound() {
     const { round, gameMode } = useGame();
-    const { scenarios, setEventIndex, eventData, setRoundStart, setShowEarnings, setShowBankruptcy } = useGameLoop();
+    const { scenarios, setEventIndex, eventData, setRoundStart, setShowEarnings, setShowBankruptcy, portfolioItems } = useGameLoop();
 
     const soloGame = scenarios[gameMode].random == "TRUE";
 
@@ -988,6 +988,12 @@ function NewRound() {
 
             <div className="absolute z-10 bottom-16 w-full">
                 <button className="block mx-auto  hover:scale-110 duration-200" onClick={() => {
+                    const diceRolls: number[] = [];
+                    portfolioItems.forEach(() => {
+                        diceRolls.push(Math.floor(Math.random() * 6)); // 0-5
+                        //continue here
+                        // create a global varible in which the dice rolls for the round are stored
+                    });
                     setRoundStart(false);
                     setShowEarnings(true);
                 }}>

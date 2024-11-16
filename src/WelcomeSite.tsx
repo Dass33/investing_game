@@ -38,7 +38,7 @@ function useJson(index: number) {
 
 function LandingSite() {
     const scenariosData: scenarios[] = useJson(3);
-    const { setShowWelcomeSite, setShowLandingSite } = useGame();
+    const { setShowLandingSite } = useGame();
     const { configData } = useGameLoop();
     if (!scenariosData || configData === null) {
         return (
@@ -65,8 +65,7 @@ function LandingSite() {
             <div className="relative z-10">
                 <button className="block mt-12 mx-auto text-3xl bg-figma-black lg:text-4xl border-white border rounded-full py-2 px-7 font-bold hover:scale-110 duration-200"
                     onClick={() => {
-                        if (localStorage.getItem("tutorial") === "false") setShowWelcomeSite(false);
-                        else setShowLandingSite(false);
+                        setShowLandingSite(false);
                     }}>{configData.buttonPlayText}</button>
             </div>
             <h3 className="text-center text-[11px] relative z-10 mt-8">{configData.copryight}</h3>
@@ -76,9 +75,8 @@ function LandingSite() {
 
 function InstructionSite() {
     const scenariosData: scenarios[] = useJson(3);
-    const { gameMode, setShowWelcomeSite } = useGame();
+    const { gameMode, setShowWelcomeSite, setGameMode } = useGame();
     const { configData } = useGameLoop();
-    const [pageOne, setPageOne] = useState(true);
 
     if (!scenariosData || configData === null) {
         return (
@@ -88,12 +86,14 @@ function InstructionSite() {
         );
     }
 
-    if (pageOne) return (
+    if (scenariosData[gameMode].random == "FALSE") return (
         <div className="bg-figma-black h-screen text-white">
             <img src={`${scenariosData[gameMode].IMG}`} alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
             <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{scenariosData[gameMode].howToPlay}</p>
+            <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{scenariosData[gameMode].howToPlay2}</p>
+            <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{scenariosData[gameMode].howToPlay3}</p>
             <div className="absolute bottom-10 md:bottom-20 w-full">
-                <button className="block mx-auto rounded-lg hover:scale-110 duration-200" onClick={() => setPageOne(false)}>
+                <button className="block mx-auto rounded-lg hover:scale-110 duration-200" onClick={() => setShowWelcomeSite(false)}>
                     <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect x="0.875488" y="0.952637" width="39" height="39" rx="19.5" fill="#0B1F42" />
                         <rect x="0.875488" y="0.952637" width="39" height="39" rx="19.5" stroke="white" />
@@ -106,9 +106,20 @@ function InstructionSite() {
     else return (
         <>
             <div className="bg-figma-black h-screen text-white">
-                <img src={`${scenariosData[gameMode].IMG2}`} alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
-                <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{scenariosData[gameMode].howToPlay2}</p>
-                <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{scenariosData[gameMode].howToPlay3}</p>
+                <div className="flex-col pt-12">
+                    {scenariosData.map((scenario, index) => (
+                        scenario.random == "TRUE" &&
+                        <button className={`block mx-auto text-2xl lg:text-4xl bg-figma-black rounded-full px-6 hover:scale-110 duration-200 mt-6 py-2
+                                ${gameMode == index ? "bg-figma-white text-figma-black" : "bg-transparent bg-figma-white"}`}
+                            onClick={() => setGameMode(index)}>{scenariosData[index].scenarioName}</button>
+                    ))}
+                </div>
+                <div className="text-center mt-20 text-lg sm:text-xl mx-auto max-w-[21rem] md:max-w-96 px-6 font-medium">
+                    <p className="pt-4">{scenariosData[gameMode].howToPlay}</p>
+                    <p className="pt-4">{scenariosData[gameMode].howToPlay2}</p>
+                    <p className="pt-4">{scenariosData[gameMode].howToPlay3}</p>
+                </div>
+
                 <div className="absolute bottom-14 md:bottom-20 w-full">
                     <button className="mx-auto border border-white rounded-full flex pl-6 pr-10" onClick={() => setShowWelcomeSite(false)}>
                         <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
