@@ -53,6 +53,10 @@ interface config {
     yourEarningsText: string;
     sellInRoundsText: string;
     endGame: string;
+    helpTabsName: string[];
+    helpGoalText: string;
+    helpTipHeadline1: string;
+    helpTipText1: string;
 }
 interface events {
     baseGame: string;
