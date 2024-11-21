@@ -51,14 +51,14 @@ function EndScreen() {
                         items.forEach(item => value += Number(item.cost));
 
                         return (
-                            <div className={`relative z-10 mt-1 mx-3 pl-3 pr-6 flex text-figma-black text-base rounded font-bold bg-${figmaColors[items[0].color]}`} key={productName}>
+                            <div className="relative z-10 mt-1 mx-3 pl-3 pr-6 flex text-figma-black text-base rounded font-bold bg-figma-white" key={productName}>
 
                                 <h3 className="my-auto flex-1 break-words text-base text-left grow">{productName}</h3>
                                 <h3 className="w-16 my-auto text-lg font-bold text-right">{value}</h3>
                             </div>
                         );
                     })}
-                    <div className="relative z-10 mt-1 mx-3 pl-3 pr-6 flex text-figma-black text-base rounded font-bold bg-figma-lime">
+                    <div className="relative z-10 mt-1 mx-3 pl-3 pr-6 flex text-figma-black text-base rounded font-bold bg-figma-white">
 
                         <h3 className="my-auto flex-1 break-words text-base text-left grow">Hotovost</h3>
                         <h3 className="w-16 my-auto text-lg font-bold text-right">{liquidity}</h3>
