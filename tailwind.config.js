@@ -35,6 +35,7 @@ export default {
                 'figma-pale': '#FF9CC4',
                 'figma-white': '#EEF1F4',
                 'figma-stone-40': '#A7BAC8',
+                'figma-pool-40': '#A3D7FD',
 
             },
             backgroundImage: {

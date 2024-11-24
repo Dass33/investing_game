@@ -119,7 +119,7 @@ function InstructionSite() {
                 <div className="flex-col pt-4">
                     {scenariosData.map((scenario, index) => (
                         scenario.random == "TRUE" &&
-                        <button key={scenariosData[index].scenarioName} className={`block mx-auto text-2xl lg:text-4xl bg-figma-black rounded-full px-6 hover:scale-110 duration-200 mt-6 py-2
+                        <button key={scenariosData[index].scenarioName} className={`block mx-auto text-2xl lg:text-4xl bg-figma-black rounded-full px-6 hover:scale-110 duration-200 mt-3 py-2
                                 ${gameMode == index ? "bg-figma-white text-figma-black" : "bg-transparent bg-figma-white"}`}
                             onClick={() => setGameMode(index)}>{scenariosData[index].scenarioName}</button>
                     ))}
