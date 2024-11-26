@@ -144,7 +144,9 @@ interface GameLoopState {
     setProductHistory: Function,
     productHistory: [products[]],
     rolledThisBancrupcy: boolean,
-    setRolledThisBancrupcy: Function
+    setRolledThisBancrupcy: Function,
+    prevRoundLiquidity: number | null,
+    setPrevRoundLiquidity: Function
 }
 
 const GameLoopContext = createContext<GameLoopState | undefined>(undefined);
@@ -198,9 +200,9 @@ export const GameLoopProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const [showHelp, setShowHelp] = useState(false);
     const [showBankruptcy, setShowBankruptcy] = useState(false);
     const [rolledThisBancrupcy, setRolledThisBancrupcy] = useState(false);
-
+    const [prevRoundLiquidity, setPrevRoundLiquidity] = useState<number | null>(() => configData?.startingMoney || 0);
     return (
-        <GameLoopContext.Provider value={{ configData, eventData, scenarios, productData, setProductData, showSite, setShowSite, numberOfSites, liquidity, setLiquidity, nextRound, setNextRound, eventIndex, setEventIndex, economySummary, setEconomySummary, isInitialized, figmaColors, roundStart, setRoundStart, setEarningsTutorial, earningsTutorial, setNewsTutorial, newsTutorial, setPortfolioTutorial, portfolioTutorial, showEarnings, showPortfolio, setShowEarnings, setShowPortfolio, setEconomyHistory, economyHistory, startingProductData, showHelp, setShowHelp, showBankruptcy, setShowBankruptcy, setProductHistory, productHistory, rolledThisBancrupcy, setRolledThisBancrupcy }}>
+        <GameLoopContext.Provider value={{ configData, eventData, scenarios, productData, setProductData, showSite, setShowSite, numberOfSites, liquidity, setLiquidity, nextRound, setNextRound, eventIndex, setEventIndex, economySummary, setEconomySummary, isInitialized, figmaColors, roundStart, setRoundStart, setEarningsTutorial, earningsTutorial, setNewsTutorial, newsTutorial, setPortfolioTutorial, portfolioTutorial, showEarnings, showPortfolio, setShowEarnings, setShowPortfolio, setEconomyHistory, economyHistory, startingProductData, showHelp, setShowHelp, showBankruptcy, setShowBankruptcy, setProductHistory, productHistory, rolledThisBancrupcy, setRolledThisBancrupcy, prevRoundLiquidity, setPrevRoundLiquidity }}>
             {children}
         </GameLoopContext.Provider>
     );

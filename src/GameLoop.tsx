@@ -145,7 +145,9 @@ function Portfolio() {
         productHistory,
         eventData,
         eventIndex,
-        setProductData
+        setProductData,
+        prevRoundLiquidity,
+        setPrevRoundLiquidity
     } = useGameLoop();
 
     const { round, setRound, gameMode } = useGame();
@@ -212,12 +214,16 @@ function Portfolio() {
         setPortfolioRisk((risk + liquidity) / (portfolioValue + liquidity));
     }, [productData]);
 
+    const percentConversion = 100;
+    const portfolioWorth: number = Number(productData.reduce((total, p) => total + p.invested, 0) + liquidity);
+    const portfolioPercentChange: number = portfolioWorth * percentConversion /
+        (productHistory[round]?.reduce((total: number, p) => total + Number(p.invested), 0) + (prevRoundLiquidity || configData.startingMoney)) - percentConversion;
+
     const currentProduct = openedProduct >= 0 ? productData[openedProduct] : null;
     const currentAdjustedCost = currentProduct ? Math.max(currentProduct.cost, 1) : null;
-    const toPercentConversion = 100;
     const currentPercentChange = currentAdjustedCost && currentProduct ?
         parseFloat(((currentAdjustedCost / productHistory[round]?.filter(historicProduct => historicProduct.productName === currentProduct?.productName)[0].cost - 1)
-            * toPercentConversion).toFixed(1)) : null;
+            * percentConversion).toFixed(1)) : null;
 
     return (
         <>
@@ -233,6 +239,7 @@ function Portfolio() {
                             setShowPortfolio(false);
                             setRoundStart(true);
                             setRound(round + 1);
+                            setPrevRoundLiquidity(liquidity);
                         }}>
                             <span className="my-auto">{configData.buttonYesText}</span>
                         </button> </div> </div>
@@ -251,6 +258,7 @@ function Portfolio() {
                                     if (item.ID === currentProduct?.ID) {
                                         return {
                                             ...item,
+                                            // dice has 6 sides
                                             autoSellIn: Math.ceil(Math.floor(Math.random() * 6 + 1) / Number(item.timeToSell)),
                                         };
                                     } else return item;
@@ -373,47 +381,64 @@ function Portfolio() {
                 </div>
             }
             <div className="z-10 fixed top-0 text-xl w-full font-[Inter]">
-                <div className="flex bg-figma-stone py-1">
-                    <button onClick={() => setShowHelp(true)}>
-                        <svg className="ml-[10px] w-12 my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="15.8669" cy="15.5" r="10.5" stroke="#FFFDFD" />
-                            <path d="M13.1711 12.8945C13.1711 12.8945 13.0495 10.1379 15.952 10.1379C15.952 10.1379 18.5634 10.1379 18.5635 12.8945C18.5635 15.5788 15.8428 15.5304 15.8428 18.1294" stroke="#FFFDFD" strokeLinecap="round" />
-                            <path d="M15.9026 20.5477V20.8621" stroke="#FFFDFD" strokeLinecap="round" />
-                        </svg>
-                    </button>
-                    <div className="grow flex justify-center pr-4">
-                        <p className="mx-5 my-auto text-white font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
-                        <h1 className="text-white font-bold my-auto">{configData.buttonPortfolioText.toUpperCase()}</h1>
+                <div className="bg-figma-stone">
+                    <div className="flex py-1 w-96 sm:w-[26rem] lg:w-[56rem] xl:w-[77rem] mx-auto">
+                        <button onClick={() => setShowHelp(true)}>
+                            <svg className="ml-[7px] sm:ml-[14px] w-12 my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="15.8669" cy="15.5" r="10.5" stroke="#FFFDFD" />
+                                <path d="M13.1711 12.8945C13.1711 12.8945 13.0495 10.1379 15.952 10.1379C15.952 10.1379 18.5634 10.1379 18.5635 12.8945C18.5635 15.5788 15.8428 15.5304 15.8428 18.1294" stroke="#FFFDFD" strokeLinecap="round" />
+                                <path d="M15.9026 20.5477V20.8621" stroke="#FFFDFD" strokeLinecap="round" />
+                            </svg>
+                        </button>
+                        <div className="grow flex justify-center pr-4">
+                            <p className="mx-5 my-auto text-white font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
+                            <h1 className="text-white font-bold my-auto">{configData.buttonPortfolioText.toUpperCase()}</h1>
+                        </div>
+                        <div className="flex items-center bg-white rounded-lg min-w-14 mr-4 sm:mr-6 my-1">
+                            <svg className="-mb-0.5 ml-2" width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13.2217 8.12476C13.2217 10.345 11.4219 12.1448 9.20166 12.1448C6.98146 12.1448 5.18164 10.345 5.18164 8.12476C5.18164 5.90456 6.98146 4.10474 9.20166 4.10474C11.4219 4.10474 13.2217 5.90456 13.2217 8.12476Z" fill="#245375" />
+                                <path d="M8.46135 3.15894C6.04531 3.51605 4.18997 5.59445 4.18167 8.10781C2.13565 7.92031 0.533203 6.19966 0.533203 4.10474C0.533203 1.88454 2.33303 0.0847168 4.55322 0.0847168C6.44765 0.0847168 8.03602 1.39512 8.46135 3.15894Z" fill="#245375" />
+                            </svg>
+                            <p className="text-center px-2 text-black font-bold text-xl">{liquidity.toFixed(1)}</p>
+                        </div>
                     </div>
-                    <div className="flex items-center bg-white rounded-lg min-w-14 mr-4 sm:mr-6 my-1">
-                        <svg className="-mb-0.5 ml-2" width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M13.2217 8.12476C13.2217 10.345 11.4219 12.1448 9.20166 12.1448C6.98146 12.1448 5.18164 10.345 5.18164 8.12476C5.18164 5.90456 6.98146 4.10474 9.20166 4.10474C11.4219 4.10474 13.2217 5.90456 13.2217 8.12476Z" fill="#245375" />
-                            <path d="M8.46135 3.15894C6.04531 3.51605 4.18997 5.59445 4.18167 8.10781C2.13565 7.92031 0.533203 6.19966 0.533203 4.10474C0.533203 1.88454 2.33303 0.0847168 4.55322 0.0847168C6.44765 0.0847168 8.03602 1.39512 8.46135 3.15894Z" fill="#245375" />
-                        </svg>
-                        <p className="text-center px-2 text-black font-bold text-xl">{liquidity.toFixed(1)}</p>
+                    <div className="bg-figma-pool-40">
+                        <div className="px-4 flex py-1 w-96 sm:w-[25rem] lg:w-[56rem] xl:w-[77rem] mx-auto">
+                            <div className="relative">
+                                <span className="absolute text-figma-white text-xs top-[6px] left-[6px] w-5 text-center">{portfolioRisk.toFixed(1)}</span>
+                                <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M1.8562 17.8294C0.579185 16.5523 0.579184 14.4819 1.8562 13.2049L13.5862 1.47485C14.8632 0.197837 16.9337 0.197836 18.2107 1.47485L29.9407 13.2049C31.2177 14.4819 31.2177 16.5523 29.9407 17.8294L18.2107 29.5594C16.9337 30.8364 14.8632 30.8364 13.5862 29.5594L1.8562 17.8294Z" fill="#0B1F42" />
+                                </svg>
+                            </div>
+                            <h1 className="ml-3 text-sm self-center text-figma-black grow">{configData.portfolioTitleText}</h1>
+
+                            {portfolioPercentChange > 0 &&
+                                <svg className="self-center" width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5.59995 2.56555C5.7924 2.23222 6.27352 2.23222 6.46597 2.56555L10.796 10.0654C10.9884 10.3987 10.7479 10.8154 10.363 10.8154H1.70294C1.31804 10.8154 1.07748 10.3987 1.26993 10.0654L5.59995 2.56555Z" fill="#0B1F42" />
+                                </svg>
+                            }
+                            {portfolioPercentChange < 0 &&
+                                <svg className="self-center" width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6.46646 10.0653C6.27401 10.3986 5.79288 10.3986 5.60043 10.0653L1.27041 2.56549C1.07796 2.23216 1.31852 1.81549 1.70342 1.81549L10.3635 1.81549C10.7484 1.81549 10.9889 2.23216 10.7965 2.56549L6.46646 10.0653Z" fill="#0B1F42" />
+                                </svg>
+                            }
+                            <h2 className="self-center text-sm ml-1 mr-6">{portfolioPercentChange.toFixed(1)}%</h2>
+                            <h2 className='text-sm self-center mr-2'>{portfolioWorth.toFixed(1)}</h2>
+                        </div>
                     </div>
-                </div>
-                <div className="bg-figma-pool px-[18px] flex py-1">
-                    <div className="relative">
-                        <span className="absolute text-figma-white text-xs top-[6px] left-[6px] w-5 text-center">{portfolioRisk.toFixed(1)}</span>
-                        <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1.8562 17.8294C0.579185 16.5523 0.579184 14.4819 1.8562 13.2049L13.5862 1.47485C14.8632 0.197837 16.9337 0.197836 18.2107 1.47485L29.9407 13.2049C31.2177 14.4819 31.2177 16.5523 29.9407 17.8294L18.2107 29.5594C16.9337 30.8364 14.8632 30.8364 13.5862 29.5594L1.8562 17.8294Z" fill="#0B1F42" />
-                        </svg>
-                    </div>
-                    <h1 className="ml-3 text-sm self-center text-figma-black">{configData.portfolioTitleText}</h1>
                 </div>
             </div>
 
             <div className="font-[Inter] bg-figma-black min-h-screen">
                 <div className="md:mx-5 pt-24">
                     {/* Map over productData with products in portfolio first */}
-                    <div className="grid lg:grid-cols-2 xl:grid-cols-3 flex-col justify-center pb-24">
+                    <div className="grid lg:grid-cols-2 xl:grid-cols-3 max-w-96 lg:max-w-[62rem] xl:max-w-[78rem] mx-auto flex-col justify-center pb-24">
                         {[...productData]
                             .sort((a, b) => b.invested - a.invested)
                             .map((product) => {
                                 const adjustedCost = Math.max(product.cost, 1);
-                                const toPercentConversion = 100;
-                                const percentChange: number = parseFloat(((adjustedCost / productHistory[round]?.filter(historicProduct => historicProduct.productName === product.productName)[0].cost - 1) * toPercentConversion).toFixed(1));
+                                const percentConversion = 100;
+                                const percentChange: number = parseFloat(((adjustedCost / productHistory[round]?.filter(historicProduct => historicProduct.productName === product.productName)[0].cost - 1) * percentConversion).toFixed(1));
                                 return (
                                     <div onClick={() => {
                                         setOpenedProduct(product.ID);
@@ -439,7 +464,7 @@ function Portfolio() {
                                                 </div>
                                                 }
                                                 {product.invested > 0 && <h2 className="self-center text-sm font-bold mr-3">{percentChange}%</h2>}
-                                                <h2 className={`text-lg font-bold ${product.invested > 0 ? 'mr-6' : '-mr-[54px] sm:mr-[-70px]'}`}>{Number(product.invested).toFixed(1)}</h2>
+                                                <h2 className={`text-lg font-bold ${product.invested > 0 ? 'mr-4' : '-mr-20'}`}>{Number(product.invested).toFixed(1)}</h2>
                                             </div>
                                         </div>
                                     </div>
@@ -751,7 +776,6 @@ function Bankruptcy() {
             productData.map(item => {
                 const randomDice = Math.floor(Math.random() * 18) + 1;
                 const isBankrupt = item.minToPreventBankruptcy >= randomDice && item.minToPreventBankruptcy > 0;
-                console.log(randomDice, isBankrupt);
 
                 if (isBankrupt) {
                     setProductData(...[productData], productData[item.ID].invested = productData[item.ID].invested / 2);
