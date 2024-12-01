@@ -12,7 +12,9 @@ interface GameState {
     gameMode: number,
     setGameMode: Function,
     showLandingSite: boolean,
-    setShowLandingSite: Function
+    setShowLandingSite: Function,
+    portfolioRiskHistory: number[],
+    setPortfolioRiskHistory: Function
 }
 
 const GameContext = createContext<GameState | undefined>(undefined);
@@ -24,9 +26,18 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [totalScore, setTotalScore] = useState(0);
     const [gameMode, setGameMode] = useState(0);
     const [showLandingSite, setShowLandingSite] = useState(true);
+    const [portfolioRiskHistory, setPortfolioRiskHistory] = useState([]);
 
     return (
-        <GameContext.Provider value={{ showWelcomeSite, setShowWelcomeSite, endGame, setEndGame, round, setRound, totalScore, setTotalScore, gameMode, setGameMode, showLandingSite, setShowLandingSite }}>
+        <GameContext.Provider value={{
+            showWelcomeSite, setShowWelcomeSite,
+            endGame, setEndGame,
+            round, setRound,
+            totalScore, setTotalScore,
+            gameMode, setGameMode,
+            showLandingSite, setShowLandingSite,
+            portfolioRiskHistory, setPortfolioRiskHistory
+        }}>
             {children}
         </GameContext.Provider>
     );

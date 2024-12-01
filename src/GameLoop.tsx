@@ -3,6 +3,7 @@ import { useRive, Layout, Fit, Alignment, useStateMachineInput } from "@rive-app
 import { useGame } from "./GameContext";
 import { useGameLoop } from "./GameLoopContext";
 import { ShowHelp } from "./ShowHelp";
+import { chartsGridClasses, LineChart } from "@mui/x-charts";
 
 interface events {
     baseGame: string;
@@ -147,18 +148,24 @@ function Portfolio() {
         eventIndex,
         setProductData,
         prevRoundLiquidity,
-        setPrevRoundLiquidity
+        setPrevRoundLiquidity,
+        portfolioRisk, setPortfolioRisk
     } = useGameLoop();
+
+    const {
+        portfolioRiskHistory,
+        setPortfolioRiskHistory
+    } = useGame();
 
     const { round, setRound, gameMode } = useGame();
     const [roundEndingAlert, setRoundEndingAlert] = useState(false);
     const [insufficientLiquidity, setInsufficientLiquidity] = useState(false);
     const [delaydSellAlert, setDelayedSellAlert] = useState(false);
-    const [delaydSellAlertShown, setDelayedSellAlertShown] = useState(false);
+    // const [delaydSellAlertShown, setDelayedSellAlertShown] = useState(false);
+    const [, setDelayedSellAlertShown] = useState(false);
     const [changesApplied, setChangesApplied] = useState(false);
     const [openedProduct, setOpenedProduct] = useState(-1);
     const [buySellAmount, setBuySellAmount] = useState(1);
-    const [portfolioRisk, setPortfolioRisk] = useState(1);
 
     if (liquidity === null) {
         return (
@@ -225,6 +232,9 @@ function Portfolio() {
         parseFloat(((currentAdjustedCost / productHistory[round]?.filter(historicProduct => historicProduct.productName === currentProduct?.productName)[0].cost - 1)
             * percentConversion).toFixed(1)) : null;
 
+    const currentProductHistory = productHistory.map(item => Number(item.filter(product => product.productName === currentProduct?.productName)[0]?.cost));
+    currentProductHistory.shift();
+
     return (
         <>
             {roundEndingAlert &&
@@ -240,6 +250,7 @@ function Portfolio() {
                             setRoundStart(true);
                             setRound(round + 1);
                             setPrevRoundLiquidity(liquidity);
+                            setPortfolioRiskHistory([...portfolioRiskHistory, portfolioRisk]);
                         }}>
                             <span className="my-auto">{configData.buttonYesText}</span>
                         </button> </div> </div>
@@ -302,7 +313,7 @@ function Portfolio() {
                         <div>
                             <div className='rounded-xl bg-figma-white text-figma-black pt-2 pb-1 flex flex-col'>
                                 <div className="flex w-full">
-                                    <img src={`../dist/riskScore/risk${currentProduct?.riskScore}.svg`} alt="NaN" className="-mt-0.5" />
+                                    <img src={`riskScore/risk${currentProduct?.riskScore}.svg`} alt="NaN" className="-mt-0.5" />
                                     <h2 className="text-base self-center font-bold grow ml-2">{currentProduct?.productName}</h2>
                                     {currentPercentChange != null && <div className="self-center">
                                         {currentPercentChange > 0 &&
@@ -319,8 +330,70 @@ function Portfolio() {
                                     <h2 className="self-center text-sm font-bold mr-3">{currentPercentChange}%</h2>
                                     <h2 className='text-lg font-bold min-w-6 text-right pr-1'>{currentProduct?.invested.toFixed(1)}</h2>
                                 </div>
+
+                                <div className="flex mx-2 mt-8 mb-4">
+                                    <div className="font-medium text-xs">
+                                        <div className="flex">
+                                            <span className="w-20">{configData.earningsProperty}</span>
+                                            <img src={`productProperties/dots${currentProduct?.potentialEarnings}.svg`} alt="NaN" className="mt-0.5 w-10 mb-1" />
+                                        </div>
+
+                                        <div className="flex">
+                                            <span className="w-20">{configData.securityProperty}</span>
+                                            <img src={`productProperties/dots${currentProduct?.security}.svg`} alt="NaN" className="mt-0.5 w-10" />
+                                        </div>
+
+                                        <div className="flex">
+                                            <span className="w-20">{configData.liquidityProperty}</span>
+                                            <img src={`productProperties/dots${currentProduct?.liquidity}.svg`} alt="NaN" className="mt-0.5 w-10" />
+                                        </div>
+                                    </div>
+                                    <div className="grow text-center text-xs font-medium">
+                                        <p className="font-bold">{((currentProduct?.invested || 0) / (currentProduct?.cost || 1)).toFixed(2)}</p>
+                                        <p>({currentProduct?.cost.toFixed(1)})</p>
+                                    </div>
+                                    <div className="mx-auto relative w-[115px] h-14">
+                                        <div className="absolute top-0 w-full h-full rounded-lg overflow-hidden">
+                                            <svg width="115" height="56" viewBox="0 0 115 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <g>
+                                                    <path d="M0 4.32715C0 2.11801 1.79086 0.327148 4 0.327148H111C113.209 0.327148 115 2.11801 115 4.32715V51.3271C115 53.5363 113.209 55.3271 111 55.3271H4C1.79086 55.3271 0 53.5363 0 51.3271V4.32715Z" fill="#0B1F42" />
+                                                    <path d="M112.5 5.38184H3" stroke="#721C7A" strokeWidth="0.5" />
+                                                    <path d="M112.5 12.7773H3" stroke="#721C7A" strokeWidth="0.5" />
+                                                    <path d="M112.5 20.1729H3" stroke="#721C7A" strokeWidth="0.5" />
+                                                    <path d="M112.5 27.5684H3" stroke="#721C7A" strokeWidth="0.5" />
+                                                    <path d="M112.5 34.9639H3" stroke="#721C7A" strokeWidth="0.5" />
+                                                    <path d="M112.5 42.3594H3" stroke="#721C7A" strokeWidth="0.5" />
+                                                    <path d="M112.5 49.7549H3" stroke="#721C7A" strokeWidth="0.5" />
+                                                </g>
+                                            </svg>
+
+                                            <div className="absolute -top-2 right-0">
+                                                <LineChart
+                                                    series={[
+                                                        {
+                                                            data: [...currentProductHistory, (currentProduct?.cost || 0)],
+                                                            color: "#FFD32A",
+                                                            curve: "linear",
+                                                            showMark: false
+                                                        },
+                                                    ]}
+                                                    leftAxis={null}
+                                                    width={120}
+                                                    height={60}
+                                                    margin={{
+                                                        left: 0,
+                                                        right: 3,
+                                                        top: 2,
+                                                        bottom: -5,
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div className="w-full font-bold flex justify-center items-center gap-3 mt-4">
-                                    <button disabled={(currentProduct?.invested || 1) < buySellAmount || Number(currentProduct?.timeToSell) < 0}
+                                    <button disabled={(currentProduct?.invested || 0) < buySellAmount || Number(currentProduct?.timeToSell) < 0}
                                         onClick={() => {
                                             setLiquidity(liquidity + buySellAmount)
                                             const updatedProductData = productData.map(item => {
@@ -375,6 +448,7 @@ function Portfolio() {
 
                             </div>
                         </div>
+
                         <hr className="bg-figma-stone h-0.5 mt-4" />
                         <p className="mt-3">{currentProduct?.productDescription}</p>
                     </div>
@@ -448,7 +522,7 @@ function Portfolio() {
                                         <div className={`${product.invested > 0 ? '' : 'w-[17rem] sm:w-72'}`}>
                                             <div className={`rounded-xl ${product.invested > 0 ? `bg-figma-white text-figma-black` :
                                                 'bg-figma-light-black text-figma-stone-40 border border-figma-stone-40'} pt-2 pb-1 flex`}>
-                                                <img src={`../dist/riskScore/${product.invested > 0 ? 'risk' : 'risk_transparent'}${product.riskScore}.svg`} alt="NaN" className="ml-2 -mt-0.5" />
+                                                <img src={`riskScore/${product.invested > 0 ? 'risk' : 'risk_transparent'}${product.riskScore}.svg`} alt="NaN" className="ml-2 -mt-0.5" />
                                                 <h2 className="text-base font-bold mx-3 grow"> {product.productName} </h2>
                                                 {product.invested > 0 && <div className="self-center">
                                                     {percentChange > 0 &&
@@ -675,7 +749,7 @@ function NewRound() {
     const { round, gameMode } = useGame();
     const { scenarios, setEventIndex, eventData,
         setRoundStart, setShowEarnings, setShowBankruptcy,
-        productData } = useGameLoop();
+        productData, setShowEvent } = useGameLoop();
 
     const soloGame = scenarios[gameMode].random == "TRUE";
 
@@ -684,6 +758,7 @@ function NewRound() {
         if (soloGame) newEvent = Math.floor(Math.random() * eventData.length);
         else newEvent = (eventData as any[]).findIndex((item: events) => item.eventName === scenarios[gameMode].eventOrder[round - 1]);
         setEventIndex(newEvent);
+        setShowEvent(true);
         if (eventData[newEvent].bankrouptcy === "TRUE") setShowBankruptcy(true);
     }, []);
 
@@ -764,7 +839,7 @@ function Bankruptcy() {
     const { scenarios, setShowHelp, eventData, eventIndex,
         liquidity, figmaColors, setShowBankruptcy, configData,
         rolledThisBancrupcy, setRolledThisBancrupcy, productData,
-        setProductData } = useGameLoop();
+        setProductData, setShowEvent } = useGameLoop();
 
     const [rollingDices, SetRollingDices] = useState(false);
     const [bankruptItems, setBankruptItems] = useState<string[]>([]);
@@ -838,12 +913,66 @@ function Bankruptcy() {
                 </div>}
             <div className={`z-10 w-full flex justify-center fixed bottom-0 font-[Inter] font-medium md:pb-3 ${'bg-' + figmaColors[eventData[eventIndex].color]}`}>
                 <button className='flex rounded-full hover:scale-110 duration-200 text-figma-black border-figma-black border py-2 px-6 m-3'
-                    onClick={() => { !rollingDices ? SetRollingDices(true) : setShowBankruptcy(false) }}>
+                    onClick={() => {
+                        if (!rollingDices) SetRollingDices(true);
+                        else {
+                            setShowBankruptcy(false);
+                            setShowEvent(false);
+                        }
+                    }}>
 
                     <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1.86694 7.5H17.8669M17.8669 7.5L11.8669 1.5M17.8669 7.5L11.8669 13.5" stroke="#0B1F42" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    <span className="mx-3 text-lg">Krize</span>
+                    <span className="mx-3 text-lg">{configData.crisisButton}</span>
+                </button>
+            </div>
+        </>
+    );
+}
+
+function News() {
+
+    const { gameMode, round } = useGame();
+    const { scenarios, setShowHelp, eventData, eventIndex,
+        liquidity, figmaColors, setShowEvent, configData,
+    } = useGameLoop();
+
+    return (
+        <>
+            <div className={`z-10 fixed top-0 py-1 text-figma-black text-xl w-full font-[Inter] bg-${figmaColors[eventData[eventIndex].color]}`}>
+                <div className="flex">
+                    <button onClick={() => setShowHelp(true)}>
+                        <svg className="w-14 my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="15.8669" cy="15.5" r="10.5" stroke="#0B1F42" />
+                            <path d="M13.1711 12.8945C13.1711 12.8945 13.0495 10.1379 15.952 10.1379C15.952 10.1379 18.5634 10.1379 18.5635 12.8945C18.5635 15.5788 15.8428 15.5304 15.8428 18.1294" stroke="#0B1F42" strokeLinecap="round" />
+                            <path d="M15.9026 20.5477V20.8621" stroke="#0B1F42" strokeLinecap="round" />
+                        </svg>
+                    </button>
+                    <div className="grow flex justify-center pr-4">
+                        <p className="ml-2 mr-4 my-auto font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
+                        <h1 className="font-bold my-auto text-sm xs:text-lg mr-2">{configData.newsHeadline}</h1>
+                    </div>
+                    <div className="bg-white rounded-md min-w-14 mr-6 my-1">
+                        <p className="text-center px-2 text-figma-black font-bold text-xl">{liquidity?.toFixed(1)}</p>
+                    </div>
+                </div>
+            </div>
+            <div className="mt-8 text-figma-black max-w-[39rem] mx-auto">
+                <div className="relative">
+                    <img src={`events/${eventData[eventIndex].IMG}`}></img>
+                </div>
+                <h1 className="text-2xl font-bold mx-4 mt-7 leading-7">{eventData[eventIndex].eventName}</h1>
+                <p className="text-lg mx-4 mt-3 leading-6">{eventData[eventIndex].eventText}</p>
+            </div>
+
+            <div className={`z-10 w-full flex justify-center fixed bottom-0 font-[Inter] font-medium md:pb-3 ${'bg-' + figmaColors[eventData[eventIndex].color]}`}>
+                <button className='flex rounded-full hover:scale-110 duration-200 text-figma-black border-figma-black border py-2 px-6 m-3'
+                    onClick={() => setShowEvent(false)}>
+
+                    <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1.86694 7.5H17.8669M17.8669 7.5L11.8669 1.5M17.8669 7.5L11.8669 13.5" stroke="#0B1F42" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
                 </button>
             </div>
         </>
@@ -853,11 +982,23 @@ function Bankruptcy() {
 function GameLoop() {
 
     const { round, gameMode } = useGame();
-    const { configData, setLiquidity, liquidity,
-        productData, nextRound, scenarios, roundStart,
-        earningsTutorial, portfolioTutorial, newsTutorial,
-        showPortfolio, showEarnings, showHelp,
-        showBankruptcy } = useGameLoop();
+    const {
+        configData,
+        setLiquidity,
+        liquidity,
+        productData,
+        nextRound,
+        scenarios,
+        roundStart,
+        earningsTutorial,
+        portfolioTutorial,
+        newsTutorial,
+        showPortfolio,
+        showEarnings,
+        showHelp,
+        showBankruptcy,
+        showEvent,
+    } = useGameLoop();
 
     const soloGame = scenarios[gameMode].random == "TRUE";
 
@@ -880,11 +1021,12 @@ function GameLoop() {
     let content = null;
     if (roundStart && round <= scenarios[gameMode].scenarioLength) content = <NewRound />;
     else if (showHelp) content = <ShowHelp />;
-    else if (showBankruptcy) content = <Bankruptcy />;
+    else if (showEvent && showBankruptcy) content = <Bankruptcy />;
     else if (portfolioTutorial) content = <PortfolioTutorial />;
     else if (showEarnings && earningsTutorial) content = <EarningsTutorial />;
     else if (showEarnings) content = <Earnings />;
     else if (nextRound && newsTutorial) content = <NewsTutorial />;
+    else if (showEvent && soloGame) content = <News />;
     else if (nextRound && !soloGame) content = <NewEvent />;
     else if (showPortfolio) content = <Portfolio />;
 
