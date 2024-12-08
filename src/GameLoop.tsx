@@ -3,7 +3,7 @@ import { useRive, Layout, Fit, Alignment, useStateMachineInput } from "@rive-app
 import { useGame } from "./GameContext";
 import { useGameLoop } from "./GameLoopContext";
 import { ShowHelp } from "./ShowHelp";
-import { chartsGridClasses, LineChart } from "@mui/x-charts";
+import { LineChart } from "@mui/x-charts";
 
 interface events {
     baseGame: string;
@@ -241,7 +241,7 @@ function Portfolio() {
                 <div className="fixed z-0 bg-figma-black/70 h-screen w-screen backdrop-blur-sm">
                     <img src={configData.endRound_IMG} alt="placeholder" className="mx-auto pt-28 relative z-10"></img>
                     <p className="text-center mt-16 text-lg font-bold text-white">{configData.endRoundText}</p>
-                    <div className="absolute flex w-full gap-8 bottom-20 justify-center text-white text-xl">
+                    <div className="fixed flex w-full gap-8 bottom-24 justify-center text-white text-xl">
                         <button className="border border-white rounded-full flex px-10 py-2" onClick={() => setRoundEndingAlert(false)}>
                             <span className="my-auto">{configData.buttonNoText}</span>
                         </button>
@@ -352,8 +352,8 @@ function Portfolio() {
                                         <p className="font-bold">{((currentProduct?.invested || 0) / (currentProduct?.cost || 1)).toFixed(2)}</p>
                                         <p>({currentProduct?.cost.toFixed(1)})</p>
                                     </div>
-                                    <div className="mx-auto relative w-[115px] h-14">
-                                        <div className="absolute top-0 w-full h-full rounded-lg overflow-hidden">
+                                    <div className="mx-auto relative w-[115px] h-[75px]">
+                                        <div className="absolute top-0 w-full h-[75px] rounded-lg overflow-hidden">
                                             <svg width="115" height="56" viewBox="0 0 115 56" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <g>
                                                     <path d="M0 4.32715C0 2.11801 1.79086 0.327148 4 0.327148H111C113.209 0.327148 115 2.11801 115 4.32715V51.3271C115 53.5363 113.209 55.3271 111 55.3271H4C1.79086 55.3271 0 53.5363 0 51.3271V4.32715Z" fill="#0B1F42" />
@@ -379,12 +379,12 @@ function Portfolio() {
                                                     ]}
                                                     leftAxis={null}
                                                     width={120}
-                                                    height={60}
+                                                    height={62}
                                                     margin={{
                                                         left: 0,
                                                         right: 3,
-                                                        top: 2,
-                                                        bottom: -5,
+                                                        top: 3,
+                                                        bottom: -3,
                                                     }}
                                                 />
                                             </div>
@@ -479,7 +479,7 @@ function Portfolio() {
                     <div className="bg-figma-pool-40">
                         <div className="px-4 flex py-1 w-96 sm:w-[25rem] lg:w-[56rem] xl:w-[77rem] mx-auto">
                             <div className="relative">
-                                <span className="absolute text-figma-white text-xs top-[6px] left-[6px] w-5 text-center">{portfolioRisk.toFixed(1)}</span>
+                                <span className="absolute text-figma-white text-xs top-[7px] left-[6px] w-5 text-center">{portfolioRisk.toFixed(1)}</span>
                                 <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M1.8562 17.8294C0.579185 16.5523 0.579184 14.4819 1.8562 13.2049L13.5862 1.47485C14.8632 0.197837 16.9337 0.197836 18.2107 1.47485L29.9407 13.2049C31.2177 14.4819 31.2177 16.5523 29.9407 17.8294L18.2107 29.5594C16.9337 30.8364 14.8632 30.8364 13.5862 29.5594L1.8562 17.8294Z" fill="#0B1F42" />
                                 </svg>
@@ -553,6 +553,7 @@ function Portfolio() {
                         onClick={() => {
                             setRoundEndingAlert(true);
                             setInsufficientLiquidity(false);
+                            setOpenedProduct(-1);
                         }}>
 
                         <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -599,7 +600,10 @@ function Earnings() {
         configData,
         setShowPortfolio,
         setEconomySummary,
-        productData
+        productData,
+        eventData,
+        eventIndex,
+        setProductData
     } = useGameLoop();
     const { round, gameMode, setTotalScore, setEndGame } = useGame();
     let incomeSum = 0;
@@ -692,9 +696,25 @@ function Earnings() {
 
                             // calculating the total score at the end of the game
                             if (round >= scenarios[gameMode].scenarioLength) {
+                                const event: any = eventData[eventIndex];
+                                // Update productData
+                                const updatedProductData = productData.map(item => {
+                                    let costChange = Number(event[item.productName][0]);
+                                    let newIncome = Number(event[item.productName][1]);
+                                    return {
+                                        ...item,
+                                        invested: Math.max(0, Number(item.invested) * costChange),
+                                        cost: Math.max(1, Number(item.cost) * costChange),
+                                        fixedIncome: Math.max(0, newIncome),
+                                    };
+                                });
+                                setProductData(updatedProductData);
+
+
                                 let score = 0;
                                 productData.map(item => score += item.invested);
                                 setTotalScore((liquidity ?? 0) + score);
+
                                 setEndGame(true);
                             }
 
@@ -811,7 +831,7 @@ function NewRound() {
                 <path d="M275.092 144.528C275.092 144.528 275.511 146.625 276.971 146.625C278.431 146.625 278.868 144.528 278.868 144.528" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
 
-            <div className="absolute z-10 bottom-16 w-full">
+            <div className="fixed z-10 bottom-24 w-full">
                 <button className="block mx-auto  hover:scale-110 duration-200" onClick={() => {
                     const diceRolls: number[] = [];
                     productData
