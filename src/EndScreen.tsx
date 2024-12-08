@@ -109,6 +109,7 @@ function EndScreen() {
                         series={[
                             {
                                 data: [...portfolioRiskHistory, portfolioRisk],
+                                curve: "linear",
                                 color: "#FFFFFF"
                             },
                         ]}
