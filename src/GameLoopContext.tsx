@@ -164,6 +164,8 @@ interface GameLoopState {
     setPrevRoundLiquidity: Function,
     portfolioRisk: number,
     setPortfolioRisk: Function,
+    rolledDices: number[],
+    setRolledDices: Function,
 }
 
 const GameLoopContext = createContext<GameLoopState | undefined>(undefined);
@@ -220,6 +222,7 @@ export const GameLoopProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const [rolledThisBancrupcy, setRolledThisBancrupcy] = useState(false);
     const [prevRoundLiquidity, setPrevRoundLiquidity] = useState<number | null>(() => configData?.startingMoney || 0);
     const [portfolioRisk, setPortfolioRisk] = useState(1);
+    const [rolledDices, setRolledDices] = useState<number[]>([]);
 
     return (
         <GameLoopContext.Provider value={{
@@ -250,6 +253,7 @@ export const GameLoopProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             prevRoundLiquidity, setPrevRoundLiquidity,
             portfolioRisk, setPortfolioRisk,
             showEvent, setShowEvent,
+            rolledDices, setRolledDices,
         }}>
             {children}
         </GameLoopContext.Provider>

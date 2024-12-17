@@ -3,7 +3,7 @@ import { useRive, Layout, Fit, Alignment, useStateMachineInput } from "@rive-app
 import { useGame } from "./GameContext";
 import { useGameLoop } from "./GameLoopContext";
 import { ShowHelp } from "./ShowHelp";
-import { LineChart } from "@mui/x-charts";
+import { ContinuousColorLegend, LineChart } from "@mui/x-charts";
 
 interface events {
     baseGame: string;
@@ -178,7 +178,7 @@ function Portfolio() {
     }
     //scrolling prevention
     useEffect(() => {
-        if (roundEndingAlert || insufficientLiquidity) {
+        if (insufficientLiquidity) {
             document.body.classList.add('overflow-hidden');
         } else {
             document.body.classList.remove('overflow-hidden');
@@ -186,7 +186,7 @@ function Portfolio() {
         return () => {
             document.body.classList.remove('overflow-hidden');
         };
-    }, [roundEndingAlert, insufficientLiquidity, delaydSellAlert, openedProduct]);
+    }, [insufficientLiquidity, delaydSellAlert, openedProduct]);
 
     useEffect(() => {
         setProductHistory([...productHistory, productData]);
@@ -590,7 +590,9 @@ function Earnings() {
         productData,
         eventData,
         eventIndex,
-        setProductData
+        setProductData,
+        rolledDices,
+        setRolledDices
     } = useGameLoop();
     const { round, gameMode, setTotalScore, setEndGame } = useGame();
     let incomeSum = 0;
@@ -605,6 +607,23 @@ function Earnings() {
             </div>
         );
     }
+
+    useEffect(() => {
+        const investedItems = productData.filter(item => item.invested > 0);
+        const newRolledDices = [...rolledDices];
+
+        let needsUpdate = false;
+        investedItems.forEach((_, index) => {
+            if (!newRolledDices[index]) {
+                newRolledDices[index] = Math.floor(Math.random() * 6);
+                needsUpdate = true;
+            }
+        });
+
+        if (needsUpdate) {
+            setRolledDices(newRolledDices);
+        }
+    }, []);
 
     return (
         <>
@@ -636,8 +655,9 @@ function Earnings() {
                                 .filter(item => item.invested > 0)
                                 .map((item, index) => {
                                     const fixedIncome = Number(item.fixedIncome);
-                                    const randomDice = Math.floor(Math.random() * 6); // 0-5
-                                    const totalIncome = (item.invested / item.cost) * (fixedIncome + item.diceValues[randomDice]);
+
+                                    let randomDice = rolledDices[index];
+                                    const totalIncome = (item.invested / item.cost) * (fixedIncome + (item.diceValues[randomDice] || 0));
                                     incomeSum += totalIncome;
                                     ++sumDelay;
 
@@ -714,6 +734,7 @@ function Earnings() {
                             setNextRound(true);
                             setShowEarnings(false);
                             setShowPortfolio(true);
+                            setRolledDices([]);
                         }}>
 
                         <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
