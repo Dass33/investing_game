@@ -231,30 +231,11 @@ function Portfolio() {
     const currentPercentChange = currentAdjustedCost && currentProduct ?
         parseFloat(((currentAdjustedCost / productHistory[round]?.filter(historicProduct => historicProduct.productName === currentProduct?.productName)[0].cost - 1)
             * percentConversion).toFixed(1)) : null;
-
     const currentProductHistory = productHistory.map(item => Number(item.filter(product => product.productName === currentProduct?.productName)[0]?.cost));
     currentProductHistory.shift();
 
     return (
         <>
-            {roundEndingAlert &&
-                <div className="fixed z-0 bg-figma-black/70 h-screen w-screen backdrop-blur-sm">
-                    <img src={configData.endRound_IMG} alt="placeholder" className="mx-auto pt-28 relative z-10"></img>
-                    <p className="text-center mt-16 text-lg font-bold text-white">{configData.endRoundText}</p>
-                    <div className="fixed flex w-full gap-8 bottom-24 justify-center text-white text-xl">
-                        <button className="border border-white rounded-full flex px-10 py-2" onClick={() => setRoundEndingAlert(false)}>
-                            <span className="my-auto">{configData.buttonNoText}</span>
-                        </button>
-                        <button className="border border-white rounded-full flex px-10 py-2" onClick={() => {
-                            setShowPortfolio(false);
-                            setRoundStart(true);
-                            setRound(round + 1);
-                            setPrevRoundLiquidity(liquidity);
-                            setPortfolioRiskHistory([...portfolioRiskHistory, portfolioRisk]);
-                        }}>
-                            <span className="my-auto">{configData.buttonYesText}</span>
-                        </button> </div> </div>
-            }
             {delaydSellAlert &&
                 <div className="fixed z-0 bg-figma-black/70 h-screen w-screen backdrop-blur-sm">
                     <img src={configData.reallySell_IMG} alt="placeholder" className="mx-auto pt-28 relative z-10"></img>
@@ -547,13 +528,17 @@ function Portfolio() {
                     </div>
                 </div>
             </div>
-            {!roundEndingAlert && !delaydSellAlert && <div className="z-10 w-full flex justify-center fixed bottom-0 font-[Inter] font-bold bg-figma-stone md:pb-4">
+            {!delaydSellAlert && <div className="z-10 w-full flex justify-center fixed bottom-0 font-[Inter] font-bold bg-figma-stone md:pb-4">
                 <div className="flex items-center justify-end">
                     <button className='flex rounded-full hover:scale-110 duration-200 text-white border-white border-2 py-2 px-4 m-2'
                         onClick={() => {
-                            setRoundEndingAlert(true);
                             setInsufficientLiquidity(false);
                             setOpenedProduct(-1);
+                            setShowPortfolio(false);
+                            setRoundStart(true);
+                            setRound(round + 1);
+                            setPrevRoundLiquidity(liquidity);
+                            setPortfolioRiskHistory([...portfolioRiskHistory, portfolioRisk]);
                         }}>
 
                         <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
