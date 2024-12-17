@@ -86,7 +86,8 @@ function NewEvent() {
 
 function NewsTutorial() {
 
-    const { setNewsTutorial, configData } = useGameLoop();
+    const { setNewsTutorial, configData, scenarios } = useGameLoop();
+    const { gameMode } = useGame();
     return (
         <div className="bg-figma-black h-screen text-white font-medium font-[Inter]">
             <img src={configData.newsTutorial_IMG} alt="placeholder" className="mx-auto pt-12 relative z-10"></img>
@@ -96,7 +97,9 @@ function NewsTutorial() {
                 <button className='flex rounded-full hover:scale-110 duration-200 text-white border-white border-2 py-2 px-4 m-2'
                     onClick={() => {
                         setNewsTutorial(false)
-                        localStorage.setItem("tutorial", "false");
+                        if (scenarios[gameMode].random == "TRUE") {
+                            localStorage.setItem("tutorial", "false");
+                        }
                     }}>
 
                     <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -158,7 +161,6 @@ function Portfolio() {
     } = useGame();
 
     const { round, setRound, gameMode } = useGame();
-    const [roundEndingAlert, setRoundEndingAlert] = useState(false);
     const [insufficientLiquidity, setInsufficientLiquidity] = useState(false);
     const [delaydSellAlert, setDelayedSellAlert] = useState(false);
     // const [delaydSellAlertShown, setDelayedSellAlertShown] = useState(false);
