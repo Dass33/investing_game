@@ -94,7 +94,7 @@ interface products {
     minToPreventBankruptcy: number;
     timeToSell: number;
     sellingForLastRounds: number;
-    diceValues: number[];
+    diceThrow: string;
     autoSellIn: number;
     invested: number;
     ID: number;

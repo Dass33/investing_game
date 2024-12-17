@@ -199,12 +199,10 @@ function Portfolio() {
             // Update productData
             const updatedProductData = productData.map(item => {
                 let costChange = Number(event[item.productName][0]);
-                let newIncome = Number(event[item.productName][1]);
                 return {
                     ...item,
                     invested: Math.max(0, Number(item.invested) * costChange),
                     cost: Math.max(1, Number(item.cost) * costChange),
-                    fixedIncome: Math.max(0, newIncome),
                 };
             });
             setProductData(updatedProductData);
@@ -654,17 +652,18 @@ function Earnings() {
                             {[...productData]
                                 .filter(item => item.invested > 0)
                                 .map((item, index) => {
-                                    const fixedIncome = Number(item.fixedIncome);
-
+                                    const event: any = eventData[eventIndex];
                                     let randomDice = rolledDices[index];
-                                    const totalIncome = (item.invested / item.cost) * (fixedIncome + (item.diceValues[randomDice] || 0));
+                                    const maxDiceIndex = 5;
+                                    const totalIncome = (item.invested / item.cost) *
+                                        (event[item.productName][1] + (event[item.productName][2] - event[item.productName][1] || 0) * (randomDice / maxDiceIndex));
                                     incomeSum += totalIncome;
                                     ++sumDelay;
 
                                     return (
                                         <div className="mt-2 mx-4 flex justify-between text-white text-base font-medium" key={item.productName}>
                                             <h3 className="my-auto flex-1 break-words text-lg grow">{item.productName}</h3>
-                                            {item.diceValues[5] > 0 && (
+                                            {item.diceThrow == "TRUE" && (
                                                 <div className="size-10">
                                                     <RiveDice diceValue={randomDice + 1} diceColor={item.color} throwDelayIndex={index} />
                                                 </div>
@@ -673,7 +672,10 @@ function Earnings() {
                                                 className="text-center w-12 my-auto text-lg font-bold pop-in"
                                                 style={{ animationDelay: `${(index + 1) * popInDelay}s` }}
                                             >
-                                                +{((item.invested / item.cost) * (fixedIncome + Number(item.diceValues[randomDice]))).toFixed(1)}
+                                                +{
+                                                    ((item.invested / item.cost) *
+                                                        (event[item.productName][1] + (event[item.productName][2] - event[item.productName][1] || 0) * (randomDice / maxDiceIndex))).toFixed(1)
+                                                }
                                             </h3>
                                         </div>
                                     );
@@ -707,12 +709,10 @@ function Earnings() {
                                 // Update productData
                                 const updatedProductData = productData.map(item => {
                                     let costChange = Number(event[item.productName][0]);
-                                    let newIncome = Number(event[item.productName][1]);
                                     return {
                                         ...item,
                                         invested: Math.max(0, Number(item.invested) * costChange),
                                         cost: Math.max(1, Number(item.cost) * costChange),
-                                        fixedIncome: Math.max(0, newIncome),
                                     };
                                 });
                                 setProductData(updatedProductData);
