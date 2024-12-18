@@ -74,7 +74,7 @@ function EndScreen() {
                     <rect width="100%" height="100%" fill="url(#verticalLines)" />
                 </svg>
                 <div className="mx-auto max-w-[40rem]">
-                    <div className="flex relative z-10 justify-center gap-8 pt-20 md:pt-24 lg:pt-28 mb-16">
+                    <div className="flex relative z-10 justify-center gap-8 pt-16 md:pt-24 lg:pt-28 mb-16">
                         <h1 className="text-2xl my-auto font-medium">{configData.riskHeadline}</h1>
                         <h1 className="text-6xl leading-[0.7] tracking-widest font-bold">{portfolioRisk.toFixed(1)}</h1>
                     </div>
@@ -93,7 +93,7 @@ function EndScreen() {
                         </button>
                     </div>}
 
-                    <LineChart className="mx-auto mt-6"
+                    <LineChart className="mx-auto mt-8"
                         xAxis={[
                             {
                                 id: 'barCategories',
@@ -112,6 +112,12 @@ function EndScreen() {
                                 curve: "linear",
                                 color: "#FFFFFF"
                             },
+                        ]}
+                        yAxis={[
+                            {
+                                min: 0,
+                                max: 7,
+                            }
                         ]}
                         leftAxis={null}
                         width={300}

@@ -3,7 +3,7 @@ import { useRive, Layout, Fit, Alignment, useStateMachineInput } from "@rive-app
 import { useGame } from "./GameContext";
 import { useGameLoop } from "./GameLoopContext";
 import { ShowHelp } from "./ShowHelp";
-import { ContinuousColorLegend, LineChart } from "@mui/x-charts";
+import { LineChart } from "@mui/x-charts";
 
 interface events {
     baseGame: string;
