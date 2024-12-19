@@ -75,6 +75,7 @@ interface config {
     moreRoundsDelaySellText: string;
     immediateSellText: string;
     neverSellText: string;
+    delaySellAmountText: string;
 }
 interface events {
     baseGame: string;
@@ -106,6 +107,7 @@ interface products {
     potentialEarnings: number;
     security: number;
     liquidity: number;
+    sellingNextRound: number;
 }
 
 interface scenarios {
@@ -172,6 +174,8 @@ interface GameLoopState {
     rolledDices: number[],
     setRolledDices: Function,
     riskColors: string[],
+    riskHistory: number[],
+    setRiskHistory: Function,
 }
 
 const GameLoopContext = createContext<GameLoopState | undefined>(undefined);
@@ -228,6 +232,7 @@ export const GameLoopProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const [rolledThisBancrupcy, setRolledThisBancrupcy] = useState(false);
     const [prevRoundLiquidity, setPrevRoundLiquidity] = useState<number | null>(() => configData?.startingMoney || 0);
     const [portfolioRisk, setPortfolioRisk] = useState(1);
+    const [riskHistory, setRiskHistory] = useState<number[]>([]);
     const [rolledDices, setRolledDices] = useState<number[]>([]);
     const riskColors = ['figma-pool-40', 'figma-lime-40', 'figma-lime', 'figma-pool', 'figma-lavender', 'figma-berries'];
 
@@ -262,6 +267,7 @@ export const GameLoopProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             showEvent, setShowEvent,
             rolledDices, setRolledDices,
             riskColors,
+            riskHistory, setRiskHistory
         }}>
             {children}
         </GameLoopContext.Provider>

@@ -154,6 +154,7 @@ function Portfolio() {
         setPrevRoundLiquidity,
         portfolioRisk, setPortfolioRisk,
         riskColors,
+        riskHistory, setRiskHistory
     } = useGameLoop();
 
     const {
@@ -198,16 +199,19 @@ function Portfolio() {
             const event: any = eventData[eventIndex];
 
             // Update productData
+            let soldThisRound = 0;
             const updatedProductData = productData.map(item => {
                 let costChange = Number(event[item.productName][0]);
+                if (item.sellingNextRound > 0) soldThisRound += item.sellingNextRound * costChange;
                 return {
                     ...item,
                     invested: Math.max(0, Number(item.invested) * costChange),
                     cost: Math.max(1, Number(item.cost) * costChange),
+                    sellingNextRound: 0,
                 };
             });
             setProductData(updatedProductData);
-
+            setLiquidity(liquidity + soldThisRound);
             setChangesApplied(true);
         }
     }, [changesApplied, productData, eventData, eventIndex]);
@@ -216,16 +220,18 @@ function Portfolio() {
         let portfolioValue = 0;
         let risk = 0;
         productData.forEach(item => {
-            portfolioValue += item.invested;
-            risk += item.riskScore * item.invested;
+            portfolioValue += item.invested + item.sellingNextRound;
+            risk += item.riskScore * (item.invested + item.sellingNextRound);
         })
         setPortfolioRisk((risk + liquidity) / (portfolioValue + liquidity));
     }, [productData]);
 
     const percentConversion = 100;
-    const portfolioWorth: number = Number(productData.reduce((total, p) => total + p.invested, 0) + liquidity);
+    const portfolioWorth: number = Number(productData.reduce((total, p) => total + p.invested + p.sellingNextRound, 0) + liquidity);
+    let addLiquidity = configData.startingMoney;
+    if (round > 1) addLiquidity = prevRoundLiquidity || 0;
     const portfolioPercentChange: number = portfolioWorth * percentConversion /
-        (productHistory[round]?.reduce((total: number, p) => total + Number(p.invested), 0) + (prevRoundLiquidity || configData.startingMoney)) - percentConversion;
+        (productHistory[round]?.reduce((total: number, p) => total + Number(p.invested) + Number(p.sellingNextRound || 0), 0) + addLiquidity) - percentConversion;
 
     const currentProduct = openedProduct >= 0 ? productData[openedProduct] : null;
     const currentAdjustedCost = currentProduct ? Math.max(currentProduct.cost, 1) : null;
@@ -413,12 +419,18 @@ function Portfolio() {
                                 <div className="w-full font-bold flex justify-center items-center gap-3 mt-4">
                                     <button disabled={(currentProduct?.invested || 0) < buySellAmount || Number(currentProduct?.timeToSell) < 0}
                                         onClick={() => {
-                                            setLiquidity(liquidity + buySellAmount)
+                                            let sellNextRound = 0;
+                                            if (Number(currentProduct?.timeToSell) == 0) {
+                                                setLiquidity(liquidity + buySellAmount);
+                                            } else {
+                                                sellNextRound = buySellAmount;
+                                            }
                                             const updatedProductData = productData.map(item => {
                                                 if (item.productName === currentProduct?.productName) {
                                                     return {
                                                         ...item,
                                                         invested: Number(Number(currentProduct?.invested || 0) - buySellAmount),
+                                                        sellingNextRound: item.sellingNextRound + sellNextRound,
                                                     };
                                                 } else return item;
                                             });
@@ -466,6 +478,12 @@ function Portfolio() {
 
                             </div>
                         </div>
+
+                        {(currentProduct?.sellingNextRound || 0) > 0 &&
+                            <div className="border-2 border-figma-pool text-figma-pool text-center py-1 my-2 rounded-md">
+                                {configData.delaySellAmountText} {currentProduct?.sellingNextRound}
+                            </div>
+                        }
 
                         <hr className="bg-figma-stone h-0.5 mt-4" />
                         <p className="mt-3">{currentProduct?.productDescription}</p>
@@ -587,6 +605,7 @@ function Portfolio() {
                             setRound(round + 1);
                             setPrevRoundLiquidity(liquidity);
                             setPortfolioRiskHistory([...portfolioRiskHistory, portfolioRisk]);
+                            setRiskHistory([...riskHistory, portfolioRisk]);
                         }}>
 
                         <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">

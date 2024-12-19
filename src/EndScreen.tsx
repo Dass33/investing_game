@@ -5,9 +5,11 @@ import { LineChart } from "@mui/x-charts";
 
 function EndScreen() {
     const { totalScore, gameMode, portfolioRiskHistory } = useGame();
-    const { productData, scenarios, liquidity, configData, portfolioRisk } = useGameLoop();
+    const { productData, scenarios, liquidity, configData, portfolioRisk, riskHistory } = useGameLoop();
     const [showRisk, setShowRisk] = useState(false);
-    const riskIndex = Math.ceil(Math.max(portfolioRisk - configData.baseRisk, 0) / configData.incrementRisk);
+    const averageRisk = riskHistory.reduce((a, b) => a + b) / riskHistory.length
+    const riskIndex = Math.ceil(Math.max(averageRisk - configData.baseRisk, 0) / configData.incrementRisk);
+
 
     const soloGame = (scenarios[gameMode].random === "TRUE");
     let content = (
@@ -76,7 +78,7 @@ function EndScreen() {
                 <div className="mx-auto max-w-[40rem]">
                     <div className="flex relative z-10 justify-center gap-8 pt-16 md:pt-24 lg:pt-28 mb-16">
                         <h1 className="text-2xl my-auto font-medium">{configData.riskHeadline}</h1>
-                        <h1 className="text-6xl leading-[0.7] tracking-widest font-bold">{portfolioRisk.toFixed(1)}</h1>
+                        <h1 className="text-6xl leading-[0.7] tracking-widest font-bold">{averageRisk.toFixed(1)}</h1>
                     </div>
 
                     <h1 className="text-2xl font-medium my-14 relative z-10 mx-7">{configData.investorType[riskIndex]}</h1>
