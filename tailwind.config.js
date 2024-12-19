@@ -13,6 +13,8 @@ export default {
         'bg-figma-winter',
         'bg-figma-indigo-40',
         'bg-figma-pale',
+        'bg-figma-pool-40',
+        'bg-figma-lime-40',
     ],
     theme: {
         extend: {
@@ -36,6 +38,7 @@ export default {
                 'figma-white': '#EEF1F4',
                 'figma-stone-40': '#A7BAC8',
                 'figma-pool-40': '#A3D7FD',
+                'figma-lime-40': '#9EE1B2',
 
             },
             backgroundImage: {

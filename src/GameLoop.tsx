@@ -152,7 +152,8 @@ function Portfolio() {
         setProductData,
         prevRoundLiquidity,
         setPrevRoundLiquidity,
-        portfolioRisk, setPortfolioRisk
+        portfolioRisk, setPortfolioRisk,
+        riskColors,
     } = useGameLoop();
 
     const {
@@ -294,7 +295,6 @@ function Portfolio() {
                         <div>
                             <div className='rounded-xl bg-figma-white text-figma-black pt-2 pb-1 flex flex-col'>
                                 <div className="flex w-full">
-                                    <img src={`riskScore/risk${currentProduct?.riskScore}.svg`} alt="NaN" className="-mt-0.5" />
                                     <h2 className="text-base self-center font-bold grow ml-2">{currentProduct?.productName}</h2>
                                     {currentPercentChange != null && <div className="self-center">
                                         {currentPercentChange > 0 &&
@@ -312,43 +312,75 @@ function Portfolio() {
                                     <h2 className='text-lg font-bold min-w-6 text-right pr-1'>{currentProduct?.invested.toFixed(1)}</h2>
                                 </div>
 
-                                <div className="flex mx-2 mt-8 mb-4">
-                                    <div className="font-medium text-xs">
-                                        <div className="flex">
-                                            <span className="w-20">{configData.earningsProperty}</span>
-                                            <img src={`productProperties/dots${currentProduct?.potentialEarnings}.svg`} alt="NaN" className="mt-0.5 w-10 mb-1" />
-                                        </div>
+                                <div className="mx-1 mt-4 font-medium text-xs flex w-full text-center gap-5">
+                                    <span className="w-1/3">{configData.riskHeadline}</span>
 
-                                        <div className="flex">
-                                            <span className="w-20">{configData.securityProperty}</span>
-                                            <img src={`productProperties/dots${currentProduct?.security}.svg`} alt="NaN" className="mt-0.5 w-10" />
-                                        </div>
+                                    <span className="w-1/3">{configData.earningsProperty}</span>
 
-                                        <div className="flex">
-                                            <span className="w-20">{configData.liquidityProperty}</span>
-                                            <img src={`productProperties/dots${currentProduct?.liquidity}.svg`} alt="NaN" className="mt-0.5 w-10" />
-                                        </div>
+                                    <span className="w-1/3">{configData.liquidityProperty}</span>
+                                </div>
+
+                                <div className="mx-2 mb-4 font-medium text-xs flex w-full gap-5 pt-4">
+                                    <div className="w-1/3 relative">
+                                        <img src={`riskScore/risk${currentProduct?.riskScore}.svg`} alt="NaN" className="absolute right-10 -top-2" />
                                     </div>
-                                    <div className="grow text-center text-xs font-medium">
-                                        <p className="font-bold">{((currentProduct?.invested || 0) / (currentProduct?.cost || 1)).toFixed(2)}</p>
-                                        <p>({currentProduct?.cost.toFixed(1)})</p>
+
+                                    <div className="w-1/3 relative">
+                                        <img src={`productProperties/dots${currentProduct?.potentialEarnings}.svg`} alt="NaN" className="absolute top-0.5 right-[27px] w-14" />
                                     </div>
-                                    <div className="mx-auto relative w-[115px] h-[75px]">
-                                        <div className="absolute top-0 w-full h-[75px] rounded-lg overflow-hidden">
-                                            <svg width="115" height="56" viewBox="0 0 115 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <g>
-                                                    <path d="M0 4.32715C0 2.11801 1.79086 0.327148 4 0.327148H111C113.209 0.327148 115 2.11801 115 4.32715V51.3271C115 53.5363 113.209 55.3271 111 55.3271H4C1.79086 55.3271 0 53.5363 0 51.3271V4.32715Z" fill="#0B1F42" />
-                                                    <path d="M112.5 5.38184H3" stroke="#721C7A" strokeWidth="0.5" />
-                                                    <path d="M112.5 12.7773H3" stroke="#721C7A" strokeWidth="0.5" />
-                                                    <path d="M112.5 20.1729H3" stroke="#721C7A" strokeWidth="0.5" />
-                                                    <path d="M112.5 27.5684H3" stroke="#721C7A" strokeWidth="0.5" />
-                                                    <path d="M112.5 34.9639H3" stroke="#721C7A" strokeWidth="0.5" />
-                                                    <path d="M112.5 42.3594H3" stroke="#721C7A" strokeWidth="0.5" />
-                                                    <path d="M112.5 49.7549H3" stroke="#721C7A" strokeWidth="0.5" />
-                                                </g>
+
+                                    <div className="w-1/3 relative ">
+                                        {(currentProduct?.timeToSell || 0) > 1 &&
+
+                                            <div className="flex absolute right-[26px] text-xs text-figma-pool">
+                                                <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M4.33301 6C4.33301 3.79086 6.12387 2 8.33301 2C10.5421 2 12.333 3.79086 12.333 6V10L14.333 12H2.33301L4.33301 10V6Z" fill="#199CF9" />
+                                                    <path d="M10.333 13C10.333 13.2626 10.2813 13.5227 10.1808 13.7654C10.0803 14.008 9.93294 14.2285 9.74722 14.4142C9.5615 14.5999 9.34103 14.7472 9.09837 14.8478C8.85572 14.9483 8.59565 15 8.33301 15C8.07036 15 7.81029 14.9483 7.56764 14.8478C7.32499 14.7472 7.10451 14.5999 6.91879 14.4142C6.73308 14.2285 6.58576 14.008 6.48525 13.7654C6.38474 13.5227 6.33301 13.2626 6.33301 13L8.33301 13H10.333Z" fill="#199CF9" />
+                                                </svg>
+                                                <span>+{currentProduct?.timeToSell} {configData.moreRoundsDelaySellText}</span>
+                                            </div>
+                                        }
+                                        {(currentProduct?.timeToSell || 0) == 1 &&
+
+                                            <div className="flex absolute right-[26px] text-xs text-figma-pool">
+                                                <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M4.33301 6C4.33301 3.79086 6.12387 2 8.33301 2C10.5421 2 12.333 3.79086 12.333 6V10L14.333 12H2.33301L4.33301 10V6Z" fill="#199CF9" />
+                                                    <path d="M10.333 13C10.333 13.2626 10.2813 13.5227 10.1808 13.7654C10.0803 14.008 9.93294 14.2285 9.74722 14.4142C9.5615 14.5999 9.34103 14.7472 9.09837 14.8478C8.85572 14.9483 8.59565 15 8.33301 15C8.07036 15 7.81029 14.9483 7.56764 14.8478C7.32499 14.7472 7.10451 14.5999 6.91879 14.4142C6.73308 14.2285 6.58576 14.008 6.48525 13.7654C6.38474 13.5227 6.33301 13.2626 6.33301 13L8.33301 13H10.333Z" fill="#199CF9" />
+                                                </svg>
+                                                <span>+{currentProduct?.timeToSell} {configData.oneRoundDelaySellText}</span>
+                                            </div>
+                                        }
+                                        {(currentProduct?.timeToSell || 0) == 0 &&
+
+
+                                            <div className="gap-0.5 absolute right-[30px] flex">
+                                                <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <circle cx="8.33301" cy="8" r="6" fill="#0B1F42" />
+                                                    <path d="M8.33301 4V8H11.333" stroke="#FFFDFD" strokeLinecap="round" strokeLinejoin="round" />
+                                                </svg>
+                                                <span>{configData.immediateSellText}</span>
+                                            </div>
+                                        }
+                                        {(currentProduct?.timeToSell || 0) < 0 &&
+                                            <span className="absolute right-10">{configData.neverSellText}</span>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div className="flex mx-2 mt-6 mb-4 bg-figma-black rounded-lg">
+                                    <div className="mx-auto relative w-64 h-[90px]">
+                                        <div className="absolute top-0 w-full rounded-lg overflow-hidden">
+                                            <svg width="250" height="90" viewBox="0 0 250 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M249.722 1.5169L0.193848 0.38092" stroke="#721C7A" strokeWidth="0.5" />
+                                                <path d="M249.667 13.4625L0.13916 12.3265" stroke="#721C7A" strokeWidth="0.5" />
+                                                <path d="M249.613 25.4082L0.0849609 24.2722" stroke="#721C7A" strokeWidth="0.5" />
+                                                <path d="M249.558 37.3538L0.0302734 36.2178" stroke="#721C7A" strokeWidth="0.5" />
+                                                <path d="M249.504 49.2993L-0.0234375 48.1633" stroke="#721C7A" strokeWidth="0.5" />
+                                                <path d="M249.449 61.2452L-0.0783691 60.1092" stroke="#721C7A" strokeWidth="0.5" />
+                                                <path d="M249.395 73.1906L-0.132812 72.0546" stroke="#721C7A" strokeWidth="0.5" />
                                             </svg>
 
-                                            <div className="absolute -top-2 right-0">
+                                            <div className="absolute top-1 right-0">
                                                 <LineChart
                                                     series={[
                                                         {
@@ -359,17 +391,22 @@ function Portfolio() {
                                                         },
                                                     ]}
                                                     leftAxis={null}
-                                                    width={120}
-                                                    height={62}
+                                                    bottomAxis={null}
+                                                    width={250}
+                                                    height={80}
                                                     margin={{
-                                                        left: 0,
-                                                        right: 3,
-                                                        top: 3,
-                                                        bottom: -3,
+                                                        left: -1,
+                                                        right: 0,
+                                                        top: 0,
+                                                        bottom: 6,
                                                     }}
                                                 />
                                             </div>
                                         </div>
+                                    </div>
+                                    <div className="w-28 mt-7 text-center text-xs font-medium">
+                                        <p className="font-bold text-figma-honey">{((currentProduct?.invested || 0) / (currentProduct?.cost || 1)).toFixed(2)} {currentProduct?.ticker}</p>
+                                        <p className="text-figma-white">({currentProduct?.cost.toFixed(1)})</p>
                                     </div>
                                 </div>
 
@@ -457,7 +494,7 @@ function Portfolio() {
                             <p className="text-center px-2 text-black font-bold text-xl">{liquidity.toFixed(1)}</p>
                         </div>
                     </div>
-                    <div className="bg-figma-pool-40">
+                    <div className={`bg-${riskColors[Math.floor(portfolioRisk) - 1]}`}>
                         <div className="px-4 flex py-1 w-96 sm:w-[25rem] lg:w-[56rem] xl:w-[77rem] mx-auto">
                             <div className="relative">
                                 <span className="absolute text-figma-white text-xs top-[7px] left-[6px] w-5 text-center">{portfolioRisk.toFixed(1)}</span>
@@ -500,12 +537,11 @@ function Portfolio() {
                                     }}
                                         key={product.ID}
                                         className={`${product.invested <= 0 && 'flex'} mt-4 w-[22rem] xs:w-[23rem] sm:min-w-96 mx-auto h-fit`}>
-                                        <div className={`${product.invested > 0 ? '' : 'w-[17rem] sm:w-72'}`}>
+                                        <div className={`${product.invested <= 0 && 'w-[14rem] xs:w-60 sm:w-64'}`}>
                                             <div className={`rounded-xl ${product.invested > 0 ? `bg-figma-white text-figma-black` :
                                                 'bg-figma-light-black text-figma-stone-40 border border-figma-stone-40'} pt-2 pb-1 flex`}>
-                                                <img src={`riskScore/${product.invested > 0 ? 'risk' : 'risk_transparent'}${product.riskScore}.svg`} alt="NaN" className="ml-2 -mt-0.5" />
                                                 <h2 className="text-base font-bold mx-3 grow"> {product.productName} </h2>
-                                                {product.invested > 0 && <div className="self-center">
+                                                {product.invested > 0 && <div className="self-center mr-0.5">
                                                     {percentChange > 0 &&
                                                         <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                             <path d="M5.59995 2.56555C5.7924 2.23222 6.27352 2.23222 6.46597 2.56555L10.796 10.0654C10.9884 10.3987 10.7479 10.8154 10.363 10.8154H1.70294C1.31804 10.8154 1.07748 10.3987 1.26993 10.0654L5.59995 2.56555Z" fill="#0CB43F" />
@@ -516,10 +552,22 @@ function Portfolio() {
                                                             <path d="M6.46646 10.0653C6.27401 10.3986 5.79288 10.3986 5.60043 10.0653L1.27041 2.56549C1.07796 2.23216 1.31852 1.81549 1.70342 1.81549L10.3635 1.81549C10.7484 1.81549 10.9889 2.23216 10.7965 2.56549L6.46646 10.0653Z" fill="#EB4C79" />
                                                         </svg>
                                                     }
-                                                </div>
-                                                }
+                                                </div>}
+                                                {product.invested <= 0 && <div className="self-center mr-0.5">
+                                                    {percentChange > 0 &&
+                                                        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M5.59995 2.56555C5.7924 2.23222 6.27352 2.23222 6.46597 2.56555L10.796 10.0654C10.9884 10.3987 10.7479 10.8154 10.363 10.8154H1.70294C1.31804 10.8154 1.07748 10.3987 1.26993 10.0654L5.59995 2.56555Z" fill="#A7BAC8" />
+                                                        </svg>
+                                                    }
+                                                    {percentChange < 0 &&
+                                                        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M6.46646 10.0653C6.27401 10.3986 5.79288 10.3986 5.60043 10.0653L1.27041 2.56549C1.07796 2.23216 1.31852 1.81549 1.70342 1.81549L10.3635 1.81549C10.7484 1.81549 10.9889 2.23216 10.7965 2.56549L6.46646 10.0653Z" fill="#A7BAC8" />
+                                                        </svg>
+                                                    }
+                                                </div>}
                                                 {product.invested > 0 && <h2 className="self-center text-sm font-bold mr-3">{percentChange}%</h2>}
-                                                <h2 className={`text-lg font-bold ${product.invested > 0 ? 'mr-4' : '-mr-20'}`}>{Number(product.invested).toFixed(1)}</h2>
+                                                {product.invested <= 0 && <h2 className="self-center text-sm font-bold mr-3">{percentChange}%</h2>}
+                                                <h2 className={`text-lg font-bold ${product.invested > 0 ? 'mr-4' : '-mr-[113px]'}`}>{Number(product.invested).toFixed(1)}</h2>
                                             </div>
                                         </div>
                                     </div>

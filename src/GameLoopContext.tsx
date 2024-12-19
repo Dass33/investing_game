@@ -71,6 +71,10 @@ interface config {
     earningsProperty: string;
     securityProperty: string;
     liquidityProperty: string;
+    oneRoundDelaySellText: string;
+    moreRoundsDelaySellText: string;
+    immediateSellText: string;
+    neverSellText: string;
 }
 interface events {
     baseGame: string;
@@ -97,6 +101,7 @@ interface products {
     diceThrow: string;
     autoSellIn: number;
     invested: number;
+    ticker: string;
     ID: number;
     potentialEarnings: number;
     security: number;
@@ -166,6 +171,7 @@ interface GameLoopState {
     setPortfolioRisk: Function,
     rolledDices: number[],
     setRolledDices: Function,
+    riskColors: string[],
 }
 
 const GameLoopContext = createContext<GameLoopState | undefined>(undefined);
@@ -207,7 +213,7 @@ export const GameLoopProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const [eventIndex, setEventIndex] = useState<number>(0);
     const [economySummary, setEconomySummary] = useState(false);
     const isInitialized = useRef(false);
-    const figmaColors = ['figma-honey', 'figma-winter', 'figma-berries', 'figma-lavender', 'figma-pool', 'figma-teal', 'figma-pale', 'figma-indigo-40']
+    const figmaColors = ['figma-honey', 'figma-winter', 'figma-berries', 'figma-lavender', 'figma-pool', 'figma-teal', 'figma-pale', 'figma-indigo-40'];
     const [roundStart, setRoundStart] = useState(true);
     const [earningsTutorial, setEarningsTutorial] = useState(hideTutorial ? false : true);
     const [newsTutorial, setNewsTutorial] = useState(hideTutorial ? false : true);
@@ -223,6 +229,7 @@ export const GameLoopProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const [prevRoundLiquidity, setPrevRoundLiquidity] = useState<number | null>(() => configData?.startingMoney || 0);
     const [portfolioRisk, setPortfolioRisk] = useState(1);
     const [rolledDices, setRolledDices] = useState<number[]>([]);
+    const riskColors = ['figma-pool-40', 'figma-lime-40', 'figma-lime', 'figma-pool', 'figma-lavender', 'figma-berries'];
 
     return (
         <GameLoopContext.Provider value={{
@@ -254,6 +261,7 @@ export const GameLoopProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             portfolioRisk, setPortfolioRisk,
             showEvent, setShowEvent,
             rolledDices, setRolledDices,
+            riskColors,
         }}>
             {children}
         </GameLoopContext.Provider>
