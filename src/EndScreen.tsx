@@ -46,7 +46,7 @@ function EndScreen() {
                     </div>
 
                     <h1 className="text-lg font-medium mt-10 relative z-10 mx-2">{configData.endText}</h1>
-                    <div className="z-10 w-full flex mt-8 justify-center font-[Inter] font-bold">
+                    <div className="z-10 w-full flex mt-4 justify-center font-[Inter] font-bold">
                         <button className='bg-figma-black relative z-10 bg flex rounded-full hover:scale-110 duration-200 text-white border-white border py-2 px-6 m-4'
                             onClick={() => setShowRisk(true)}>
 
@@ -76,12 +76,12 @@ function EndScreen() {
                     <rect width="100%" height="100%" fill="url(#verticalLines)" />
                 </svg>
                 <div className="mx-auto max-w-[40rem]">
-                    <div className="flex relative z-10 justify-center gap-8 pt-16 md:pt-24 lg:pt-28 mb-16">
+                    <div className="flex relative z-10 justify-center gap-8 pt-14 md:pt-24 lg:pt-28 mb-16">
                         <h1 className="text-2xl my-auto font-medium">{configData.riskHeadline}</h1>
                         <h1 className="text-6xl leading-[0.7] tracking-widest font-bold">{averageRisk.toFixed(1)}</h1>
                     </div>
 
-                    <h1 className="text-2xl font-medium my-14 relative z-10 mx-7">{configData.investorType[riskIndex]}</h1>
+                    <h1 className="text-2xl font-medium my-12 relative z-10 mx-7">{configData.investorType[riskIndex]}</h1>
                     <p className="text-lg font-medium mt-8 relative z-10 mx-7">{configData.investorTypeDescription[riskIndex]}</p>
                     {soloGame && <div className="z-10 w-full flex mt-8 justify-center font-[Inter] font-bold">
                         <button className='bg-figma-black relative z-10 bg flex rounded-full hover:scale-110 duration-200 text-white border-white border py-2 px-4 m-2'
