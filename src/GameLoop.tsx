@@ -555,7 +555,7 @@ function Portfolio() {
                                     }}
                                         key={product.ID}
                                         className={`${product.invested <= 0 && 'flex'} mt-4 w-[22rem] xs:w-[23rem] sm:min-w-96 mx-auto h-fit`}>
-                                        <div className={`${product.invested <= 0 && 'w-56 sm:w-64'}`}>
+                                        <div className={`${product.invested <= 0 && 'w-56 sm:w-60'}`}>
                                             <div className={`rounded-xl ${product.invested > 0 ? `bg-figma-white text-figma-black` :
                                                 'bg-figma-light-black text-figma-stone-40 border border-figma-stone-40'} pt-2 pb-1 flex`}>
                                                 <h2 className="text-base font-bold mx-3 grow"> {product.productName} </h2>
@@ -584,7 +584,7 @@ function Portfolio() {
                                                     }
                                                 </div>}
                                                 <h2 className="self-center text-sm font-bold mr-3 w-10 text-right">{percentChange}%</h2>
-                                                <h2 className={`text-lg font-bold w-10 text-right ${product.invested > 0 ? 'mr-4' : '-mr-[113px] xs:-mr-[129px]'}`}>
+                                                <h2 className={`text-lg font-bold w-10 text-right ${product.invested > 0 ? 'mr-4' : '-mr-[113px] xs:-mr-[128px]'}`}>
                                                     {product.invested > 0 ? Number(product.invested).toFixed(1) : '0'}</h2>
                                             </div>
                                         </div>
