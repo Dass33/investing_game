@@ -67,12 +67,6 @@ function EndScreen() {
         </>
     );
 
-    if (configData.investorTypeDescription[riskIndex] == "") {
-        content =
-            <div className="bg-figma-black h-screen">
-                <h1 className="text-center pt-36 lg:mt-56 text-white">Loading...</h1>
-            </div>
-    }
     if (showRisk) content =
         <>
             <div className="text-center text-figma-white bg-figma-black h-screen">
@@ -88,7 +82,7 @@ function EndScreen() {
                     <rect width="100%" height="100%" fill="url(#verticalLines)" />
                 </svg>
                 <div className="mx-auto max-w-[40rem]">
-                    <div className="flex relative z-10 justify-center gap-8 pt-14 md:pt-24 lg:pt-28 mb-16">
+                    <div className="flex relative z-10 justify-center gap-8 pt-12 md:pt-24 lg:pt-28 mb-12">
                         <h1 className="text-2xl my-auto font-medium">{configData.riskHeadline}</h1>
                         <h1 className="text-6xl leading-[0.7] tracking-widest font-bold">{averageRisk.toFixed(1)}</h1>
                     </div>

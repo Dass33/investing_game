@@ -42,7 +42,7 @@ function NewEvent() {
                                 <h1 className="font-bold my-auto text-sm xs:text-lg mr-2">{configData.crisisNewsHeadlineText}</h1>
                             </div>
                             <div className="bg-white rounded-md min-w-14 mr-6 my-1">
-                                <p className="text-center px-2 text-figma-black font-bold text-xl">{liquidity?.toFixed(1)}</p>
+                                <p className="text-center px-2 text-figma-black font-bold text-xl">{(Math.floor((liquidity || 0) * 100) / 100).toFixed(1)}</p>
                             </div>
                         </div>
                     </div>
@@ -504,12 +504,12 @@ function Portfolio() {
                             <p className="mx-5 my-auto text-white font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
                             <h1 className="text-white font-bold my-auto">{configData.buttonPortfolioText.toUpperCase()}</h1>
                         </div>
-                        <div className="flex items-center bg-white rounded-lg min-w-14 mr-4 sm:mr-6 my-1">
+                        <div className="flex items-center bg-white rounded-lg min-w-14 mr-6 xs:mr-4 sm:mr-6 my-1">
                             <svg className="-mb-0.5 ml-2" width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M13.2217 8.12476C13.2217 10.345 11.4219 12.1448 9.20166 12.1448C6.98146 12.1448 5.18164 10.345 5.18164 8.12476C5.18164 5.90456 6.98146 4.10474 9.20166 4.10474C11.4219 4.10474 13.2217 5.90456 13.2217 8.12476Z" fill="#245375" />
                                 <path d="M8.46135 3.15894C6.04531 3.51605 4.18997 5.59445 4.18167 8.10781C2.13565 7.92031 0.533203 6.19966 0.533203 4.10474C0.533203 1.88454 2.33303 0.0847168 4.55322 0.0847168C6.44765 0.0847168 8.03602 1.39512 8.46135 3.15894Z" fill="#245375" />
                             </svg>
-                            <p className="text-center px-2 text-black font-bold text-xl">{liquidity.toFixed(1)}</p>
+                            <p className="text-center px-2 text-black font-bold text-xl">{(Math.floor((liquidity || 0) * 100) / 100).toFixed(1)}</p>
                         </div>
                     </div>
                     <div className={`bg-${riskColors[Math.floor(portfolioRisk) - 1]}`}>
@@ -705,8 +705,8 @@ function Earnings() {
                         <p className="mx-4 my-auto font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
                         <h1 className="font-bold my-auto text-lg mr-2">{configData.buttonEarningsText.toUpperCase()}</h1>
                     </div>
-                    <div className="bg-white rounded-md min-w-14 mr-6 my-1">
-                        <p className="text-center px-2 text-figma-black font-bold text-xl">{liquidity.toFixed(1)}</p>
+                    <div className="bg-figma-white rounded-md min-w-14 mr-6 my-1">
+                        <p className="text-center px-2 text-figma-black font-bold text-xl">{(Math.floor((liquidity || 0) * 100) / 100).toFixed(1)}</p>
                     </div>
                 </div>
             </div>
