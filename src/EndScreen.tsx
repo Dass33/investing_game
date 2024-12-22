@@ -1,15 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGame } from "./GameContext";
 import { useGameLoop } from "./GameLoopContext";
 import { LineChart } from "@mui/x-charts";
 
 function EndScreen() {
-    const { totalScore, gameMode, portfolioRiskHistory } = useGame();
+    const { totalScore, setTotalScore, gameMode, portfolioRiskHistory } = useGame();
     const { productData, scenarios, liquidity, configData, portfolioRisk, riskHistory } = useGameLoop();
     const [showRisk, setShowRisk] = useState(false);
     const averageRisk = riskHistory.reduce((a, b) => a + b) / riskHistory.length
     const riskIndex = Math.ceil(Math.max(averageRisk - configData.baseRisk, 0) / configData.incrementRisk);
 
+    useEffect(() => {
+        let score = 0;
+        productData.map(item => score += item.invested);
+        setTotalScore((liquidity ?? 0) + score);
+    }, [productData]);
 
     const soloGame = (scenarios[gameMode].random === "TRUE");
     let content = (
@@ -61,6 +66,13 @@ function EndScreen() {
             </div>
         </>
     );
+
+    if (configData.investorTypeDescription[riskIndex] == "") {
+        content =
+            <div className="bg-figma-black h-screen">
+                <h1 className="text-center pt-36 lg:mt-56 text-white">Loading...</h1>
+            </div>
+    }
     if (showRisk) content =
         <>
             <div className="text-center text-figma-white bg-figma-black h-screen">

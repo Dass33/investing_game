@@ -659,7 +659,7 @@ function Earnings() {
         rolledDices,
         setRolledDices
     } = useGameLoop();
-    const { round, gameMode, setTotalScore, setEndGame } = useGame();
+    const { round, gameMode, setEndGame } = useGame();
     let incomeSum = 0;
 
     const popInDelay = 0.5;
@@ -783,11 +783,6 @@ function Earnings() {
                                     };
                                 });
                                 setProductData(updatedProductData);
-
-
-                                let score = 0;
-                                productData.map(item => score += item.invested);
-                                setTotalScore((liquidity ?? 0) + score);
 
                                 setEndGame(true);
                             }
