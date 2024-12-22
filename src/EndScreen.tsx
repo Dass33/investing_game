@@ -101,7 +101,7 @@ function EndScreen() {
                         </button>
                     </div>}
 
-                    <LineChart className="mx-auto mt-8"
+                    <LineChart className="mx-auto mt-2"
                         xAxis={[
                             {
                                 id: 'barCategories',
