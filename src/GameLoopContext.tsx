@@ -76,6 +76,12 @@ interface config {
     immediateSellText: string;
     neverSellText: string;
     delaySellAmountText: string;
+    autor0: string;
+    autor1: string;
+    autor2: string;
+    autor3: string;
+    autor4: string;
+    autor5: string;
 }
 interface events {
     baseGame: string;

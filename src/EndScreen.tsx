@@ -89,7 +89,7 @@ function EndScreen() {
 
                     <h1 className="text-2xl font-medium my-12 relative z-10 mx-7">{configData.investorType[riskIndex]}</h1>
                     <p className="text-lg font-medium mt-8 relative z-10 mx-7">{configData.investorTypeDescription[riskIndex]}</p>
-                    {soloGame && <div className="z-10 w-full flex mt-8 justify-center font-[Inter] font-bold">
+                    {soloGame && <div className="z-10 w-full flex mt-4 justify-center font-[Inter] font-bold">
                         <button className='bg-figma-black relative z-10 bg flex rounded-full hover:scale-110 duration-200 text-white border-white border py-2 px-4 m-2'
                             onClick={() => window.location.replace(window.location.href)}>  {/*temporary way to restart the game*/}
 
