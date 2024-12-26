@@ -13,6 +13,7 @@ interface config {
     earningsTutorialText: string;
     earningsTutorial_IMG: string;
     newsTutorialText: string;
+    newsTutorialText2: string;
     newsTutorial_IMG: string;
     copryight: string;
     crisisHeadlineText: string;

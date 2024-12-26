@@ -26,7 +26,8 @@ export function ShowHelp() {
                 <p className="mt-4 text-center mx-5 text-lg font-medium min-h-16 mb-8" >{configData.earningsTutorialText}</p>
 
                 <img className="h-36 mx-auto" src={configData.newsTutorial_IMG}></img>
-                <p className="mt-4 text-center mx-5 text-lg font-medium min-h-16 mb-8" >{configData.newsTutorialText}</p>
+                <p className="mt-4 text-center mx-5 text-lg font-medium min-h-16" >{configData.newsTutorialText}</p>
+                <p className="mt-4 text-center mx-5 text-lg font-medium min-h-16 mb-8" >{configData.newsTutorialText2}</p>
             </>
         ),
         (

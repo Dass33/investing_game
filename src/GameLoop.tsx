@@ -96,6 +96,7 @@ function NewsTutorial() {
         <div className="bg-figma-black h-screen text-white font-medium font-[Inter]">
             <img src={configData.newsTutorial_IMG} alt="placeholder" className="mx-auto pt-12 relative z-10"></img>
             <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{configData.newsTutorialText}</p>
+            <p className="text-center pt-2 text-xl mx-auto max-w-96 font-light px-6">{configData.newsTutorialText2}</p>
 
             <div className="z-10 w-full flex justify-center fixed bottom-14 md:bottom-20 font-[Inter] font-bold ">
                 <button className='flex rounded-full hover:scale-110 duration-200 text-white border-white border-2 py-2 px-4 m-2'
@@ -678,7 +679,7 @@ function Earnings() {
     }
 
     useEffect(() => {
-        const investedItems = productData.filter(item => item.invested > 0);
+        const investedItems = productData.filter(item => Number(item.invested) + Number(item.sellingNextRound || 0) > 0);
         const newRolledDices = [...rolledDices];
 
         let needsUpdate = false;
@@ -718,12 +719,12 @@ function Earnings() {
                     <div className="w-full max-w-[609px] min-w-80">
                         <div className="border border-white rounded-t-xl mx-8 bg-figma-black pb-6 pt-1">
                             {[...productData]
-                                .filter(item => item.invested > 0)
+                                .filter(item => (Number(item.invested) + Number(item.sellingNextRound || 0)) > 0)
                                 .map((item, index) => {
                                     const event: any = eventData[eventIndex];
                                     let randomDice = rolledDices[index];
                                     const maxDiceIndex = 5;
-                                    const totalIncome = (item.invested / item.cost) *
+                                    const totalIncome = ((Number(item.invested) + Number(item.sellingNextRound || 0)) / item.cost) *
                                         (event[item.productName][1] + (event[item.productName][2] - event[item.productName][1] || 0) * (randomDice / maxDiceIndex));
                                     incomeSum += totalIncome;
                                     ++sumDelay;
@@ -741,7 +742,7 @@ function Earnings() {
                                                 style={{ animationDelay: `${(index + 1) * popInDelay}s` }}
                                             >
                                                 +{
-                                                    Math.floor((item.invested / item.cost) *
+                                                    Math.floor(((Number(item.invested) + Number(item.sellingNextRound || 0)) / item.cost) *
                                                         (event[item.productName][1] + (event[item.productName][2] - event[item.productName][1] || 0) * (randomDice / maxDiceIndex)) * 10) / 10
                                                 }
                                             </h3>
