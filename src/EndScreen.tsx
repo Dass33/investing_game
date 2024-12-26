@@ -9,11 +9,16 @@ function EndScreen() {
     const [showRisk, setShowRisk] = useState(false);
     const averageRisk = riskHistory.reduce((a, b) => a + b) / riskHistory.length
     const riskIndex = Math.ceil(Math.max(averageRisk - configData.baseRisk, 0) / configData.incrementRisk);
-
+    const [lastRoundSell, setLastRoundSell] = useState(0);
     useEffect(() => {
         let score = 0;
-        productData.map(item => score += item.invested);
+        let roundSell = 0;
+        productData.map(item => {
+            score += item.invested + item.sellingNextRound;
+            roundSell += item.sellingNextRound;
+        });
         setTotalScore((liquidity ?? 0) + score);
+        setLastRoundSell(roundSell);
     }, [productData]);
 
     const soloGame = (scenarios[gameMode].random === "TRUE");
@@ -47,7 +52,8 @@ function EndScreen() {
                     })}
                     <div className="relative z-10 mt-1 mx-3 pl-3 pr-6 flex text-figma-black text-base rounded font-bold bg-figma-white">
                         <h3 className="my-auto flex-1 break-words text-base text-left grow">{configData.cashText}</h3>
-                        <h3 className="w-16 my-auto text-lg font-bold text-right">{liquidity?.toFixed(1)}</h3>
+                        <h3 className="w-16 my-auto text-lg font-bold text-right">{((liquidity || 0) + lastRoundSell).toFixed(1)}</h3>
+
                     </div>
 
                     <h1 className="text-lg font-medium mt-10 relative z-10 mx-2">{configData.endText}</h1>

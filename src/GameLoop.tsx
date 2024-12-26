@@ -46,7 +46,7 @@ function NewEvent() {
                                     <path d="M13.2217 8.12476C13.2217 10.345 11.4219 12.1448 9.20166 12.1448C6.98146 12.1448 5.18164 10.345 5.18164 8.12476C5.18164 5.90456 6.98146 4.10474 9.20166 4.10474C11.4219 4.10474 13.2217 5.90456 13.2217 8.12476Z" fill="#245375" />
                                     <path d="M8.46135 3.15894C6.04531 3.51605 4.18997 5.59445 4.18167 8.10781C2.13565 7.92031 0.533203 6.19966 0.533203 4.10474C0.533203 1.88454 2.33303 0.0847168 4.55322 0.0847168C6.44765 0.0847168 8.03602 1.39512 8.46135 3.15894Z" fill="#245375" />
                                 </svg>
-                                <p className="text-center px-2 text-black font-bold text-xl">{(Math.floor((liquidity || 0) * 100) / 100).toFixed(1)}</p>
+                                <p className="text-center px-2 text-black font-bold text-xl">{Math.floor((liquidity || 0) * 10) / 10}</p>
                             </div>
                         </div>
                     </div>
@@ -319,7 +319,7 @@ function Portfolio() {
                                         }
                                     </div>}
                                     <h2 className="self-center text-sm font-bold mr-3">{currentPercentChange}%</h2>
-                                    <h2 className='text-lg font-bold min-w-6 text-right pr-1'>{currentProduct?.invested.toFixed(1)}</h2>
+                                    <h2 className='text-lg font-bold min-w-6 text-right pr-1'>{(Math.floor((currentProduct?.invested || 0) * 10) / 10)}</h2>
                                 </div>
 
                                 <div className="mx-1 mt-4 font-medium text-xs flex w-full text-center gap-5">
@@ -513,7 +513,7 @@ function Portfolio() {
                                 <path d="M13.2217 8.12476C13.2217 10.345 11.4219 12.1448 9.20166 12.1448C6.98146 12.1448 5.18164 10.345 5.18164 8.12476C5.18164 5.90456 6.98146 4.10474 9.20166 4.10474C11.4219 4.10474 13.2217 5.90456 13.2217 8.12476Z" fill="#245375" />
                                 <path d="M8.46135 3.15894C6.04531 3.51605 4.18997 5.59445 4.18167 8.10781C2.13565 7.92031 0.533203 6.19966 0.533203 4.10474C0.533203 1.88454 2.33303 0.0847168 4.55322 0.0847168C6.44765 0.0847168 8.03602 1.39512 8.46135 3.15894Z" fill="#245375" />
                             </svg>
-                            <p className="text-center px-2 text-black font-bold text-xl">{(Math.floor((liquidity || 0) * 100) / 100).toFixed(1)}</p>
+                            <p className="text-center px-2 text-black font-bold text-xl">{Math.floor((liquidity || 0) * 10) / 10}</p>
                         </div>
                     </div>
                     <div className={`bg-${riskColors[Math.floor(portfolioRisk) - 1]}`}>
@@ -589,7 +589,7 @@ function Portfolio() {
                                                 </div>}
                                                 <h2 className="self-center text-sm font-bold mr-3 w-10 text-right">{percentChange}%</h2>
                                                 <h2 className={`text-lg font-bold w-10 text-right ${product.invested > 0 ? 'mr-4' : '-mr-[113px] xs:-mr-[128px]'}`}>
-                                                    {product.invested > 0 ? Number(product.invested).toFixed(1) : '0'}</h2>
+                                                    {product.invested > 0 ? Math.floor(product.invested * 10) / 10 : '0'}</h2>
                                             </div>
                                         </div>
                                     </div>
@@ -741,8 +741,8 @@ function Earnings() {
                                                 style={{ animationDelay: `${(index + 1) * popInDelay}s` }}
                                             >
                                                 +{
-                                                    ((item.invested / item.cost) *
-                                                        (event[item.productName][1] + (event[item.productName][2] - event[item.productName][1] || 0) * (randomDice / maxDiceIndex))).toFixed(1)
+                                                    Math.floor((item.invested / item.cost) *
+                                                        (event[item.productName][1] + (event[item.productName][2] - event[item.productName][1] || 0) * (randomDice / maxDiceIndex)) * 10) / 10
                                                 }
                                             </h3>
                                         </div>
@@ -975,7 +975,7 @@ function Bankruptcy() {
                             <path d="M13.2217 8.12476C13.2217 10.345 11.4219 12.1448 9.20166 12.1448C6.98146 12.1448 5.18164 10.345 5.18164 8.12476C5.18164 5.90456 6.98146 4.10474 9.20166 4.10474C11.4219 4.10474 13.2217 5.90456 13.2217 8.12476Z" fill="#245375" />
                             <path d="M8.46135 3.15894C6.04531 3.51605 4.18997 5.59445 4.18167 8.10781C2.13565 7.92031 0.533203 6.19966 0.533203 4.10474C0.533203 1.88454 2.33303 0.0847168 4.55322 0.0847168C6.44765 0.0847168 8.03602 1.39512 8.46135 3.15894Z" fill="#245375" />
                         </svg>
-                        <p className="text-center px-2 text-black font-bold text-xl">{(Math.floor((liquidity || 0) * 100) / 100).toFixed(1)}</p>
+                        <p className="text-center px-2 text-black font-bold text-xl">{Math.floor((liquidity || 0) * 10) / 10}</p>
                     </div>
                 </div>
             </div>
@@ -1053,7 +1053,7 @@ function News() {
                             <path d="M13.2217 8.12476C13.2217 10.345 11.4219 12.1448 9.20166 12.1448C6.98146 12.1448 5.18164 10.345 5.18164 8.12476C5.18164 5.90456 6.98146 4.10474 9.20166 4.10474C11.4219 4.10474 13.2217 5.90456 13.2217 8.12476Z" fill="#245375" />
                             <path d="M8.46135 3.15894C6.04531 3.51605 4.18997 5.59445 4.18167 8.10781C2.13565 7.92031 0.533203 6.19966 0.533203 4.10474C0.533203 1.88454 2.33303 0.0847168 4.55322 0.0847168C6.44765 0.0847168 8.03602 1.39512 8.46135 3.15894Z" fill="#245375" />
                         </svg>
-                        <p className="text-center px-2 text-black font-bold text-xl">{(Math.floor((liquidity || 0) * 100) / 100).toFixed(1)}</p>
+                        <p className="text-center px-2 text-black font-bold text-xl">{Math.floor((liquidity || 0) * 10) / 10}</p>
                     </div>
                 </div>
             </div>
