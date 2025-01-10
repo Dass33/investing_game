@@ -652,7 +652,6 @@ function Earnings() {
         setShowEarnings,
         setLiquidity,
         setShowSite,
-        setNextRound,
         setShowHelp,
         configData,
         setShowPortfolio,
