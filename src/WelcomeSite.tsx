@@ -89,6 +89,14 @@ function InstructionSite() {
 
     if (scenariosData[gameMode].random == "FALSE") return (
         <div className="bg-figma-black h-screen text-white">
+            <button onClick={() => setShowHelp(true)}>
+                <svg className="w-14 mt-2 my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="15.8669" cy="15.5" r="10.5" stroke="#EEF1F4" />
+                    <path d="M13.1711 12.8945C13.1711 12.8945 13.0495 10.1379 15.952 10.1379C15.952 10.1379 18.5634 10.1379 18.5635 12.8945C18.5635 15.5788 15.8428 15.5304 15.8428 18.1294" stroke="#EEF1F4" strokeLinecap="round" />
+                    <path d="M15.9026 20.5477V20.8621" stroke="#EEF1F4" strokeLinecap="round" />
+                </svg>
+            </button>
+
             <img src={`${scenariosData[gameMode].IMG}`} alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
             <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{scenariosData[gameMode].howToPlay}</p>
             <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{scenariosData[gameMode].howToPlay2}</p>
@@ -161,8 +169,8 @@ function WelcomeSite() {
     return (
         <>
             {showHelp && <ShowHelp />}
-            {showLandingSite && <LandingSite />}
-            {!showLandingSite && <InstructionSite />}
+            {showLandingSite && !showHelp && <LandingSite />}
+            {!showLandingSite && !showHelp && <InstructionSite />}
         </>
     );
 }

@@ -60,6 +60,12 @@ interface config {
     helpGoalText: string;
     helpTipHeadline1: string;
     helpTipText1: string;
+    helpTipHeadline2: string;
+    helpTipText2: string;
+    helpTipHeadline3: string;
+    helpTipText3: string;
+    helpTipHeadline4: string;
+    helpTipText4: string;
     toSell: string;
     toBuy: string;
     riskHeadline: string;
@@ -83,6 +89,9 @@ interface config {
     autor3: string;
     autor4: string;
     autor5: string;
+    riskTutorialText: string;
+    playAgainText: string;
+    playAgainHeadline: string;
 }
 interface events {
     baseGame: string;
@@ -125,6 +134,7 @@ interface scenarios {
     scenarioLength: number;
     howToPlay: string;
     howToPlay2: string;
+    howToPlay3: string;
     IMG: string;
     IMG2: string;
     eventOrder: string[];

@@ -19,15 +19,15 @@ export function ShowHelp() {
                 <img className="h-36 mx-auto" src={scenarios[gameMode].IMG2}></img>
                 <p className="mt-4 text-center mx-5 text-lg font-medium min-h-16 mb-8">{scenarios[gameMode].howToPlay2}</p>
 
-                <img className="h-36 mx-auto" src={configData.portfolioTutorial_IMG}></img>
-                <p className="mt-4 text-center mx-5 text-lg font-medium min-h-16 mb-8" >{configData.portfolioTutorialText}</p>
-
                 <img className="h-36 mx-auto" src={configData.earningsTutorial_IMG}></img>
                 <p className="mt-4 text-center mx-5 text-lg font-medium min-h-16 mb-8" >{configData.earningsTutorialText}</p>
 
                 <img className="h-36 mx-auto" src={configData.newsTutorial_IMG}></img>
                 <p className="mt-4 text-center mx-5 text-lg font-medium min-h-16" >{configData.newsTutorialText}</p>
+
+                <img className="h-36 mx-auto" src={configData.portfolioTutorial_IMG}></img>
                 <p className="mt-4 text-center mx-5 text-lg font-medium min-h-16 mb-8" >{configData.newsTutorialText2}</p>
+                <p className="mt-4 text-center mx-5 text-lg font-medium min-h-16 mb-8" >{configData.riskTutorialText}</p>
             </>
         ),
         (
@@ -46,6 +46,15 @@ export function ShowHelp() {
             <div className="mx-3 ">
                 <p className="pt-2 font-bold">{configData.helpTipHeadline1}</p>
                 <p className="text-base font-medium min-h-14 mt-3 mb-2">{configData.helpTipText1}</p>
+
+                <p className="pt-2 font-bold">{configData.helpTipHeadline2}</p>
+                <p className="text-base font-medium min-h-14 mt-3 mb-2">{configData.helpTipText2}</p>
+
+                <p className="pt-2 font-bold">{configData.helpTipHeadline3}</p>
+                <p className="text-base font-medium min-h-14 mt-3 mb-2">{configData.helpTipText3}</p>
+
+                <p className="pt-2 font-bold">{configData.helpTipHeadline4}</p>
+                <p className="text-base font-medium min-h-14 mt-3 mb-2">{configData.helpTipText4}</p>
             </div>
         ),
         (

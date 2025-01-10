@@ -90,8 +90,8 @@ function NewEvent() {
 
 function NewsTutorial() {
 
-    const { setNewsTutorial, configData, scenarios } = useGameLoop();
-    const { gameMode } = useGame();
+    const { setNewsTutorial, configData } = useGameLoop();
+    // const { gameMode } = useGame();
     return (
         <div className="bg-figma-black h-screen text-white font-medium font-[Inter]">
             <img src={configData.newsTutorial_IMG} alt="placeholder" className="mx-auto pt-12 relative z-10"></img>
@@ -102,9 +102,9 @@ function NewsTutorial() {
                 <button className='flex rounded-full hover:scale-110 duration-200 text-white border-white border-2 py-2 px-4 m-2'
                     onClick={() => {
                         setNewsTutorial(false)
-                        if (scenarios[gameMode].random == "TRUE") {
+                        /*if (scenarios[gameMode].random == "TRUE") {
                             localStorage.setItem("tutorial", "false");
-                        }
+                        }*/
                     }}>
 
                     <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -795,7 +795,6 @@ function Earnings() {
 
                             setLiquidity((prevLiquidity: number) => (prevLiquidity ?? 0) + incomeSum);
                             setShowSite(0);
-                            setNextRound(true);
                             setShowEarnings(false);
                             setShowPortfolio(true);
                             setRolledDices([]);
@@ -841,7 +840,7 @@ function NewRound() {
     const { round, gameMode } = useGame();
     const { scenarios, setEventIndex, eventData,
         setRoundStart, setShowEarnings, setShowBankruptcy,
-        productData, setShowEvent } = useGameLoop();
+        productData, setShowEvent, setNextRound } = useGameLoop();
 
     const soloGame = scenarios[gameMode].random == "TRUE";
 
@@ -915,6 +914,7 @@ function NewRound() {
                         });
                     setRoundStart(false);
                     setShowEarnings(true);
+                    setNextRound(true);
                 }}>
                     <svg className="size-20" width="41" height="41" viewBox="10 10 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12.3755 20.4526H28.3755M28.3755 20.4526L22.3755 14.4526M28.3755 20.4526L22.3755 26.4526" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -1031,7 +1031,7 @@ function News() {
 
     const { gameMode, round } = useGame();
     const { scenarios, setShowHelp, eventData, eventIndex,
-        liquidity, figmaColors, setShowEvent, configData,
+        figmaColors, setShowEvent, configData,
     } = useGameLoop();
 
     return (
@@ -1048,13 +1048,6 @@ function News() {
                     <div className="grow flex justify-center pr-2">
                         <p className="ml-2 mr-4 my-auto font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
                         <h1 className="font-bold my-auto text-sm xs:text-lg mr-2">{configData.newsHeadline}</h1>
-                    </div>
-                    <div className="flex items-center bg-white rounded-lg min-w-14 mr-2">
-                        <svg className="-mb-0.5 ml-2" width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M13.2217 8.12476C13.2217 10.345 11.4219 12.1448 9.20166 12.1448C6.98146 12.1448 5.18164 10.345 5.18164 8.12476C5.18164 5.90456 6.98146 4.10474 9.20166 4.10474C11.4219 4.10474 13.2217 5.90456 13.2217 8.12476Z" fill="#245375" />
-                            <path d="M8.46135 3.15894C6.04531 3.51605 4.18997 5.59445 4.18167 8.10781C2.13565 7.92031 0.533203 6.19966 0.533203 4.10474C0.533203 1.88454 2.33303 0.0847168 4.55322 0.0847168C6.44765 0.0847168 8.03602 1.39512 8.46135 3.15894Z" fill="#245375" />
-                        </svg>
-                        <p className="text-center px-2 text-black font-bold text-xl">{Math.floor((liquidity || 0) * 10) / 10}</p>
                     </div>
                 </div>
             </div>
@@ -1122,12 +1115,12 @@ function GameLoop() {
     if (roundStart && round <= scenarios[gameMode].scenarioLength) content = <NewRound />;
     else if (showHelp) content = <ShowHelp />;
     else if (showEvent && showBankruptcy) content = <Bankruptcy />;
-    else if (portfolioTutorial) content = <PortfolioTutorial />;
+    else if (portfolioTutorial && !soloGame) content = <PortfolioTutorial />;
     else if (showEarnings && earningsTutorial) content = <EarningsTutorial />;
-    else if (showEarnings) content = <Earnings />;
     else if (nextRound && newsTutorial) content = <NewsTutorial />;
     else if (showEvent && soloGame) content = <News />;
     else if (nextRound && !soloGame) content = <NewEvent />;
+    else if (showEarnings) content = <Earnings />;
     else if (showPortfolio) content = <Portfolio />;
 
     return content;
