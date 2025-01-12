@@ -72,16 +72,16 @@ function NewEvent() {
             }
 
             <div className={`z-10 w-full flex justify-center fixed font-[Inter] font-medium ${soloGame ? 'bg-' + figmaColors[eventData[eventIndex].color] + ' bottom-0' : 'bottom-12 md:bottom-20'}`}>
-                <button className='flex rounded-full hover:scale-110 duration-200 text-figma-black border-figma-black border py-2 px-6 m-3'
+                <button className='flex rounded-full hover:scale-110 duration-200 text-figma-black border-figma-black border'
                     onClick={() => {
                         setRolledThisBancrupcy(false);
                         setNextRound(false);
                     }}>
 
-                    <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1.86694 7.5H17.8669M17.8669 7.5L11.8669 1.5M17.8669 7.5L11.8669 13.5" stroke="#0B1F42" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+
+                    <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12.3755 20.4526H28.3755M28.3755 20.4526L22.3755 14.4526M28.3755 20.4526L22.3755 26.4526" stroke="#0B1F42" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    <span className="mx-3 text-lg">{configData.buttonNewsText}</span>
                 </button>
             </div>
         </>
