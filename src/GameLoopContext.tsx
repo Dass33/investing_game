@@ -92,6 +92,7 @@ interface config {
     riskTutorialText: string;
     playAgainText: string;
     playAgainHeadline: string;
+    theEndText: string;
 }
 interface events {
     baseGame: string;

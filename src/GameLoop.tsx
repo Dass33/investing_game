@@ -99,7 +99,7 @@ function NewsTutorial() {
             <p className="text-center pt-2 text-xl mx-auto max-w-96 font-light px-6">{configData.newsTutorialText2}</p>
 
             <div className="z-10 w-full flex justify-center fixed bottom-14 md:bottom-20 font-[Inter] font-bold ">
-                <button className='flex rounded-full hover:scale-110 duration-200 text-white border-white border-2 py-2 px-4 m-2'
+                <button className='flex rounded-full hover:scale-110 duration-200 text-white border-white border-2'
                     onClick={() => {
                         setNewsTutorial(false)
                         /*if (scenarios[gameMode].random == "TRUE") {
@@ -107,10 +107,9 @@ function NewsTutorial() {
                         }*/
                     }}>
 
-                    <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1.86694 7.5H17.8669M17.8669 7.5L11.8669 1.5M17.8669 7.5L11.8669 13.5" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12.3755 20.4526H28.3755M28.3755 20.4526L22.3755 14.4526M28.3755 20.4526L22.3755 26.4526" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    <span className="mx-3 text-lg">{configData.buttonNewsText}</span>
                 </button>
             </div>
         </div>
@@ -632,13 +631,12 @@ function PortfolioTutorial() {
                 <img src={configData.portfolioTutorial_IMG} alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
                 <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{configData.portfolioTutorialText}</p>
                 <div className="absolute bottom-14 md:bottom-20 w-full">
-                    <button className="mx-auto border border-white rounded-full flex pl-6 pr-10" onClick={() => {
+                    <button className="mx-auto border border-white rounded-full flex" onClick={() => {
                         setPortfolioTutorial(false);
                     }}>
                         <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12.3755 20.4526H28.3755M28.3755 20.4526L22.3755 14.4526M28.3755 20.4526L22.3755 26.4526" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
-                        <span className="my-auto">{configData.buttonPortfolioText}</span>
                     </button>
                 </div>
             </div>
@@ -802,7 +800,7 @@ function Earnings() {
                         <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M1.86694 7.5H17.8669M17.8669 7.5L11.8669 1.5M17.8669 7.5L11.8669 13.5" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
-                        <span className="mx-3 text-lg">{configData.buttonNewsText}</span>
+                        <span className="ml-2">{configData.buttonPortfolioText}</span>
                     </button>
                 </div>
             </div>
@@ -823,11 +821,10 @@ function EarningsTutorial() {
                     {configData.earningsTutorailPromptText}
                 </p>
                 <div className="absolute bottom-14 md:bottom-20 w-full">
-                    <button className="mx-auto border border-white rounded-full flex pl-6 pr-10" onClick={() => setEarningsTutorial(false)}>
+                    <button className="mx-auto border border-white rounded-full flex" onClick={() => setEarningsTutorial(false)}>
                         <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12.3755 20.4526H28.3755M28.3755 20.4526L22.3755 14.4526M28.3755 20.4526L22.3755 26.4526" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
-                        <span className="my-auto">{configData.buttonEarningsText}</span>
                     </button>
                 </div>
             </div>
@@ -1115,10 +1112,10 @@ function GameLoop() {
     else if (showHelp) content = <ShowHelp />;
     else if (showEvent && showBankruptcy) content = <Bankruptcy />;
     else if (portfolioTutorial && !soloGame) content = <PortfolioTutorial />;
-    else if (showEarnings && earningsTutorial) content = <EarningsTutorial />;
     else if (nextRound && newsTutorial) content = <NewsTutorial />;
     else if (showEvent && soloGame) content = <News />;
     else if (nextRound && !soloGame) content = <NewEvent />;
+    else if (showEarnings && earningsTutorial) content = <EarningsTutorial />;
     else if (showEarnings) content = <Earnings />;
     else if (showPortfolio) content = <Portfolio />;
 
