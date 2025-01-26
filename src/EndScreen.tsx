@@ -172,6 +172,8 @@ function EndScreen() {
                 </svg>
                 <img src="end_screen_picture.svg" alt="placeholder" className="mx-auto pt-28 relative z-10"></img>
 
+                {!soloGame && <p className="text-2xl font-bold mt-8 relative z-10 mx-7">{configData.playAgainText}</p>}
+
                 <div className="max-w-[40rem] mx-auto">
                     <div className="z-10 gap-4 flex mt-4 justify-center font-[Inter] font-bold text-sm ml-8">
                         <button className='bg-figma-black relative z-10 bg flex rounded-full hover:scale-110 duration-200 text-center text-white border-white border py-2 px-6 my-4'
@@ -188,19 +190,19 @@ function EndScreen() {
                         </button>
 
                         <button className='bg-figma-black min-w-32 relative z-10 bg flex rounded-full hover:scale-110 duration-200 text-center text-white border-white border py-2 px-6 my-4'
-                            onClick={() => () => {
+                            onClick={() => {
+                                console.log("NHI");
                                 const url = new URL(window.location.href);
-                                if (!soloGame) url.searchParams.set('gameMode', '1');
+                                url.searchParams.set('gameMode', '1');
                                 window.location.replace(url.toString());
                             }}>
 
-                            {!soloGame && <h1 className="text-md my-2">{configData.playAgainHeadline}</h1>}
+                            {!soloGame && <h1 className="text-md my-1">{configData.playAgainHeadline}</h1>}
 
                             {soloGame && <div> <p className="text-md my-1 relative z-10 ">{configData.buttonRestartText}</p> </div>}
                         </button>
                     </div>
 
-                    {!soloGame && <p className="text-2xl font-bold mt-8 relative z-10 mx-7">{configData.playAgainText}</p>}
 
                     <h3 className="text-center text-[11px] relative z-10">{configData.copryight}</h3>
                 </div>
