@@ -31,10 +31,10 @@ function NewEvent() {
                     <div className={`z-10 fixed top-0 py-1 text-figma-black text-xl w-full font-[Inter] bg-${figmaColors[eventData[eventIndex].color]}`}>
                         <div className="flex">
                             <button onClick={() => setShowHelp(true)}>
-                                <svg className="w-14 my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <svg className="w-14 my-auto" width="31" height="31" viewBox="0 0 31 31" strokeWidth={1.5} fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="15.8669" cy="15.5" r="10.5" stroke="#0B1F42" />
                                     <path d="M13.1711 12.8945C13.1711 12.8945 13.0495 10.1379 15.952 10.1379C15.952 10.1379 18.5634 10.1379 18.5635 12.8945C18.5635 15.5788 15.8428 15.5304 15.8428 18.1294" stroke="#0B1F42" strokeLinecap="round" />
-                                    <path d="M15.9026 20.5477V20.8621" stroke="#0B1F42" strokeLinecap="round" />
+                                    <path d="M15.9026 20.5477V20.8621" strokeWidth={2} stroke="#0B1F42" strokeLinecap="round" />
                                 </svg>
                             </button>
                             <div className="grow flex justify-center pr-4">
@@ -174,6 +174,7 @@ function Portfolio() {
     const [changesApplied, setChangesApplied] = useState(false);
     const [openedProduct, setOpenedProduct] = useState(-1);
     const [buySellAmount, setBuySellAmount] = useState(1);
+    const [popAnimation, setPopAnimation] = useState(false);
 
     if (liquidity === null) {
         return (
@@ -245,6 +246,13 @@ function Portfolio() {
     const currentProductHistory = productHistory.map(item => Number(item.filter(product => product.productName === currentProduct?.productName)[0]?.cost));
     currentProductHistory.shift();
 
+    useEffect(() => {
+        if (popAnimation) {
+            const timer = setTimeout(() => setPopAnimation(false), 300);
+            return () => clearTimeout(timer);
+        }
+    }, [popAnimation]);
+
     return (
         <>
             {delaydSellAlert &&
@@ -290,8 +298,13 @@ function Portfolio() {
                 </div>
             }
             {openedProduct >= 0 &&
-                <div className="fixed flex items-center justify-center z-0 bg-figma-black/70 h-screen w-screen backdrop-blur-sm">
-                    <div className="mt-4 max-w-[374px] mx-2 sm:w-96 bg-figma-white rounded-2xl relative pb-5 px-3">
+                <div className="fixed flex items-center justify-center z-0 bg-figma-black/70 h-screen w-screen backdrop-blur-sm"
+                    onClick={() => {
+                        setOpenedProduct(-1);
+                        setBuySellAmount(1);
+                    }}>
+                    <div className="mt-4 max-w-[374px] mx-2 sm:w-96 bg-figma-white rounded-2xl relative pb-5 px-3"
+                        onClick={(e) => e.stopPropagation()}>
                         <button className="text-xl rounded-full absolute right-0 -top-10" onClick={() => {
                             setOpenedProduct(-1);
                             setBuySellAmount(1);
@@ -319,7 +332,7 @@ function Portfolio() {
                                         }
                                     </div>}
                                     <h2 className="self-center text-sm font-bold mr-3">{currentPercentChange}%</h2>
-                                    <h2 className='text-lg font-bold min-w-6 text-right pr-1'>{(Math.floor((currentProduct?.invested || 0) * 10) / 10)}</h2>
+                                    <h2 className={`text-lg font-bold min-w-8 text-right pr-1 ${popAnimation ? "animate-grow-shrink" : ""}`}>{(Math.floor((currentProduct?.invested || 0) * 10) / 10)}</h2>
                                 </div>
 
                                 <div className="mx-1 mt-4 font-medium text-xs flex w-full text-center gap-5">
@@ -439,8 +452,9 @@ function Portfolio() {
                                                 } else return item;
                                             });
                                             setProductData(updatedProductData);
+                                            setPopAnimation(true);
                                         }}
-                                        className="px-[10px] py-[6px] bg-figma-rose rounded-full">
+                                        className={`px-[10px] py-[6px] ${(currentProduct?.timeToSell || 0) >= 0 ? "bg-figma-rose" : "bg-figma-rose/60 text-figma-black/60"} rounded-full`}>
                                         {configData.toSell}</button>
                                     <div className="flex items-center">
                                         <button disabled={buySellAmount <= 1} onClick={() => setBuySellAmount(buySellAmount - 1)}>
@@ -475,6 +489,7 @@ function Portfolio() {
                                             } else return item;
                                         });
                                         setProductData(updatedProductData);
+                                        setPopAnimation(true);
                                     }}
                                         className="px-[10px] py-[6px] bg-figma-lime rounded-full">
                                         {configData.toBuy}</button>
@@ -485,7 +500,8 @@ function Portfolio() {
 
                         {(currentProduct?.sellingNextRound || 0) > 0 &&
                             <div className="border-2 border-figma-pool text-figma-pool text-center py-1 my-2 rounded-md">
-                                {configData.delaySellAmountText} {currentProduct?.sellingNextRound}
+                                {configData.delaySellAmountText} {Math.floor(((currentProduct?.sellingNextRound || 0) * 100) / (currentProduct?.cost || 0)) / 100}
+                                {" " + currentProduct?.ticker} {configData.delaySellAmountText1}
                             </div>
                         }
 
@@ -498,10 +514,10 @@ function Portfolio() {
                 <div className="bg-figma-stone">
                     <div className="flex py-1 w-96 sm:w-[26rem] lg:w-[56rem] xl:w-[77rem] mx-auto">
                         <button onClick={() => setShowHelp(true)}>
-                            <svg className="ml-[7px] sm:ml-[14px] w-12 my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg className="ml-[7px] sm:ml-[14px] w-12 my-auto" width="31" height="31" strokeWidth={1.5} viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="15.8669" cy="15.5" r="10.5" stroke="#FFFDFD" />
                                 <path d="M13.1711 12.8945C13.1711 12.8945 13.0495 10.1379 15.952 10.1379C15.952 10.1379 18.5634 10.1379 18.5635 12.8945C18.5635 15.5788 15.8428 15.5304 15.8428 18.1294" stroke="#FFFDFD" strokeLinecap="round" />
-                                <path d="M15.9026 20.5477V20.8621" stroke="#FFFDFD" strokeLinecap="round" />
+                                <path d="M15.9026 20.5477V20.8621" strokeWidth={2} stroke="#FFFDFD" strokeLinecap="round" />
                             </svg>
                         </button>
                         <div className="grow flex justify-center pr-4">
@@ -697,10 +713,10 @@ function Earnings() {
             <div className="z-10 fixed top-0 py-1 text-xl w-full font-[Inter] bg-[linear-gradient(135deg,rgba(255,211,42,1)0%,rgba(255,96,48,1)25%,rgba(255,1,91,1)50%,rgba(170,75,179,1)75%,rgba(25,156,249,1)100%)]">
                 <div className="flex">
                     <button onClick={() => setShowHelp(true)}>
-                        <svg className="w-14 my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg className="w-14 my-auto" width="31" height="31" viewBox="0 0 31 31" strokeWidth={1.5} fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="15.8669" cy="15.5" r="10.5" stroke="#FFFDFD" />
                             <path d="M13.1711 12.8945C13.1711 12.8945 13.0495 10.1379 15.952 10.1379C15.952 10.1379 18.5634 10.1379 18.5635 12.8945C18.5635 15.5788 15.8428 15.5304 15.8428 18.1294" stroke="#FFFDFD" strokeLinecap="round" />
-                            <path d="M15.9026 20.5477V20.8621" stroke="#FFFDFD" strokeLinecap="round" />
+                            <path d="M15.9026 20.5477V20.8621" strokeWidth={2} stroke="#FFFDFD" strokeLinecap="round" />
                         </svg>
                     </button>
                     <div className="grow flex justify-center pr-4 text-figma-white">
@@ -957,10 +973,10 @@ function Bankruptcy() {
             <div className={`z-10 fixed top-0 py-1 text-figma-black text-xl w-full font-[Inter] bg-${figmaColors[eventData[eventIndex].color]}`}>
                 <div className="flex">
                     <button onClick={() => setShowHelp(true)}>
-                        <svg className="w-14 my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg className="w-14 my-auto" width="31" height="31" viewBox="0 0 31 31" strokeWidth={1.5} fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="15.8669" cy="15.5" r="10.5" stroke="#0B1F42" />
                             <path d="M13.1711 12.8945C13.1711 12.8945 13.0495 10.1379 15.952 10.1379C15.952 10.1379 18.5634 10.1379 18.5635 12.8945C18.5635 15.5788 15.8428 15.5304 15.8428 18.1294" stroke="#0B1F42" strokeLinecap="round" />
-                            <path d="M15.9026 20.5477V20.8621" stroke="#0B1F42" strokeLinecap="round" />
+                            <path d="M15.9026 20.5477V20.8621" strokeWidth={2} stroke="#0B1F42" strokeLinecap="round" />
                         </svg>
                     </button>
                     <div className="grow flex justify-center pr-4">
@@ -1035,10 +1051,10 @@ function News() {
             <div className={`z-10 fixed top-0 py-2 text-figma-black text-xl w-full font-[Inter] bg-${figmaColors[eventData[eventIndex].color]}`}>
                 <div className="flex">
                     <button onClick={() => setShowHelp(true)}>
-                        <svg className="w-14 my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg className="w-14 my-auto" width="31" height="31" viewBox="0 0 31 31" strokeWidth={1.5} fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="15.8669" cy="15.5" r="10.5" stroke="#0B1F42" />
                             <path d="M13.1711 12.8945C13.1711 12.8945 13.0495 10.1379 15.952 10.1379C15.952 10.1379 18.5634 10.1379 18.5635 12.8945C18.5635 15.5788 15.8428 15.5304 15.8428 18.1294" stroke="#0B1F42" strokeLinecap="round" />
-                            <path d="M15.9026 20.5477V20.8621" stroke="#0B1F42" strokeLinecap="round" />
+                            <path d="M15.9026 20.5477V20.8621" strokeWidth={2} stroke="#0B1F42" strokeLinecap="round" />
                         </svg>
                     </button>
                     <div className="grow flex justify-center pr-2">

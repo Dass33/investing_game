@@ -172,28 +172,34 @@ function EndScreen() {
                 </svg>
                 <img src="end_screen_picture.svg" alt="placeholder" className="mx-auto pt-28 relative z-10"></img>
 
-                <div className="mx-auto max-w-[40rem]">
-                    <div className="flex relative z-10 justify-center gap-8 pt-4 mb-12">
-                        {!soloGame && <h1 className="text-3xl my-auto font-bold">{configData.playAgainHeadline}</h1>}
-                    </div>
-
-                    {soloGame && <div>
-                        <p className="text-3xl font-bold mt-10 relative z-10 mx-7">{configData.buttonRestartText}</p>
-                    </div>}
-                    <div className="z-10 w-full flex mt-4 justify-center font-[Inter] font-bold">
-                        <button className='relative z-10 bg flex rounded-full hover:scale-110 duration-200 text-white py-2 px-4 m-2'
+                <div className="max-w-[40rem] mx-auto">
+                    <div className="z-10 gap-4 flex mt-4 justify-center font-[Inter] font-bold text-sm ml-8">
+                        <button className='bg-figma-black relative z-10 bg flex rounded-full hover:scale-110 duration-200 text-center text-white border-white border py-2 px-6 my-4'
                             onClick={() => {
+                                setShowRisk(true);
+                                setShowPlayAgain(false);
+                            }}>
+
+
+                            <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M17.1331 7.5H1.1331 M1.1331 7.5L7.1331 1.5 M1.1331 7.5L7.1331 13.5" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            <span className="ml-2 mt-1">{configData.backText}</span>
+                        </button>
+
+                        <button className='bg-figma-black min-w-32 relative z-10 bg flex rounded-full hover:scale-110 duration-200 text-center text-white border-white border py-2 px-6 my-4'
+                            onClick={() => () => {
                                 const url = new URL(window.location.href);
                                 if (!soloGame) url.searchParams.set('gameMode', '1');
                                 window.location.replace(url.toString());
-                            }}> {/* Temporary way to restart the game */}
+                            }}>
 
+                            {!soloGame && <h1 className="text-md my-2">{configData.playAgainHeadline}</h1>}
 
-                            <svg className="" width="76" height="60" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M1.86694 7.5H17.8669M17.8669 7.5L11.8669 1.5M17.8669 7.5L11.8669 13.5" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" />
-                            </svg>
+                            {soloGame && <div> <p className="text-md my-1 relative z-10 ">{configData.buttonRestartText}</p> </div>}
                         </button>
                     </div>
+
                     {!soloGame && <p className="text-2xl font-bold mt-8 relative z-10 mx-7">{configData.playAgainText}</p>}
 
                     <h3 className="text-center text-[11px] relative z-10">{configData.copryight}</h3>

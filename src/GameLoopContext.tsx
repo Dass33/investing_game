@@ -83,6 +83,7 @@ interface config {
     immediateSellText: string;
     neverSellText: string;
     delaySellAmountText: string;
+    delaySellAmountText1: string;
     autor0: string;
     autor1: string;
     autor2: string;
@@ -93,6 +94,7 @@ interface config {
     playAgainText: string;
     playAgainHeadline: string;
     theEndText: string;
+    backText: string;
 }
 interface events {
     baseGame: string;
