@@ -17,70 +17,30 @@ interface events {
 
 function NewEvent() {
 
-    const { gameMode, round } = useGame();
-    const { scenarios, setShowHelp, eventData, eventIndex, setNextRound,
-        liquidity, figmaColors, configData, setRolledThisBancrupcy } = useGameLoop();
-
-    const soloGame = scenarios[gameMode].random == "TRUE";
-
+    const { setNextRound, configData, setRolledThisBancrupcy } = useGameLoop();
 
     return (
         <>
-            {soloGame ?
-                <>
-                    <div className={`z-10 fixed top-0 py-1 text-figma-black text-xl w-full font-[Inter] bg-${figmaColors[eventData[eventIndex].color]}`}>
-                        <div className="flex">
-                            <button onClick={() => setShowHelp(true)}>
-                                <svg className="w-14 my-auto" width="31" height="31" viewBox="0 0 31 31" strokeWidth={1.5} fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="15.8669" cy="15.5" r="10.5" stroke="#0B1F42" />
-                                    <path d="M13.1711 12.8945C13.1711 12.8945 13.0495 10.1379 15.952 10.1379C15.952 10.1379 18.5634 10.1379 18.5635 12.8945C18.5635 15.5788 15.8428 15.5304 15.8428 18.1294" stroke="#0B1F42" strokeLinecap="round" />
-                                    <path d="M15.9026 20.5477V20.8621" strokeWidth={2} stroke="#0B1F42" strokeLinecap="round" />
-                                </svg>
-                            </button>
-                            <div className="grow flex justify-center pr-4">
-                                <p className="ml-2 mr-4 my-auto font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
-                                <h1 className="font-bold my-auto text-sm xs:text-lg mr-2">{configData.crisisNewsHeadlineText}</h1>
-                            </div>
-                            <div className="flex items-center bg-white rounded-lg min-w-14 mr-6 xs:mr-4 sm:mr-6 my-1">
-                                <svg className="-mb-0.5 ml-2" width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M13.2217 8.12476C13.2217 10.345 11.4219 12.1448 9.20166 12.1448C6.98146 12.1448 5.18164 10.345 5.18164 8.12476C5.18164 5.90456 6.98146 4.10474 9.20166 4.10474C11.4219 4.10474 13.2217 5.90456 13.2217 8.12476Z" fill="#245375" />
-                                    <path d="M8.46135 3.15894C6.04531 3.51605 4.18997 5.59445 4.18167 8.10781C2.13565 7.92031 0.533203 6.19966 0.533203 4.10474C0.533203 1.88454 2.33303 0.0847168 4.55322 0.0847168C6.44765 0.0847168 8.03602 1.39512 8.46135 3.15894Z" fill="#245375" />
-                                </svg>
-                                <p className="text-center px-2 text-black font-bold text-xl">{Math.floor((liquidity || 0) * 10) / 10}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="mt-8 text-figma-black max-w-[39rem] mx-auto">
-                        <div className="relative">
-                            <img src={`events/${eventData[eventIndex].IMG}.png`}></img>
-                            <p className={`absolute font-bold text-base bottom-5 w-[90%] mx-5 px-3 text-figma-black bg-${figmaColors[eventData[eventIndex].color]}`}>{configData.crisisNewsHeadlineText}</p>
-                        </div>
-                        <h1 className="text-2xl font-bold mx-4 mt-7 leading-7">{eventData[eventIndex].eventName}</h1>
-                        <p className="text-lg mx-4 mt-3 leading-6">{eventData[eventIndex].eventText}</p>
-                    </div>
-                </>
-                :
-                <div className="h-screen bg-figma-white text-figma-black font-medium font-[Inter] md:flex md:items-center md:justify-center">
-                    <div className="md:w-[50rem] xl:w-[74rem] mx-auto md:flex md:items-center md:justify-center md:pb-40 md:gap-16">
-                        <img src={configData.campaignInstruction_IMG} alt="placeholder" className="mx-auto pt-12 relative z-10 md:w-72 md:pt-0 md:mx-0"></img>
-                        <div>
-                            <p className="text-center pt-12 text-lg px-7 md:pt-0">{configData.campaignInstructionText}</p>
-                            <p className="text-center pt-12 text-lg px-7 md:pt-0">{configData.campaignInstructionText2}</p>
-                        </div>
+            <div className="h-screen bg-figma-white text-figma-black font-medium font-[Inter] md:flex md:items-center md:justify-center">
+                <div className="md:w-[50rem] xl:w-[74rem] mx-auto md:flex md:items-center md:justify-center md:pb-40 md:gap-16">
+                    <img src={configData.campaignInstruction_IMG} alt="placeholder" className="mx-auto pt-12 relative z-10 md:w-72 md:pt-0 md:mx-0"></img>
+                    <div>
+                        <p className="text-center pt-12 text-lg px-7 md:pt-0">{configData.campaignInstructionText}</p>
+                        <p className="text-center pt-12 text-lg px-7 md:pt-0">{configData.campaignInstructionText2}</p>
                     </div>
                 </div>
-            }
+            </div>
 
-            <div className={`z-10 w-full flex justify-center fixed font-[Inter] font-medium ${soloGame ? 'bg-' + figmaColors[eventData[eventIndex].color] + ' bottom-0' : 'bottom-12 md:bottom-20'}`}>
-                <button className='flex rounded-full hover:scale-110 duration-200 text-figma-black border-figma-black border'
+            <div className='z-10 w-full flex justify-center fixed font-[Inter] font-medium bottom-5'>
+                <button className='flex rounded-full hover:scale-110 duration-200 text-figma-black'
                     onClick={() => {
                         setRolledThisBancrupcy(false);
                         setNextRound(false);
                     }}>
 
-
-                    <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12.3755 20.4526H28.3755M28.3755 20.4526L22.3755 14.4526M28.3755 20.4526L22.3755 26.4526" stroke="#0B1F42" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <svg width="65" height="41" viewBox="0 0 65 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="1.03906" y="1.03418" width="63" height="39" rx="19.5" stroke="#0B1F42" />
+                        <path d="M24.5391 20.5342H40.5391M40.5391 20.5342L34.5391 14.5342M40.5391 20.5342L34.5391 26.5342" stroke="#0B1F42" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 </button>
             </div>
@@ -98,17 +58,17 @@ function NewsTutorial() {
             <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{configData.newsTutorialText}</p>
             <p className="text-center pt-2 text-xl mx-auto max-w-96 font-light px-6">{configData.newsTutorialText2}</p>
 
-            <div className="z-10 w-full flex justify-center fixed bottom-14 md:bottom-20 font-[Inter] font-bold ">
-                <button className='flex rounded-full hover:scale-110 duration-200 text-white border-white border-2'
+            <div className="z-10 w-full flex justify-center fixed bottom-5 font-[Inter] font-bold ">
+                <button className='flex rounded-full hover:scale-110 duration-200 text-white'
                     onClick={() => {
                         setNewsTutorial(false)
                         /*if (scenarios[gameMode].random == "TRUE") {
                             localStorage.setItem("tutorial", "false");
                         }*/
                     }}>
-
-                    <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12.3755 20.4526H28.3755M28.3755 20.4526L22.3755 14.4526M28.3755 20.4526L22.3755 26.4526" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <svg width="65" height="41" viewBox="0 0 65 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="1.03906" y="1.03418" width="63" height="39" rx="19.5" stroke="#FFFDFD" />
+                        <path d="M24.5391 20.5342H40.5391M40.5391 20.5342L34.5391 14.5342M40.5391 20.5342L34.5391 26.5342" stroke="#FFFDFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 </button>
             </div>
@@ -614,7 +574,7 @@ function Portfolio() {
                     </div>
                 </div>
             </div>
-            {!delaydSellAlert && <div className="z-10 w-full flex justify-center fixed bottom-0 font-[Inter] font-bold bg-figma-stone md:pb-4">
+            {!delaydSellAlert && <div className="z-10 w-full flex justify-center fixed bottom-0 font-[Inter] font-bold bg-figma-stone md:py-2">
                 <div className="flex items-center justify-end">
                     <button className='flex rounded-full hover:scale-110 duration-200 text-white border-white border-2 py-2 px-4 m-2'
                         onClick={() => {
@@ -646,12 +606,13 @@ function PortfolioTutorial() {
             <div className="bg-figma-black h-screen text-white">
                 <img src={configData.portfolioTutorial_IMG} alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
                 <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{configData.portfolioTutorialText}</p>
-                <div className="absolute bottom-14 md:bottom-20 w-full">
-                    <button className="mx-auto border border-white rounded-full flex" onClick={() => {
+                <div className="absolute bottom-5 w-full">
+                    <button className="mx-auto rounded-full flex" onClick={() => {
                         setPortfolioTutorial(false);
                     }}>
-                        <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12.3755 20.4526H28.3755M28.3755 20.4526L22.3755 14.4526M28.3755 20.4526L22.3755 26.4526" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        <svg width="65" height="41" viewBox="0 0 65 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="1.03906" y="1.03418" width="63" height="39" rx="19.5" stroke="#FFFDFD" />
+                            <path d="M24.5391 20.5342H40.5391M40.5391 20.5342L34.5391 14.5342M40.5391 20.5342L34.5391 26.5342" stroke="#FFFDFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </button>
                 </div>
@@ -780,7 +741,7 @@ function Earnings() {
             </div>
             <div className="z-10 w-full flex justify-center fixed bottom-0 font-[Inter] font-bold 
                 bg-[linear-gradient(135deg,rgba(255,211,42,1)0%,rgba(255,96,48,1)25%,rgba(255,1,91,1)50%,rgba(170,75,179,1)75%,rgba(25,156,249,1)100%)]">
-                <div className="flex items-center justify-end py-1 md:pb-4">
+                <div className="flex items-center justify-end py-1 md:py-2">
                     <button className='flex rounded-full hover:scale-110 duration-200 text-white border-white border-2 py-2 px-4 m-2'
                         onClick={() => {
                             let addLiquidity = 0;
@@ -836,10 +797,11 @@ function EarningsTutorial() {
                     <br></br><br></br>
                     {configData.earningsTutorailPromptText}
                 </p>
-                <div className="absolute bottom-14 md:bottom-20 w-full">
-                    <button className="mx-auto border border-white rounded-full flex" onClick={() => setEarningsTutorial(false)}>
-                        <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12.3755 20.4526H28.3755M28.3755 20.4526L22.3755 14.4526M28.3755 20.4526L22.3755 26.4526" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <div className="absolute bottom-5 w-full">
+                    <button className="mx-auto rounded-full flex" onClick={() => setEarningsTutorial(false)}>
+                        <svg width="65" height="41" viewBox="0 0 65 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="1.03906" y="1.03418" width="63" height="39" rx="19.5" stroke="#FFFDFD" />
+                            <path d="M24.5391 20.5342H40.5391M40.5391 20.5342L34.5391 14.5342M40.5391 20.5342L34.5391 26.5342" stroke="#FFFDFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </button>
                 </div>
@@ -869,7 +831,7 @@ function NewRound() {
         <div className="bg-[linear-gradient(135deg,rgba(255,211,42,1)0%,rgba(255,96,48,1)25%,rgba(225,1,91,1)50%,rgba(170,75,179,1)75%,rgba(25,156,249,1)100%)]
                     h-screen flex flex-col items-center justify-center relative" >
             <svg
-                className="h-screen w-full absolute px-6 py-8 z-0"
+                className="h-screen w-full absolute px-6 pt-8 pb-20 z-0"
                 preserveAspectRatio="none"
                 xmlns="http://www.w3.org/2000/svg"
             >
@@ -914,7 +876,7 @@ function NewRound() {
                 <path d="M275.092 144.528C275.092 144.528 275.511 146.625 276.971 146.625C278.431 146.625 278.868 144.528 278.868 144.528" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
 
-            <div className="fixed z-10 bottom-24 w-full">
+            <div className="fixed bottom-5 z-10 w-ful ">
                 <button className="block mx-auto  hover:scale-110 duration-200" onClick={() => {
                     const diceRolls: number[] = [];
                     productData
@@ -928,8 +890,9 @@ function NewRound() {
                     setShowEarnings(true);
                     setNextRound(true);
                 }}>
-                    <svg className="size-20" width="41" height="41" viewBox="10 10 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12.3755 20.4526H28.3755M28.3755 20.4526L22.3755 14.4526M28.3755 20.4526L22.3755 26.4526" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <svg width="65" height="41" viewBox="0 0 65 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="1.03906" y="1.03418" width="63" height="39" rx="19.5" stroke="#FFFDFD" />
+                        <path d="M24.5391 20.5342H40.5391M40.5391 20.5342L34.5391 14.5342M40.5391 20.5342L34.5391 26.5342" stroke="#FFFDFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 </button>
             </div>
@@ -1071,12 +1034,13 @@ function News() {
                 <p className="text-lg mx-4 mt-3 leading-6">{eventData[eventIndex].eventText}</p>
             </div>
 
-            <div className={`z-10 w-full flex justify-center fixed bottom-0 font-[Inter] font-medium md:pb-3 ${'bg-' + figmaColors[eventData[eventIndex].color]}`}>
-                <button className='flex rounded-full hover:scale-110 duration-200 text-figma-black border-figma-black border py-2 px-6 m-3'
+            <div className={`z-10 w-full flex justify-center fixed bottom-0 font-[Inter] font-medium ${'bg-' + figmaColors[eventData[eventIndex].color]}`}>
+                <button className='flex rounded-full hover:scale-110 duration-200 text-figma-black py-2 px-6 m-2 md:m-3'
                     onClick={() => setShowEvent(false)}>
 
-                    <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1.86694 7.5H17.8669M17.8669 7.5L11.8669 1.5M17.8669 7.5L11.8669 13.5" stroke="#0B1F42" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <svg width="65" height="41" viewBox="0 0 65 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="1.03906" y="1.03418" width="63" height="39" rx="19.5" stroke="#0B1F42" />
+                        <path d="M24.5391 20.5342H40.5391M40.5391 20.5342L34.5391 14.5342M40.5391 20.5342L34.5391 26.5342" stroke="#0B1F42" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 </button>
             </div>

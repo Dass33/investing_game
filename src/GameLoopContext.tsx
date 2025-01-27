@@ -15,7 +15,7 @@ interface config {
     newsTutorialText: string;
     newsTutorialText2: string;
     newsTutorial_IMG: string;
-    copryight: string;
+    copyright: string;
     crisisHeadlineText: string;
     crisisBankruptcyText: string;
     crisisNoBankruptcyText: string;

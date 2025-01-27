@@ -69,7 +69,7 @@ function LandingSite() {
                         setShowLandingSite(false);
                     }}>{configData.buttonPlayText}</button>
             </div>
-            <h3 className="text-center text-[11px] relative z-10 mt-8">{configData.copryight}</h3>
+            <h3 className="text-center text-[11px] relative z-10 mt-8">{configData.copyright}</h3>
         </div>
     );
 }
@@ -101,12 +101,11 @@ function InstructionSite() {
             <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{scenariosData[gameMode].howToPlay}</p>
             <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{scenariosData[gameMode].howToPlay2}</p>
             <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{scenariosData[gameMode].howToPlay3}</p>
-            <div className="absolute bottom-10 md:bottom-20 w-full">
+            <div className="absolute bottom-5 w-full">
                 <button className="block mx-auto rounded-lg hover:scale-110 duration-200" onClick={() => setShowWelcomeSite(false)}>
-                    <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="0.875488" y="0.952637" width="39" height="39" rx="19.5" fill="#0B1F42" />
-                        <rect x="0.875488" y="0.952637" width="39" height="39" rx="19.5" stroke="white" />
-                        <path d="M12.3755 20.4526H28.3755M28.3755 20.4526L22.3755 14.4526M28.3755 20.4526L22.3755 26.4526" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <svg width="65" height="41" viewBox="0 0 65 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="1.03906" y="1.03418" width="63" height="39" rx="19.5" stroke="#FFFDFD" />
+                        <path d="M24.5391 20.5342H40.5391M40.5391 20.5342L34.5391 14.5342M40.5391 20.5342L34.5391 26.5342" stroke="#FFFDFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 </button>
             </div>
@@ -138,10 +137,10 @@ function InstructionSite() {
                     <p className="pt-4">{scenariosData[gameMode].howToPlay3}</p>
                 </div>
 
-                <div className="absolute bottom-14 md:bottom-20 w-full">
-                    <button className="mx-auto border border-white rounded-full flex pl-6 pr-10" onClick={() => setShowWelcomeSite(false)}>
-                        <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12.3755 20.4526H28.3755M28.3755 20.4526L22.3755 14.4526M28.3755 20.4526L22.3755 26.4526" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <div className="fixed bottom-5 w-full">
+                    <button className="mx-auto border border-white rounded-full flex  pr-7" onClick={() => setShowWelcomeSite(false)}>
+                        <svg width="65" height="41" viewBox="0 0 55 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M24.5391 20.5342H40.5391M40.5391 20.5342L34.5391 14.5342M40.5391 20.5342L34.5391 26.5342" stroke="#FFFDFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                         <span className="my-auto">{configData.buttonStartText}</span>
                     </button>

@@ -68,7 +68,6 @@ function EndScreen() {
                             </svg>
                         </button>
                     </div>
-                    <h3 className="text-center text-[11px] relative z-10 mt-4">{configData.copryight}</h3>
                 </div>
             </div>
         </>
@@ -175,7 +174,7 @@ function EndScreen() {
                 {!soloGame && <p className="text-2xl font-bold mt-8 relative z-10 mx-7">{configData.playAgainText}</p>}
 
                 <div className="max-w-[40rem] mx-auto">
-                    <div className="z-10 gap-4 flex mt-4 justify-center font-[Inter] font-bold text-sm ml-8">
+                    <div className={`z-10 gap-4 flex mt-4 justify-center font-[Inter] font-bold text-sm ${soloGame ? "ml-6" : "ml-3"}`}>
                         <button className='bg-figma-black relative z-10 bg flex rounded-full hover:scale-110 duration-200 text-center text-white border-white border py-2 px-6 my-4'
                             onClick={() => {
                                 setShowRisk(true);
@@ -203,8 +202,7 @@ function EndScreen() {
                         </button>
                     </div>
 
-
-                    <h3 className="text-center text-[11px] relative z-10">{configData.copryight}</h3>
+                    <h3 className="text-center text-[11px] relative z-10">{configData.copyright}</h3>
                 </div>
             </div>
         </>
