@@ -144,19 +144,34 @@ function EndScreen() {
                         <span className="ml-2">{configData.scoreText}</span>
                     </button>
 
-                    <button className='bg-figma-black relative z-10 bg flex rounded-full hover:scale-110 duration-200 text-white border-white border py-2 px-6 m-4'
-                        onClick={() => setShowPlayAgain(true)}>
+                    {soloGame ?
+                        <button className='bg-figma-black relative z-10 bg flex rounded-full hover:scale-110 duration-200 text-white border-white border py-2 px-6 m-4'
+                            onClick={() => {
+                                console.log("NHI");
+                                const url = new URL(window.location.href);
+                                url.searchParams.set('gameMode', '1');
+                                window.location.replace(url.toString());
+                            }}>
 
-                        <span className="mr-2">{configData.theEndText}</span>
-                        <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1.86694 7.5H17.8669M17.8669 7.5L11.8669 1.5M17.8669 7.5L11.8669 13.5" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    </button>
+
+                            <span className="">{configData.buttonRestartText}</span>
+                        </button>
+
+                        :
+                        <button className='bg-figma-black relative z-10 bg flex rounded-full hover:scale-110 duration-200 text-white border-white border py-2 px-6 m-4'
+                            onClick={() => setShowPlayAgain(true)}>
+
+                            <span className="mr-2">{configData.theEndText}</span>
+                            <svg className="my-auto" width="19" height="15" viewBox="0 0 19 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1.86694 7.5H17.8669M17.8669 7.5L11.8669 1.5M17.8669 7.5L11.8669 13.5" stroke="#FFFDFD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </button>
+                    }
                 </div>
             </div>
         </>
 
-    if (showPlayAgain) content =
+    if (showPlayAgain && !soloGame) content =
         <>
             <div className="text-center text-figma-white bg-figma-black h-screen">
                 <svg className="h-screen w-full absolute pr-5 pl-7 py-8 z-0"
@@ -171,7 +186,7 @@ function EndScreen() {
                 </svg>
                 <img src="end_screen_picture.svg" alt="placeholder" className="mx-auto pt-28 relative z-10"></img>
 
-                {!soloGame && <p className="text-2xl font-bold mt-8 relative z-10 mx-7">{configData.playAgainText}</p>}
+                <p className="text-2xl font-bold mt-8 relative z-10 mx-7">{configData.playAgainText}</p>
 
                 <div className="max-w-[40rem] mx-auto">
                     <div className={`z-10 gap-4 flex mt-4 justify-center font-[Inter] font-bold text-sm ${soloGame ? "ml-6" : "ml-3"}`}>
@@ -196,9 +211,7 @@ function EndScreen() {
                                 window.location.replace(url.toString());
                             }}>
 
-                            {!soloGame && <h1 className="text-md my-1">{configData.playAgainHeadline}</h1>}
-
-                            {soloGame && <div> <p className="text-md my-1 relative z-10 ">{configData.buttonRestartText}</p> </div>}
+                            <h1 className="text-md my-1">{configData.playAgainHeadline}</h1>
                         </button>
                     </div>
 
