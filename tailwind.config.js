@@ -1,3 +1,5 @@
+import { transform } from 'typescript';
+
 /** @type {import('tailwindcss').Config} */
 export default {
     content: [
@@ -46,6 +48,16 @@ export default {
             },
             screens: {
                 'xs': '380px',
+            },
+            keyframes: {
+                growAndShrink: {
+                    "0%": { transform: "scale(1)" },
+                    "50%": { transform: "scale(1.3)" },
+                    "100%": { transform: "scale(1)" },
+                },
+            },
+            animation: {
+                "grow-shrink": "growAndShrink 0.3s ease-in-out",
             },
         },
     },

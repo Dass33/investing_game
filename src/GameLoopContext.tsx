@@ -90,7 +90,8 @@ interface config {
     autor3: string;
     autor4: string;
     autor5: string;
-    riskTutorialText: string;
+    riskTutorialText1: string;
+    riskTutorialText2: string;
     playAgainText: string;
     playAgainHeadline: string;
     theEndText: string;
