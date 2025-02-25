@@ -10,10 +10,6 @@ function App() {
 
 
 
-    //prompt user if they want to exit the site => loose game progress
-    window.addEventListener('beforeunload', function(e) {
-        if (!showWelcomeSite) e.preventDefault();
-    });
     return (
         <div className="select-none">
             <GameLoopProvider>
