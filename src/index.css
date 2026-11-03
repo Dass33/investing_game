@@ -14,6 +14,19 @@
     }
 }
 
+/* On mobile browsers 100vh is the height with the browser bars hidden, so "full screen"
+   layouts end up partly behind the bars (e.g. Safari on iPhone SE). Use the dynamic
+   viewport height where it is supported. */
+@supports (height: 100dvh) {
+    .h-screen {
+        height: 100dvh;
+    }
+
+    .min-h-screen {
+        min-height: 100dvh;
+    }
+}
+
 .custom-radial-gradient {
     background-image: radial-gradient(circle at center,
             rgba(128, 106, 21, 1) 0%,

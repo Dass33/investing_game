@@ -22,12 +22,17 @@ function EndScreen() {
         setLastRoundSell(roundSell);
     }, [productData]);
 
+    // These screens can be taller than a small phone; open each one at the top.
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [showRisk, showPlayAgain]);
+
     const soloGame = (scenarios[gameMode].random === "TRUE");
     let content = (
         <>
-            <div className="text-center text-figma-white bg-figma-black h-screen">
+            <div className="relative text-center text-figma-white bg-figma-black min-h-screen pb-6">
                 <svg
-                    className="h-screen w-full absolute pr-5 pl-7 py-8 z-0"
+                    className="inset-0 h-full w-full absolute pr-5 pl-7 py-8 z-0"
                     preserveAspectRatio="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -58,8 +63,8 @@ function EndScreen() {
                     </div>
 
                     <h1 className="text-lg font-medium mt-10 relative z-10 mx-2">{configData.endText}</h1>
-                    <div className="z-10 w-full flex mt-4 justify-center font-[Inter] font-bold">
-                        <button className='bg-figma-black relative z-10 bg flex rounded-full hover:scale-110 duration-200 text-white border-white border py-2 px-6 m-4'
+                    <div className="z-10 w-full flex flex-wrap mt-4 justify-center font-[Inter] font-bold">
+                        <button className='bg-figma-black relative z-10 bg flex whitespace-nowrap rounded-full hover:scale-110 duration-200 text-white border-white border py-2 px-4 xs:px-6 m-2 xs:m-4'
                             onClick={() => setShowRisk(true)}>
 
 
@@ -75,9 +80,9 @@ function EndScreen() {
 
     if (showRisk) content =
         <>
-            <div className="text-center text-figma-white bg-figma-black h-screen">
+            <div className="relative text-center text-figma-white bg-figma-black min-h-screen pb-6">
                 <svg
-                    className="h-screen w-full absolute pr-5 pl-7 py-8 z-0"
+                    className="inset-0 h-full w-full absolute pr-5 pl-7 py-8 z-0"
                     preserveAspectRatio="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -133,8 +138,8 @@ function EndScreen() {
                         }}
                     />
                 </div>
-                <div className="z-10 w-full flex mt-4 justify-center font-[Inter] font-bold">
-                    <button className='bg-figma-black relative z-10 bg flex rounded-full hover:scale-110 duration-200 text-white border-white border py-2 px-6 m-4'
+                <div className="z-10 w-full flex flex-wrap mt-4 justify-center font-[Inter] font-bold">
+                    <button className='bg-figma-black relative z-10 bg flex whitespace-nowrap rounded-full hover:scale-110 duration-200 text-white border-white border py-2 px-4 xs:px-6 m-2 xs:m-4'
                         onClick={() => setShowRisk(false)}>
 
 
@@ -145,7 +150,7 @@ function EndScreen() {
                     </button>
 
                     {soloGame ?
-                        <button className='bg-figma-black relative z-10 bg flex rounded-full hover:scale-110 duration-200 text-white border-white border py-2 px-6 m-4'
+                        <button className='bg-figma-black relative z-10 bg flex whitespace-nowrap rounded-full hover:scale-110 duration-200 text-white border-white border py-2 px-4 xs:px-6 m-2 xs:m-4'
                             onClick={() => {
                                 console.log("NHI");
                                 const url = new URL(window.location.href);
@@ -158,7 +163,7 @@ function EndScreen() {
                         </button>
 
                         :
-                        <button className='bg-figma-black relative z-10 bg flex rounded-full hover:scale-110 duration-200 text-white border-white border py-2 px-6 m-4'
+                        <button className='bg-figma-black relative z-10 bg flex whitespace-nowrap rounded-full hover:scale-110 duration-200 text-white border-white border py-2 px-4 xs:px-6 m-2 xs:m-4'
                             onClick={() => setShowPlayAgain(true)}>
 
                             <span className="mr-2">{configData.theEndText}</span>
@@ -173,8 +178,8 @@ function EndScreen() {
 
     if (showPlayAgain && !soloGame) content =
         <>
-            <div className="text-center text-figma-white bg-figma-black h-screen">
-                <svg className="h-screen w-full absolute pr-5 pl-7 py-8 z-0"
+            <div className="relative text-center text-figma-white bg-figma-black min-h-screen pb-6">
+                <svg className="inset-0 h-full w-full absolute pr-5 pl-7 py-8 z-0"
                     preserveAspectRatio="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -189,8 +194,8 @@ function EndScreen() {
                 <p className="text-2xl font-bold mt-8 relative z-10 mx-7">{configData.playAgainText}</p>
 
                 <div className="max-w-[40rem] mx-auto">
-                    <div className={`z-10 gap-4 flex mt-4 justify-center font-[Inter] font-bold text-sm ${soloGame ? "ml-6" : "ml-3"}`}>
-                        <button className='bg-figma-black relative z-10 bg flex rounded-full hover:scale-110 duration-200 text-center text-white border-white border py-2 px-6 my-4'
+                    <div className={`z-10 gap-x-4 flex flex-wrap mt-4 px-2 justify-center font-[Inter] font-bold text-sm ${soloGame ? "ml-6" : "ml-3"}`}>
+                        <button className='bg-figma-black relative z-10 bg flex whitespace-nowrap rounded-full hover:scale-110 duration-200 text-center text-white border-white border py-2 px-4 xs:px-6 my-4'
                             onClick={() => {
                                 setShowRisk(true);
                                 setShowPlayAgain(false);
@@ -203,7 +208,7 @@ function EndScreen() {
                             <span className="ml-2 mt-1">{configData.backText}</span>
                         </button>
 
-                        <button className='bg-figma-black min-w-32 relative z-10 bg flex rounded-full hover:scale-110 duration-200 text-center text-white border-white border py-2 px-6 my-4'
+                        <button className='bg-figma-black min-w-32 relative z-10 bg flex whitespace-nowrap rounded-full hover:scale-110 duration-200 text-center text-white border-white border py-2 px-4 xs:px-6 my-4'
                             onClick={() => {
                                 console.log("NHI");
                                 const url = new URL(window.location.href);
