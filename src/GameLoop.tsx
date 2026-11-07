@@ -21,7 +21,7 @@ function NewEvent() {
 
     return (
         <>
-            <div className="h-screen bg-figma-white text-figma-black font-medium font-[Inter] md:flex md:items-center md:justify-center">
+            <div className="min-h-screen pb-24 md:pb-0 bg-figma-white text-figma-black font-medium font-[Inter] md:flex md:items-center md:justify-center">
                 <div className="md:w-[50rem] xl:w-[74rem] mx-auto md:flex md:items-center md:justify-center md:pb-40 md:gap-16">
                     <img src={configData.campaignInstruction_IMG} alt="placeholder" className="mx-auto pt-12 relative z-10 md:w-72 md:pt-0 md:mx-0"></img>
                     <div>
@@ -31,7 +31,7 @@ function NewEvent() {
                 </div>
             </div>
 
-            <div className='z-10 w-full flex justify-center fixed font-[Inter] font-medium bottom-5'>
+            <div className='z-20 w-full flex justify-center fixed font-[Inter] font-medium bottom-0 pt-3 pb-5 bg-figma-white'>
                 <button className='flex rounded-full hover:scale-110 duration-200 text-figma-black'
                     onClick={() => {
                         setRolledThisBancrupcy(false);
@@ -53,12 +53,12 @@ function NewsTutorial() {
     const { setNewsTutorial, configData } = useGameLoop();
     // const { gameMode } = useGame();
     return (
-        <div className="bg-figma-black h-screen text-white font-medium font-[Inter]">
+        <div className="bg-figma-black min-h-screen pb-24 text-white font-medium font-[Inter]">
             <img src={configData.newsTutorial_IMG} alt="placeholder" className="mx-auto pt-12 relative z-10"></img>
             <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{configData.newsTutorialText}</p>
             <p className="text-center pt-2 text-xl mx-auto max-w-96 font-light px-6">{configData.newsTutorialText2}</p>
 
-            <div className="z-10 w-full flex justify-center fixed bottom-5 font-[Inter] font-bold ">
+            <div className="z-20 w-full flex justify-center fixed bottom-0 pt-3 pb-5 bg-figma-black font-[Inter] font-bold ">
                 <button className='flex rounded-full hover:scale-110 duration-200 text-white'
                     onClick={() => {
                         setNewsTutorial(false)
@@ -118,7 +118,8 @@ function Portfolio() {
         setPrevRoundLiquidity,
         portfolioRisk, setPortfolioRisk,
         riskColors,
-        riskHistory, setRiskHistory
+        riskHistory, setRiskHistory,
+        changesAppliedRound, setChangesAppliedRound
     } = useGameLoop();
 
     const {
@@ -131,7 +132,6 @@ function Portfolio() {
     const [delaydSellAlert, setDelayedSellAlert] = useState(false);
     // const [delaydSellAlertShown, setDelayedSellAlertShown] = useState(false);
     const [, setDelayedSellAlertShown] = useState(false);
-    const [changesApplied, setChangesApplied] = useState(false);
     const [openedProduct, setOpenedProduct] = useState(-1);
     const [buySellAmount, setBuySellAmount] = useState(1);
     const [popAnimation, setPopAnimation] = useState(false);
@@ -155,8 +155,12 @@ function Portfolio() {
         };
     }, [insufficientLiquidity, delaydSellAlert, openedProduct]);
 
+    // Kept in the context, not in local state: opening Help unmounts this screen and the
+    // round's price changes must not be applied again when coming back.
+    const changesApplied = changesAppliedRound === round;
+
     useEffect(() => {
-        setProductHistory([...productHistory, productData]);
+        if (!changesApplied) setProductHistory([...productHistory, productData]);
     }, []);
 
     useEffect(() => {
@@ -177,7 +181,7 @@ function Portfolio() {
             });
             setProductData(updatedProductData);
             setLiquidity(liquidity + soldThisRound);
-            setChangesApplied(true);
+            setChangesAppliedRound(round);
         }
     }, [changesApplied, productData, eventData, eventIndex]);
 
@@ -258,12 +262,12 @@ function Portfolio() {
                 </div>
             }
             {openedProduct >= 0 &&
-                <div className="fixed flex items-center justify-center z-0 bg-figma-black/70 h-screen w-screen backdrop-blur-sm px-2"
+                <div className="fixed flex justify-center z-0 bg-figma-black/70 h-screen w-screen backdrop-blur-sm overflow-y-auto px-2 pt-32 pb-28"
                     onClick={() => {
                         setOpenedProduct(-1);
                         setBuySellAmount(1);
                     }}>
-                    <div className="mt-4 w-full max-w-[374px] sm:w-96 bg-figma-white rounded-2xl relative pb-5 px-3"
+                    <div className="my-auto w-full max-w-[374px] sm:w-96 bg-figma-white rounded-2xl relative pb-5 px-3"
                         onClick={(e) => e.stopPropagation()}>
                         <button className="text-xl rounded-full absolute right-0 -top-10" onClick={() => {
                             setOpenedProduct(-1);
@@ -603,10 +607,10 @@ function PortfolioTutorial() {
     const { setPortfolioTutorial, configData } = useGameLoop();
     return (
         <>
-            <div className="bg-figma-black h-screen text-white">
+            <div className="bg-figma-black min-h-screen pb-24 text-white">
                 <img src={configData.portfolioTutorial_IMG} alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
                 <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{configData.portfolioTutorialText}</p>
-                <div className="absolute bottom-5 w-full">
+                <div className="fixed z-20 bottom-0 pt-3 pb-5 w-full bg-figma-black">
                     <button className="mx-auto rounded-full flex" onClick={() => {
                         setPortfolioTutorial(false);
                     }}>
@@ -687,7 +691,7 @@ function Earnings() {
                 </div>
             </div>
 
-            <div className="relative z-0 h-screen flex flex-col justify-center custom-radial-gradient">
+            <div className="relative z-0 min-h-screen py-24 flex flex-col justify-center custom-radial-gradient">
                 <h1 className="mb-6 text-xl text-white text-center -mt-10">{configData.yourEarningsText} {round}. {configData.roundText}</h1>
                 <div className="flex justify-center">
                     <div className="w-full max-w-[609px] min-w-80">
@@ -790,14 +794,14 @@ function EarningsTutorial() {
     const { setEarningsTutorial, configData } = useGameLoop();
     return (
         <>
-            <div className="bg-figma-black h-screen text-white">
+            <div className="bg-figma-black min-h-screen pb-24 text-white">
                 <img src={configData.earningsTutorial_IMG} alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
                 <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">
                     {configData.earningsTutorialText}
                     <br></br><br></br>
                     {configData.earningsTutorailPromptText}
                 </p>
-                <div className="absolute bottom-5 w-full">
+                <div className="fixed z-20 bottom-0 pt-3 pb-5 w-full bg-figma-black">
                     <button className="mx-auto rounded-full flex" onClick={() => setEarningsTutorial(false)}>
                         <svg width="65" height="41" viewBox="0 0 65 41" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="1.03906" y="1.03418" width="63" height="39" rx="19.5" stroke="#FFFDFD" />
@@ -957,7 +961,7 @@ function Bankruptcy() {
             </div>
             {!rollingDices ?
                 <>
-                    <div className="mt-8 text-figma-black max-w-[39rem] mx-auto">
+                    <div className="mt-8 pb-24 text-figma-black max-w-[39rem] mx-auto">
                         <div className="relative">
                             <img src={`events/${eventData[eventIndex].IMG}`}></img>
                             <p className={`absolute font-bold text-base bottom-5 w-[90%] mx-5 px-3 text-figma-black bg-${figmaColors[eventData[eventIndex].color]}`}>{configData.crisisNewsHeadlineText}</p>
@@ -968,7 +972,7 @@ function Bankruptcy() {
 
                 </>
                 :
-                <div className="bg-figma-black h-screen">
+                <div className="bg-figma-black min-h-screen pb-24">
                     <h1 className="pt-40 font-bold text-lg text-figma-white text-center">{configData.crisisHeadlineText}</h1>
                     <div className="pt-12">
                         <div className="size-10 mx-auto">
@@ -1026,7 +1030,7 @@ function News() {
                     </div>
                 </div>
             </div>
-            <div className="mt-8 text-figma-black max-w-[39rem] mx-auto">
+            <div className="mt-8 pb-24 text-figma-black max-w-[39rem] mx-auto">
                 <div className="relative">
                     <img src={`events/${eventData[eventIndex].IMG}`}></img>
                 </div>
