@@ -21,7 +21,7 @@ function NewEvent() {
 
     return (
         <>
-            <div className="min-h-screen pb-24 md:pb-0 bg-figma-white text-figma-black font-medium font-[Inter] md:flex md:items-center md:justify-center">
+            <div className="h-screen bg-figma-white text-figma-black font-medium font-[Inter] md:flex md:items-center md:justify-center">
                 <div className="md:w-[50rem] xl:w-[74rem] mx-auto md:flex md:items-center md:justify-center md:pb-40 md:gap-16">
                     <img src={configData.campaignInstruction_IMG} alt="placeholder" className="mx-auto pt-12 relative z-10 md:w-72 md:pt-0 md:mx-0"></img>
                     <div>
@@ -31,7 +31,7 @@ function NewEvent() {
                 </div>
             </div>
 
-            <div className='z-20 w-full flex justify-center fixed font-[Inter] font-medium bottom-0 pt-3 pb-5 bg-figma-white'>
+            <div className='z-10 w-full flex justify-center fixed font-[Inter] font-medium bottom-5'>
                 <button className='flex rounded-full hover:scale-110 duration-200 text-figma-black'
                     onClick={() => {
                         setRolledThisBancrupcy(false);
@@ -53,12 +53,12 @@ function NewsTutorial() {
     const { setNewsTutorial, configData } = useGameLoop();
     // const { gameMode } = useGame();
     return (
-        <div className="bg-figma-black min-h-screen pb-24 text-white font-medium font-[Inter]">
+        <div className="bg-figma-black h-screen text-white font-medium font-[Inter]">
             <img src={configData.newsTutorial_IMG} alt="placeholder" className="mx-auto pt-12 relative z-10"></img>
             <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{configData.newsTutorialText}</p>
             <p className="text-center pt-2 text-xl mx-auto max-w-96 font-light px-6">{configData.newsTutorialText2}</p>
 
-            <div className="z-20 w-full flex justify-center fixed bottom-0 pt-3 pb-5 bg-figma-black font-[Inter] font-bold ">
+            <div className="z-10 w-full flex justify-center fixed bottom-5 font-[Inter] font-bold ">
                 <button className='flex rounded-full hover:scale-110 duration-200 text-white'
                     onClick={() => {
                         setNewsTutorial(false)
@@ -258,14 +258,12 @@ function Portfolio() {
                 </div>
             }
             {openedProduct >= 0 &&
-                <div className="fixed inset-0 flex justify-center z-0 bg-figma-black/70 h-screen w-screen backdrop-blur-sm overflow-y-auto px-2 pt-32 pb-28"
+                <div className="fixed flex items-center justify-center z-0 bg-figma-black/70 h-screen w-screen backdrop-blur-sm px-2"
                     onClick={() => {
                         setOpenedProduct(-1);
                         setBuySellAmount(1);
                     }}>
-                    {/* pt-32 keeps the close button (above the card) clear of the fixed header,
-                        my-auto centres the card (same spot as before) but lets it scroll on short screens */}
-                    <div className="my-auto h-fit w-full max-w-[374px] sm:w-96 bg-figma-white rounded-2xl relative pb-5 px-3"
+                    <div className="mt-4 w-full max-w-[374px] sm:w-96 bg-figma-white rounded-2xl relative pb-5 px-3"
                         onClick={(e) => e.stopPropagation()}>
                         <button className="text-xl rounded-full absolute right-0 -top-10" onClick={() => {
                             setOpenedProduct(-1);
@@ -305,19 +303,19 @@ function Portfolio() {
                                     <span className="w-1/3">{configData.liquidityProperty}</span>
                                 </div>
 
-                                <div className="mx-1 mb-4 font-medium text-xs flex w-full gap-5 pt-4">
+                                <div className="mx-2 mb-4 font-medium text-xs flex w-full gap-5 pt-4">
                                     <div className="w-1/3 relative">
-                                        <img src={`riskScore/risk${currentProduct?.riskScore}.svg`} alt="NaN" className="absolute left-1/2 -translate-x-1/2 -top-2 max-w-none" />
+                                        <img src={`riskScore/risk${currentProduct?.riskScore}.svg`} alt="NaN" className="absolute right-10 -top-2" />
                                     </div>
 
                                     <div className="w-1/3 relative">
-                                        <img src={`productProperties/dots${currentProduct?.potentialEarnings}.svg`} alt="NaN" className="absolute top-0.5 left-1/2 -translate-x-1/2 w-14 max-w-none" />
+                                        <img src={`productProperties/dots${currentProduct?.potentialEarnings}.svg`} alt="NaN" className="absolute top-0.5 right-[27px] w-14" />
                                     </div>
 
                                     <div className="w-1/3 relative ">
                                         {(currentProduct?.timeToSell || 0) > 1 &&
 
-                                            <div className="flex absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-xs text-figma-pool">
+                                            <div className="flex absolute right-[26px] text-xs text-figma-pool">
                                                 <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M4.33301 6C4.33301 3.79086 6.12387 2 8.33301 2C10.5421 2 12.333 3.79086 12.333 6V10L14.333 12H2.33301L4.33301 10V6Z" fill="#199CF9" />
                                                     <path d="M10.333 13C10.333 13.2626 10.2813 13.5227 10.1808 13.7654C10.0803 14.008 9.93294 14.2285 9.74722 14.4142C9.5615 14.5999 9.34103 14.7472 9.09837 14.8478C8.85572 14.9483 8.59565 15 8.33301 15C8.07036 15 7.81029 14.9483 7.56764 14.8478C7.32499 14.7472 7.10451 14.5999 6.91879 14.4142C6.73308 14.2285 6.58576 14.008 6.48525 13.7654C6.38474 13.5227 6.33301 13.2626 6.33301 13L8.33301 13H10.333Z" fill="#199CF9" />
@@ -327,7 +325,7 @@ function Portfolio() {
                                         }
                                         {(currentProduct?.timeToSell || 0) == 1 &&
 
-                                            <div className="flex absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-xs text-figma-pool">
+                                            <div className="flex absolute right-[26px] text-xs text-figma-pool">
                                                 <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M4.33301 6C4.33301 3.79086 6.12387 2 8.33301 2C10.5421 2 12.333 3.79086 12.333 6V10L14.333 12H2.33301L4.33301 10V6Z" fill="#199CF9" />
                                                     <path d="M10.333 13C10.333 13.2626 10.2813 13.5227 10.1808 13.7654C10.0803 14.008 9.93294 14.2285 9.74722 14.4142C9.5615 14.5999 9.34103 14.7472 9.09837 14.8478C8.85572 14.9483 8.59565 15 8.33301 15C8.07036 15 7.81029 14.9483 7.56764 14.8478C7.32499 14.7472 7.10451 14.5999 6.91879 14.4142C6.73308 14.2285 6.58576 14.008 6.48525 13.7654C6.38474 13.5227 6.33301 13.2626 6.33301 13L8.33301 13H10.333Z" fill="#199CF9" />
@@ -338,7 +336,7 @@ function Portfolio() {
                                         {(currentProduct?.timeToSell || 0) == 0 &&
 
 
-                                            <div className="gap-0.5 absolute left-1/2 -translate-x-1/2 whitespace-nowrap flex">
+                                            <div className="gap-0.5 absolute right-[30px] flex">
                                                 <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <circle cx="8.33301" cy="8" r="6" fill="#0B1F42" />
                                                     <path d="M8.33301 4V8H11.333" stroke="#FFFDFD" strokeLinecap="round" strokeLinejoin="round" />
@@ -347,15 +345,15 @@ function Portfolio() {
                                             </div>
                                         }
                                         {(currentProduct?.timeToSell || 0) < 0 &&
-                                            <span className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap">{configData.neverSellText}</span>
+                                            <span className="absolute right-10">{configData.neverSellText}</span>
                                         }
                                     </div>
                                 </div>
 
                                 <div className="flex mx-2 mt-6 mb-4 bg-figma-black rounded-lg">
-                                    <div className="mx-auto relative w-64 min-w-0 h-[90px]">
+                                    <div className="mx-auto relative w-64 h-[90px]">
                                         <div className="absolute top-0 w-full rounded-lg overflow-hidden">
-                                            <svg className="w-full" width="250" height="90" viewBox="0 0 250 90" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <svg width="250" height="90" viewBox="0 0 250 90" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M249.722 1.5169L0.193848 0.38092" stroke="#721C7A" strokeWidth="0.5" />
                                                 <path d="M249.667 13.4625L0.13916 12.3265" stroke="#721C7A" strokeWidth="0.5" />
                                                 <path d="M249.613 25.4082L0.0849609 24.2722" stroke="#721C7A" strokeWidth="0.5" />
@@ -365,8 +363,7 @@ function Portfolio() {
                                                 <path d="M249.395 73.1906L-0.132812 72.0546" stroke="#721C7A" strokeWidth="0.5" />
                                             </svg>
 
-                                            {/* no fixed width: the chart fills the space left next to the price on narrow phones */}
-                                            <div className="absolute top-1 inset-x-0 h-20">
+                                            <div className="absolute top-1 right-0">
                                                 <LineChart
                                                     series={[
                                                         {
@@ -378,6 +375,7 @@ function Portfolio() {
                                                     ]}
                                                     leftAxis={null}
                                                     bottomAxis={null}
+                                                    width={250}
                                                     height={80}
                                                     margin={{
                                                         left: -1,
@@ -389,13 +387,13 @@ function Portfolio() {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="w-24 xs:w-28 mt-7 text-center text-xs font-medium">
+                                    <div className="w-28 mt-7 text-center text-xs font-medium">
                                         <p className="font-bold text-figma-honey">{((currentProduct?.invested || 0) / (currentProduct?.cost || 1)).toFixed(2)} {currentProduct?.ticker}</p>
                                         <p className="text-figma-white">({currentProduct?.cost.toFixed(1)})</p>
                                     </div>
                                 </div>
 
-                                <div className="w-full font-bold flex justify-center items-center gap-2 xs:gap-3 mt-4">
+                                <div className="w-full font-bold flex justify-center items-center gap-3 mt-4">
                                     <button disabled={(currentProduct?.invested || 0) < buySellAmount || Number(currentProduct?.timeToSell) < 0}
                                         onClick={() => {
                                             let sellNextRound = 0;
@@ -475,18 +473,18 @@ function Portfolio() {
             <div className="z-10 fixed top-0 text-xl w-full font-[Inter]">
                 <div className="bg-figma-stone">
                     <div className="flex py-1 w-full max-w-96 sm:max-w-[26rem] lg:max-w-[56rem] xl:max-w-[77rem] mx-auto">
-                        <button className="shrink-0" onClick={() => setShowHelp(true)}>
+                        <button onClick={() => setShowHelp(true)}>
                             <svg className="ml-[7px] sm:ml-[14px] w-12 my-auto" width="31" height="31" strokeWidth={1.5} viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="15.8669" cy="15.5" r="10.5" stroke="#FFFDFD" />
                                 <path d="M13.1711 12.8945C13.1711 12.8945 13.0495 10.1379 15.952 10.1379C15.952 10.1379 18.5634 10.1379 18.5635 12.8945C18.5635 15.5788 15.8428 15.5304 15.8428 18.1294" stroke="#FFFDFD" strokeLinecap="round" />
                                 <path d="M15.9026 20.5477V20.8621" strokeWidth={2} stroke="#FFFDFD" strokeLinecap="round" />
                             </svg>
                         </button>
-                        <div className="grow min-w-0 flex justify-center pr-2 xs:pr-4">
-                            <p className="mx-3 xs:mx-5 my-auto text-white font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
-                            <h1 className="text-white font-bold my-auto truncate">{configData.buttonPortfolioText.toUpperCase()}</h1>
+                        <div className="grow flex justify-center pr-4">
+                            <p className="mx-5 my-auto text-white font-bold">{round}/{scenarios[gameMode].scenarioLength}</p>
+                            <h1 className="text-white font-bold my-auto">{configData.buttonPortfolioText.toUpperCase()}</h1>
                         </div>
-                        <div className="flex shrink-0 items-center bg-white rounded-lg min-w-14 mr-3 xs:mr-4 sm:mr-6 my-1">
+                        <div className="flex items-center bg-white rounded-lg min-w-14 mr-6 xs:mr-4 sm:mr-6 my-1">
                             <svg className="-mb-0.5 ml-2" width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M13.2217 8.12476C13.2217 10.345 11.4219 12.1448 9.20166 12.1448C6.98146 12.1448 5.18164 10.345 5.18164 8.12476C5.18164 5.90456 6.98146 4.10474 9.20166 4.10474C11.4219 4.10474 13.2217 5.90456 13.2217 8.12476Z" fill="#245375" />
                                 <path d="M8.46135 3.15894C6.04531 3.51605 4.18997 5.59445 4.18167 8.10781C2.13565 7.92031 0.533203 6.19966 0.533203 4.10474C0.533203 1.88454 2.33303 0.0847168 4.55322 0.0847168C6.44765 0.0847168 8.03602 1.39512 8.46135 3.15894Z" fill="#245375" />
@@ -496,13 +494,13 @@ function Portfolio() {
                     </div>
                     <div className={`bg-${riskColors[Math.floor(portfolioRisk) - 1]}`}>
                         <div className="px-4 flex py-1 w-full max-w-96 sm:max-w-[25rem] lg:max-w-[56rem] xl:max-w-[77rem] mx-auto">
-                            <div className="relative shrink-0">
+                            <div className="relative">
                                 <span className="absolute text-figma-white text-xs top-[7px] left-[6px] w-5 text-center">{portfolioRisk.toFixed(1)}</span>
                                 <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M1.8562 17.8294C0.579185 16.5523 0.579184 14.4819 1.8562 13.2049L13.5862 1.47485C14.8632 0.197837 16.9337 0.197836 18.2107 1.47485L29.9407 13.2049C31.2177 14.4819 31.2177 16.5523 29.9407 17.8294L18.2107 29.5594C16.9337 30.8364 14.8632 30.8364 13.5862 29.5594L1.8562 17.8294Z" fill="#0B1F42" />
                                 </svg>
                             </div>
-                            <h1 className="ml-3 text-sm self-center text-figma-black grow min-w-0 truncate">{configData.portfolioTitleText}</h1>
+                            <h1 className="ml-3 text-sm self-center text-figma-black grow">{configData.portfolioTitleText}</h1>
 
                             {portfolioPercentChange > 0 &&
                                 <svg className="self-center" width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -514,8 +512,8 @@ function Portfolio() {
                                     <path d="M6.46646 10.0653C6.27401 10.3986 5.79288 10.3986 5.60043 10.0653L1.27041 2.56549C1.07796 2.23216 1.31852 1.81549 1.70342 1.81549L10.3635 1.81549C10.7484 1.81549 10.9889 2.23216 10.7965 2.56549L6.46646 10.0653Z" fill="#0B1F42" />
                                 </svg>
                             }
-                            <h2 className="self-center text-sm ml-1 mr-4 xs:mr-6 whitespace-nowrap">{portfolioPercentChange.toFixed(1)}%</h2>
-                            <h2 className='text-sm self-center mr-2 whitespace-nowrap'>{portfolioWorth.toFixed(1)}</h2>
+                            <h2 className="self-center text-sm ml-1 mr-6">{portfolioPercentChange.toFixed(1)}%</h2>
+                            <h2 className='text-sm self-center mr-2'>{portfolioWorth.toFixed(1)}</h2>
                         </div>
                     </div>
                 </div>
@@ -536,10 +534,8 @@ function Portfolio() {
                                         setOpenedProduct(product.ID);
                                     }}
                                         key={product.ID}
-                                        className={`${product.invested <= 0 ? 'flex' : ''} mt-4 w-[22rem] max-w-[calc(100%-1.5rem)] xs:w-[23rem] xs:max-w-none sm:min-w-96 mx-auto h-fit`}>
-                                        {/* On narrow phones the outlined box shrinks with the row, so the % and value
-                                            columns stay aligned with the invested rows and on screen. */}
-                                        <div className={`${product.invested <= 0 ? 'w-[calc(100%-8rem)] xs:w-56 sm:w-60' : ''}`}>
+                                        className={`${product.invested <= 0 && 'flex'} mt-4 w-[22rem] max-w-[calc(100%-1.5rem)] xs:w-[23rem] xs:max-w-none sm:min-w-96 mx-auto h-fit`}>
+                                        <div className={`${product.invested <= 0 && 'w-[calc(100%-8rem)] xs:w-56 sm:w-60'}`}>
                                             <div className={`rounded-xl ${product.invested > 0 ? `bg-figma-white text-figma-black` :
                                                 'bg-figma-light-black text-figma-stone-40 border border-figma-stone-40'} pt-2 pb-1 flex`}>
                                                 <h2 className="text-base font-bold mx-3 grow"> {product.productName} </h2>
@@ -607,10 +603,10 @@ function PortfolioTutorial() {
     const { setPortfolioTutorial, configData } = useGameLoop();
     return (
         <>
-            <div className="bg-figma-black min-h-screen pb-24 text-white">
+            <div className="bg-figma-black h-screen text-white">
                 <img src={configData.portfolioTutorial_IMG} alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
                 <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{configData.portfolioTutorialText}</p>
-                <div className="fixed z-20 bottom-0 pt-3 pb-5 w-full bg-figma-black">
+                <div className="absolute bottom-5 w-full">
                     <button className="mx-auto rounded-full flex" onClick={() => {
                         setPortfolioTutorial(false);
                     }}>
@@ -691,7 +687,7 @@ function Earnings() {
                 </div>
             </div>
 
-            <div className="relative z-0 min-h-screen py-24 flex flex-col justify-center custom-radial-gradient">
+            <div className="relative z-0 h-screen flex flex-col justify-center custom-radial-gradient">
                 <h1 className="mb-6 text-xl text-white text-center -mt-10">{configData.yourEarningsText} {round}. {configData.roundText}</h1>
                 <div className="flex justify-center">
                     <div className="w-full max-w-[609px] min-w-80">
@@ -794,14 +790,14 @@ function EarningsTutorial() {
     const { setEarningsTutorial, configData } = useGameLoop();
     return (
         <>
-            <div className="bg-figma-black min-h-screen pb-24 text-white">
+            <div className="bg-figma-black h-screen text-white">
                 <img src={configData.earningsTutorial_IMG} alt="placeholder" className="mx-auto pt-16 relative z-10"></img>
                 <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">
                     {configData.earningsTutorialText}
                     <br></br><br></br>
                     {configData.earningsTutorailPromptText}
                 </p>
-                <div className="fixed z-20 bottom-0 pt-3 pb-5 w-full bg-figma-black">
+                <div className="absolute bottom-5 w-full">
                     <button className="mx-auto rounded-full flex" onClick={() => setEarningsTutorial(false)}>
                         <svg width="65" height="41" viewBox="0 0 65 41" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="1.03906" y="1.03418" width="63" height="39" rx="19.5" stroke="#FFFDFD" />
@@ -822,16 +818,6 @@ function NewRound() {
 
     const soloGame = scenarios[gameMode].random == "TRUE";
 
-    // The faces + round number are ~560px tall at full size. On short phones (e.g. iPhone SE with
-    // browser bars visible) they are scaled down so everything fits above the bottom arrow button.
-    // Browsers without dvh support ignore these styles and fall back to the original fixed sizes.
-    const roundLabel = `${round}/${scenarios[gameMode].scenarioLength}`;
-    const freeHeight = "(100dvh - 160px)";
-    const labelWidthEm = roundLabel.replace("/", "").length * 0.65 + 0.4;
-    const topFacesStyle = { height: `min(150px, calc(${freeHeight} * 0.266))`, width: "auto" };
-    const roundNumberStyle = { fontSize: `min(9rem, calc(${freeHeight} * 0.256), ${(90 / labelWidthEm).toFixed(1)}vw)` };
-    const bottomFacesStyle = { height: `min(197px, calc(${freeHeight} * 0.35))`, width: "auto" };
-
     useEffect(() => {
         let newEvent;
         if (soloGame) newEvent = Math.floor(Math.random() * eventData.length);
@@ -843,7 +829,7 @@ function NewRound() {
 
     return (
         <div className="bg-[linear-gradient(135deg,rgba(255,211,42,1)0%,rgba(255,96,48,1)25%,rgba(225,1,91,1)50%,rgba(170,75,179,1)75%,rgba(25,156,249,1)100%)]
-                    h-screen flex flex-col items-center justify-center relative" >
+                    h-screen supports-[height:100dvh]:h-dvh flex flex-col items-center justify-center relative" >
             <svg
                 className="h-screen w-full absolute px-6 pt-8 pb-20 z-0"
                 preserveAspectRatio="none"
@@ -857,7 +843,7 @@ function NewRound() {
                 <rect width="100%" height="100%" fill="url(#verticalLines)" />
             </svg>
 
-            <svg className="relative z-10 max-w-full shrink-0" style={topFacesStyle} width="284" height="150" viewBox="0 0 284 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg className="relative z-10 h-[min(150px,22dvh)] w-auto" width="284" height="150" viewBox="0 0 284 150" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M282.691 100.058C282.691 110.624 274.127 119.188 263.561 119.188H260.668C252.674 116.894 244.435 108.791 244.435 100.058C244.432 91.8328 253.253 83.6315 260.536 80.9282C260.536 80.9282 261.221 80.9282 263.561 80.9282C274.127 80.9282 282.691 89.492 282.691 100.058Z" fill="#0B1F42" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M260.668 119.188C271.233 119.188 279.798 110.623 279.798 100.058C279.798 89.4929 271.233 80.9282 260.668 80.9282C250.103 80.9282 241.539 89.4929 241.539 100.058C241.539 110.623 250.103 119.188 260.668 119.188Z" fill="#AA4BB3" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M264.687 97.7783L269.561 97.8132" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
@@ -870,9 +856,9 @@ function NewRound() {
                 <path d="M26.0596 46.502C26.0596 46.502 26.4974 48.6921 28.0224 48.6921C29.5475 48.6921 30.0042 46.502 30.0042 46.502" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
 
-            <h1 className="text-[9rem] text-white relative z-10 whitespace-nowrap" style={roundNumberStyle}>{roundLabel}</h1>
+            <h1 className="text-[9rem] supports-[height:100dvh]:text-[length:min(9rem,18dvh)] text-white relative z-10">{round}/{scenarios[gameMode].scenarioLength}</h1>
 
-            <svg className="relative z-10 max-w-full shrink-0" style={bottomFacesStyle} width="294" height="197" viewBox="0 0 294 197" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg className="relative z-10 h-[min(197px,28dvh)] w-auto" width="294" height="197" viewBox="0 0 294 197" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M43.7296 121.773C43.7296 132.631 34.9289 141.431 24.0708 141.431H21.0978C12.882 139.074 4.41553 130.747 4.41553 121.773C4.41205 113.32 13.4773 104.892 20.962 102.114C20.962 102.114 21.6653 102.114 24.0708 102.114C34.9289 102.114 43.7296 110.914 43.7296 121.773Z" fill="#0B1F42" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M21.0987 141.431C31.9559 141.431 40.7575 132.63 40.7575 121.773C40.7575 110.915 31.9559 102.114 21.0987 102.114C10.2415 102.114 1.43994 110.915 1.43994 121.773C1.43994 132.63 10.2415 141.431 21.0987 141.431Z" fill="#FFFDFD" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M13.8939 120.499C14.3804 120.499 14.7747 119.7 14.7747 118.713C14.7747 117.727 14.3804 116.927 13.8939 116.927C13.4075 116.927 13.0132 117.727 13.0132 118.713C13.0132 119.7 13.4075 120.499 13.8939 120.499Z" fill="#0B1F42" stroke="#0B1F42" strokeLinecap="round" strokeLinejoin="round" />
@@ -927,10 +913,6 @@ function Bankruptcy() {
     const whiteDice = 8;
 
     useEffect(() => {
-        window.scrollTo(0, 0);
-    }, [rollingDices]);
-
-    useEffect(() => {
         if (!rolledThisBancrupcy) {
             const updatedBankruptCatergories: string[] = [];
             productData.map(item => {
@@ -975,7 +957,7 @@ function Bankruptcy() {
             </div>
             {!rollingDices ?
                 <>
-                    <div className="mt-8 pb-24 text-figma-black max-w-[39rem] mx-auto">
+                    <div className="mt-8 text-figma-black max-w-[39rem] mx-auto">
                         <div className="relative">
                             <img src={`events/${eventData[eventIndex].IMG}`}></img>
                             <p className={`absolute font-bold text-base bottom-5 w-[90%] mx-5 px-3 text-figma-black bg-${figmaColors[eventData[eventIndex].color]}`}>{configData.crisisNewsHeadlineText}</p>
@@ -986,7 +968,7 @@ function Bankruptcy() {
 
                 </>
                 :
-                <div className="bg-figma-black min-h-screen pb-24">
+                <div className="bg-figma-black h-screen">
                     <h1 className="pt-40 font-bold text-lg text-figma-white text-center">{configData.crisisHeadlineText}</h1>
                     <div className="pt-12">
                         <div className="size-10 mx-auto">
@@ -1044,7 +1026,7 @@ function News() {
                     </div>
                 </div>
             </div>
-            <div className="mt-8 pb-24 text-figma-black max-w-[39rem] mx-auto">
+            <div className="mt-8 text-figma-black max-w-[39rem] mx-auto">
                 <div className="relative">
                     <img src={`events/${eventData[eventIndex].IMG}`}></img>
                 </div>
@@ -1096,22 +1078,6 @@ function GameLoop() {
         }
     }, []);
 
-    let screen = "";
-    if (roundStart && round <= scenarios[gameMode].scenarioLength) screen = "newRound";
-    else if (showHelp) screen = "help";
-    else if (showEvent && showBankruptcy) screen = "bankruptcy";
-    else if (portfolioTutorial && !soloGame) screen = "portfolioTutorial";
-    else if (nextRound && newsTutorial) screen = "newsTutorial";
-    else if (showEvent && soloGame) screen = "news";
-    else if (nextRound && !soloGame) screen = "newEvent";
-    else if (showEarnings && earningsTutorial) screen = "earningsTutorial";
-    else if (showEarnings) screen = "earnings";
-    else if (showPortfolio) screen = "portfolio";
-
-    // On small phones some screens are taller than the viewport; start every new screen at the top.
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, [screen, round]);
 
     if (!productData || liquidity === null) {
         return (
@@ -1121,19 +1087,19 @@ function GameLoop() {
         );
     }
 
-    switch (screen) {
-        case "newRound": return <NewRound />;
-        case "help": return <ShowHelp />;
-        case "bankruptcy": return <Bankruptcy />;
-        case "portfolioTutorial": return <PortfolioTutorial />;
-        case "newsTutorial": return <NewsTutorial />;
-        case "news": return <News />;
-        case "newEvent": return <NewEvent />;
-        case "earningsTutorial": return <EarningsTutorial />;
-        case "earnings": return <Earnings />;
-        case "portfolio": return <Portfolio />;
-        default: return null;
-    }
+    let content = null;
+    if (roundStart && round <= scenarios[gameMode].scenarioLength) content = <NewRound />;
+    else if (showHelp) content = <ShowHelp />;
+    else if (showEvent && showBankruptcy) content = <Bankruptcy />;
+    else if (portfolioTutorial && !soloGame) content = <PortfolioTutorial />;
+    else if (nextRound && newsTutorial) content = <NewsTutorial />;
+    else if (showEvent && soloGame) content = <News />;
+    else if (nextRound && !soloGame) content = <NewEvent />;
+    else if (showEarnings && earningsTutorial) content = <EarningsTutorial />;
+    else if (showEarnings) content = <Earnings />;
+    else if (showPortfolio) content = <Portfolio />;
+
+    return content;
 }
 
 export default GameLoop;

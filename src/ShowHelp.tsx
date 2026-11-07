@@ -97,7 +97,7 @@ export function ShowHelp() {
                     </div>
                 </div>
                 {Object.keys(tabContent).map((tab, index) => (
-                    <button key={tab} className={`text-sm xs:text-base font-bold text-figma-black mt-1 px-1 xs:px-4 w-1/4 pt-1 pb-1 whitespace-nowrap ${activeTab === index
+                    <button key={tab} className={`text-base font-bold text-figma-black mt-1 px-4 w-1/4 pt-1 pb-1 ${activeTab === index
                         ? 'bg-figma-white rounded-t-lg'
                         : 'bg-figma-stone-40'}`}
                         onClick={() => setActiveTab(index)} >
