@@ -26,7 +26,7 @@ function NewEvent() {
 
   return (
     <>
-      <div className="min-h-screen pb-24 md:pb-0 bg-figma-white text-figma-black font-medium font-[Inter] md:flex md:items-center md:justify-center">
+      <div className="min-h-screen pb-28 md:pb-0 bg-figma-white text-figma-black font-medium font-[Inter] md:flex md:items-center md:justify-center">
         <div className="md:w-[50rem] xl:w-[74rem] mx-auto md:flex md:items-center md:justify-center md:pb-40 md:gap-16">
           <img
             src={configData.campaignInstruction_IMG}
@@ -44,7 +44,7 @@ function NewEvent() {
         </div>
       </div>
 
-      <div className="z-20 w-full flex justify-center fixed font-[Inter] font-medium bottom-0 pt-3 pb-5 bg-figma-white">
+      <div className="z-20 w-full flex justify-center fixed font-[Inter] font-medium bottom-0 pt-10 pb-5 bg-gradient-to-t from-figma-white from-60%">
         <button
           className="flex rounded-full hover:scale-110 duration-200 text-figma-black"
           onClick={() => {
@@ -85,7 +85,7 @@ function NewsTutorial() {
   const { setNewsTutorial, configData } = useGameLoop();
   // const { gameMode } = useGame();
   return (
-    <div className="bg-figma-black min-h-screen pb-24 text-white font-medium font-[Inter]">
+    <div className="bg-figma-black min-h-screen pb-28 text-white font-medium font-[Inter]">
       <img
         src={configData.newsTutorial_IMG}
         alt="placeholder"
@@ -98,7 +98,7 @@ function NewsTutorial() {
         {configData.newsTutorialText2}
       </p>
 
-      <div className="z-20 w-full flex justify-center fixed bottom-0 pt-3 pb-5 bg-figma-black font-[Inter] font-bold ">
+      <div className="z-20 w-full flex justify-center fixed bottom-0 pt-10 pb-5 bg-gradient-to-t from-figma-black from-60% font-[Inter] font-bold ">
         <button
           className="flex rounded-full hover:scale-110 duration-200 text-white"
           onClick={() => {
@@ -1119,7 +1119,7 @@ function PortfolioTutorial() {
   const { setPortfolioTutorial, configData } = useGameLoop();
   return (
     <>
-      <div className="bg-figma-black min-h-screen pb-24 text-white">
+      <div className="bg-figma-black min-h-screen pb-28 text-white">
         <img
           src={configData.portfolioTutorial_IMG}
           alt="placeholder"
@@ -1128,7 +1128,7 @@ function PortfolioTutorial() {
         <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">
           {configData.portfolioTutorialText}
         </p>
-        <div className="fixed z-20 bottom-0 pt-3 pb-5 w-full bg-figma-black">
+        <div className="fixed z-20 bottom-0 pt-10 pb-5 w-full bg-gradient-to-t from-figma-black from-60%">
           <button
             className="mx-auto rounded-full flex"
             onClick={() => {
@@ -1405,7 +1405,7 @@ function EarningsTutorial() {
   const { setEarningsTutorial, configData } = useGameLoop();
   return (
     <>
-      <div className="bg-figma-black min-h-screen pb-24 text-white">
+      <div className="bg-figma-black min-h-screen pb-28 text-white">
         <img
           src={configData.earningsTutorial_IMG}
           alt="placeholder"
@@ -1417,7 +1417,7 @@ function EarningsTutorial() {
           <br></br>
           {configData.earningsTutorailPromptText}
         </p>
-        <div className="fixed z-20 bottom-0 pt-3 pb-5 w-full bg-figma-black">
+        <div className="fixed z-20 bottom-0 pt-10 pb-5 w-full bg-gradient-to-t from-figma-black from-60%">
           <button
             className="mx-auto rounded-full flex"
             onClick={() => setEarningsTutorial(false)}
