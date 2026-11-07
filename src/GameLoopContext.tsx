@@ -198,7 +198,7 @@ interface GameLoopState {
     riskHistory: number[],
     setRiskHistory: Function,
     changesAppliedRound: number,
-    setChangesAppliedRound: Function,
+    setChangesAppliedRound: (round: number) => void,
 }
 
 const GameLoopContext = createContext<GameLoopState | undefined>(undefined);
