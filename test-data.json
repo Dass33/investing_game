@@ -1,0 +1,588 @@
+[
+  {
+    "imgages": "",
+    "startingMoney": 60,
+    "startingProducts": [],
+    "luckLowerBound": 0,
+    "luckUpperBound": 1,
+    "roundsAmount": 5,
+    "portfolioTutorialText": "Tady je delší vysvětlující text, který má zhruba takovou délku jako texty ve skutečné hře.",
+    "portfolioTutorial_IMG": "start-portfolio-help.svg",
+    "earningsTutorialText": "Tady je delší vysvětlující text, který má zhruba takovou délku jako texty ve skutečné hře.",
+    "earningsTutorial_IMG": "random-vynos.svg",
+    "newsTutorialText": "Tady je delší vysvětlující text, který má zhruba takovou délku jako texty ve skutečné hře.",
+    "newsTutorialText2": "Tady je delší vysvětlující text, který má zhruba takovou délku jako texty ve skutečné hře.",
+    "newsTutorial_IMG": "news-help.svg",
+    "copyright": "© 2024 Nadace České spořitelny",
+    "crisisHeadlineText": "Krize! Hází se kostkou o bankrot.",
+    "crisisBankruptcyText": "Zbankrotovaly tyto investice:",
+    "crisisNoBankruptcyText": "Nic nezbankrotovalo",
+    "buttonPlayText": "HRÁT",
+    "buttonRestartText": "HRÁT ZNOVU",
+    "buttonStartText": "Začít hru",
+    "buttonEarningsText": "Výnosy",
+    "buttonNewsText": "Zprávy",
+    "buttonPortfolioText": "Obchod",
+    "buttonEndRoundText": "Ukončit kolo",
+    "portfolioTitleText": "Moje portfolio",
+    "endRoundText": "Konec kola",
+    "endRound_IMG": "stop.svg",
+    "reallySell_1_Text": "Opravdu chceš prodat",
+    "reallySell_2_Text": "Peníze dostaneš až za několik kol.",
+    "reallySell_IMG": "really-sell.svg",
+    "noBudgetText": "Nemáš dost peněz na nákup.",
+    "noBudget_IMG": "nofunds.svg",
+    "buttonYesText": "Ano",
+    "buttonNoText": "Ne",
+    "scoreText": "SKÓRE",
+    "endText": "Gratulujeme, dohrál/a jsi hru! Podívej se, jak riskantně jsi investoval/a.",
+    "cashText": "Hotovost",
+    "campaignInstructionText": "Tady je delší vysvětlující text, který má zhruba takovou délku jako texty ve skutečné hře.",
+    "campaignInstructionText2": "Tady je delší vysvětlující text, který má zhruba takovou délku jako texty ve skutečné hře.",
+    "campaignInstruction_IMG": "makemoney.svg",
+    "buySellNewsText": "",
+    "earningsText": "Výnosy",
+    "earningsColonText": "Výnosy:",
+    "sellPortfolioText": "",
+    "earningsTutorailPromptText": "Hoď si kostkou a zjisti, kolik ti investice vynesly.",
+    "crisisNewsHeadlineText": "KRIZE",
+    "earningsSumText": "Celkem",
+    "helpHeadlineText": "NÁPOVĚDA",
+    "helpHowToPlayText": "Jak hrát",
+    "roundText": "kolo",
+    "roundsText": "kol",
+    "yourEarningsText": "Tvoje výnosy za",
+    "sellInRoundsText": "",
+    "endGame": "Konec hry",
+    "helpTabsName": [
+      "Hra",
+      "Produkty",
+      "Tipy",
+      "Autoři"
+    ],
+    "helpGoalText": "",
+    "helpTipHeadline1": "Diverzifikuj",
+    "helpTipText1": "Tady je delší vysvětlující text, který má zhruba takovou délku jako texty ve skutečné hře.",
+    "helpTipHeadline2": "Mysli dlouhodobě",
+    "helpTipText2": "Tady je delší vysvětlující text, který má zhruba takovou délku jako texty ve skutečné hře.",
+    "helpTipHeadline3": "Sleduj riziko",
+    "helpTipText3": "Tady je delší vysvětlující text, který má zhruba takovou délku jako texty ve skutečné hře.",
+    "helpTipHeadline4": "Měj rezervu",
+    "helpTipText4": "Tady je delší vysvětlující text, který má zhruba takovou délku jako texty ve skutečné hře.",
+    "toSell": "Prodat",
+    "toBuy": "Koupit",
+    "riskHeadline": "RIZIKOVOST",
+    "investorType": [
+      "Konzervativní investor",
+      "Opatrný investor",
+      "Vyvážený investor",
+      "Dynamický investor",
+      "Odvážný investor",
+      "Spekulant",
+      "Hazardér"
+    ],
+    "investorTypeDescription": [
+      "Nechceš přijímat velké riziko, a proto se jej snažíš za každou cenu minimalizovat. Tento styl investování je vhodný pro rozvážné investory, kteří chtějí své bohatství uchovat a potřebují větší jistotu, např. lidé s vyššími závazky nebo v důchodu.",
+      "Popis typu „Opatrný investor“: jak riskantně investuješ a komu se takový styl hodí.",
+      "Popis typu „Vyvážený investor“: jak riskantně investuješ a komu se takový styl hodí.",
+      "Popis typu „Dynamický investor“: jak riskantně investuješ a komu se takový styl hodí.",
+      "Popis typu „Odvážný investor“: jak riskantně investuješ a komu se takový styl hodí.",
+      "Popis typu „Spekulant“: jak riskantně investuješ a komu se takový styl hodí.",
+      "Popis typu „Hazardér“: jak riskantně investuješ a komu se takový styl hodí."
+    ],
+    "baseRisk": 1.5,
+    "incrementRisk": 1,
+    "crisisButton": "Hodit kostkou",
+    "newsHeadline": "ZPRÁVY",
+    "earningsProperty": "Výnos",
+    "securityProperty": "Bezpečnost",
+    "liquidityProperty": "Prodej",
+    "oneRoundDelaySellText": "kolo",
+    "moreRoundsDelaySellText": "kola",
+    "immediateSellText": "Ihned",
+    "neverSellText": "Nelze",
+    "delaySellAmountText": "Prodáváš",
+    "delaySellAmountText1": "– peníze dostaneš příští kolo.",
+    "autor0": "Autor 1",
+    "autor1": "Autor 2",
+    "autor2": "Autor 3",
+    "autor3": "Autor 4",
+    "autor4": "Autor 5",
+    "autor5": "Autor 6",
+    "riskTutorialText1": "Tady je delší vysvětlující text, který má zhruba takovou délku jako texty ve skutečné hře.",
+    "riskTutorialText2": "Tady je delší vysvětlující text, který má zhruba takovou délku jako texty ve skutečné hře.",
+    "playAgainText": "Chceš si zahrát znovu sám/sama?",
+    "playAgainHeadline": "HRÁT ZNOVU",
+    "theEndText": "KONEC",
+    "backText": "ZPĚT"
+  },
+  [
+    {
+      "eventName": "Ekonomika roste",
+      "eventText": "Firmám se daří, lidé víc nakupují a akcie rostou. Úroky na spořicích účtech zůstávají stejné.",
+      "IMG": "news-01.webp",
+      "color": 3,
+      "bankrouptcy": "FALSE",
+      "baseGame": "TRUE",
+      "advancedGame": "TRUE",
+      "eventValue": 0,
+      "Vzdělání": [
+        1,
+        1,
+        1
+      ],
+      "Spořicí účet": [
+        1,
+        0.2,
+        0.2
+      ],
+      "Akcie": [
+        1.2,
+        0,
+        1
+      ],
+      "Krypto": [
+        1.5,
+        0,
+        0
+      ],
+      "Podílový fond": [
+        1.1,
+        0.2,
+        0.6
+      ],
+      "Nemovitosti": [
+        1.05,
+        0.5,
+        0.5
+      ],
+      "Zlato": [
+        0.95,
+        0,
+        0
+      ],
+      "Podnikání": [
+        1.3,
+        0,
+        2
+      ]
+    },
+    {
+      "eventName": "Velká finanční krize zasáhla trhy",
+      "eventText": "Banky přestaly půjčovat peníze, firmy propouštějí a ceny akcií prudce padají. Některé firmy a kryptoměny mohou zkrachovat. Lidé se snaží peníze uložit do bezpečnějších investic, například do zlata. Tento text je schválně delší, aby šlo vyzkoušet, jak se dlouhá zpráva vejde na malý telefon.",
+      "IMG": "news-02.webp",
+      "color": 2,
+      "bankrouptcy": "TRUE",
+      "baseGame": "TRUE",
+      "advancedGame": "TRUE",
+      "eventValue": 0,
+      "Vzdělání": [
+        1,
+        1,
+        1
+      ],
+      "Spořicí účet": [
+        1,
+        0.2,
+        0.2
+      ],
+      "Akcie": [
+        0.6,
+        0,
+        0.3
+      ],
+      "Krypto": [
+        0.4,
+        0,
+        0
+      ],
+      "Podílový fond": [
+        0.8,
+        0,
+        0.3
+      ],
+      "Nemovitosti": [
+        0.9,
+        0.3,
+        0.5
+      ],
+      "Zlato": [
+        1.2,
+        0,
+        0
+      ],
+      "Podnikání": [
+        0.6,
+        0,
+        0.5
+      ]
+    },
+    {
+      "eventName": "Stabilní období",
+      "eventText": "Nic zvláštního se neděje. Ceny se skoro nemění a investice přinášejí obvyklé výnosy.",
+      "IMG": "news-03.webp",
+      "color": 0,
+      "bankrouptcy": "FALSE",
+      "baseGame": "TRUE",
+      "advancedGame": "TRUE",
+      "eventValue": 0,
+      "Vzdělání": [
+        1,
+        1,
+        1
+      ],
+      "Spořicí účet": [
+        1,
+        0.2,
+        0.2
+      ],
+      "Akcie": [
+        1.02,
+        0.2,
+        0.6
+      ],
+      "Krypto": [
+        0.9,
+        0,
+        0
+      ],
+      "Podílový fond": [
+        1.02,
+        0.2,
+        0.4
+      ],
+      "Nemovitosti": [
+        1.02,
+        0.5,
+        0.5
+      ],
+      "Zlato": [
+        1,
+        0,
+        0
+      ],
+      "Podnikání": [
+        1.05,
+        0,
+        1
+      ]
+    },
+    {
+      "eventName": "Inflace zdražuje",
+      "eventText": "Všechno je dražší. Peníze na účtu ztrácejí hodnotu, nemovitosti a zlato naopak zdražují.",
+      "IMG": "news-04.webp",
+      "color": 5,
+      "bankrouptcy": "FALSE",
+      "baseGame": "TRUE",
+      "advancedGame": "TRUE",
+      "eventValue": 0,
+      "Vzdělání": [
+        1,
+        1,
+        1
+      ],
+      "Spořicí účet": [
+        1,
+        0.3,
+        0.3
+      ],
+      "Akcie": [
+        0.95,
+        0,
+        0.5
+      ],
+      "Krypto": [
+        1.1,
+        0,
+        0
+      ],
+      "Podílový fond": [
+        0.97,
+        0.1,
+        0.3
+      ],
+      "Nemovitosti": [
+        1.15,
+        0.6,
+        0.6
+      ],
+      "Zlato": [
+        1.15,
+        0,
+        0
+      ],
+      "Podnikání": [
+        0.9,
+        0,
+        1
+      ]
+    },
+    {
+      "eventName": "Technologický boom",
+      "eventText": "Nové technologie mění svět. Akcie technologických firem a kryptoměny rostou rychleji než kdy dřív.",
+      "IMG": "news-05.webp",
+      "color": 4,
+      "bankrouptcy": "FALSE",
+      "baseGame": "TRUE",
+      "advancedGame": "TRUE",
+      "eventValue": 0,
+      "Vzdělání": [
+        1,
+        1.5,
+        1.5
+      ],
+      "Spořicí účet": [
+        1,
+        0.2,
+        0.2
+      ],
+      "Akcie": [
+        1.3,
+        0.2,
+        1.2
+      ],
+      "Krypto": [
+        2,
+        0,
+        0
+      ],
+      "Podílový fond": [
+        1.15,
+        0.2,
+        0.6
+      ],
+      "Nemovitosti": [
+        1,
+        0.5,
+        0.5
+      ],
+      "Zlato": [
+        0.9,
+        0,
+        0
+      ],
+      "Podnikání": [
+        1.4,
+        0,
+        2.5
+      ]
+    }
+  ],
+  [
+    {
+      "ID": 0,
+      "productName": "Vzdělání",
+      "ticker": "EDU",
+      "riskScore": 1,
+      "potentialEarnings": 2,
+      "color": 0,
+      "cost": 10,
+      "invested": 20,
+      "sellingNextRound": 0,
+      "timeToSell": -1,
+      "sellingForLastRounds": 0,
+      "autoSellIn": 0,
+      "diceThrow": "FALSE",
+      "minToPreventBankruptcy": 0,
+      "fixedIncome": 0,
+      "security": 7,
+      "liquidity": 3,
+      "incomeChanges": "",
+      "productDescription": "Investice do sebe. Nedá se prodat, ale každé kolo přináší jistý výnos."
+    },
+    {
+      "ID": 1,
+      "productName": "Spořicí účet",
+      "ticker": "SPO",
+      "riskScore": 1,
+      "potentialEarnings": 1,
+      "color": 1,
+      "cost": 10,
+      "invested": 10,
+      "sellingNextRound": 0,
+      "timeToSell": 0,
+      "sellingForLastRounds": 0,
+      "autoSellIn": 0,
+      "diceThrow": "FALSE",
+      "minToPreventBankruptcy": 0,
+      "fixedIncome": 0,
+      "security": 7,
+      "liquidity": 3,
+      "incomeChanges": "",
+      "productDescription": "Bezpečné místo pro peníze. Malý, ale jistý úrok a peníze máš kdykoli k dispozici."
+    },
+    {
+      "ID": 2,
+      "productName": "Akcie",
+      "ticker": "AKC",
+      "riskScore": 5,
+      "potentialEarnings": 4,
+      "color": 2,
+      "cost": 10,
+      "invested": 0,
+      "sellingNextRound": 0,
+      "timeToSell": 0,
+      "sellingForLastRounds": 0,
+      "autoSellIn": 0,
+      "diceThrow": "TRUE",
+      "minToPreventBankruptcy": 3,
+      "fixedIncome": 0,
+      "security": 3,
+      "liquidity": 3,
+      "incomeChanges": "",
+      "productDescription": "Podíl ve firmě. Cena hodně kolísá, dlouhodobě ale obvykle roste. Ve velké krizi může firma zkrachovat."
+    },
+    {
+      "ID": 3,
+      "productName": "Krypto",
+      "ticker": "BTC",
+      "riskScore": 7,
+      "potentialEarnings": 5,
+      "color": 3,
+      "cost": 10,
+      "invested": 0,
+      "sellingNextRound": 0,
+      "timeToSell": 0,
+      "sellingForLastRounds": 0,
+      "autoSellIn": 0,
+      "diceThrow": "TRUE",
+      "minToPreventBankruptcy": 6,
+      "fixedIncome": 0,
+      "security": 1,
+      "liquidity": 3,
+      "incomeChanges": "",
+      "productDescription": "Kryptoměny. Velmi rizikové: cena může během kola vyletět nahoru i spadnout skoro na nulu."
+    },
+    {
+      "ID": 4,
+      "productName": "Podílový fond",
+      "ticker": "FND",
+      "riskScore": 4,
+      "potentialEarnings": 3,
+      "color": 4,
+      "cost": 10,
+      "invested": 0,
+      "sellingNextRound": 0,
+      "timeToSell": 1,
+      "sellingForLastRounds": 0,
+      "autoSellIn": 0,
+      "diceThrow": "TRUE",
+      "minToPreventBankruptcy": 0,
+      "fixedIncome": 0,
+      "security": 4,
+      "liquidity": 1,
+      "incomeChanges": "",
+      "productDescription": "Balíček mnoha akcií a dluhopisů. Riziko je rozložené, prodej trvá jedno kolo."
+    },
+    {
+      "ID": 5,
+      "productName": "Nemovitosti",
+      "ticker": "NMV",
+      "riskScore": 3,
+      "potentialEarnings": 3,
+      "color": 5,
+      "cost": 10,
+      "invested": 0,
+      "sellingNextRound": 0,
+      "timeToSell": 2,
+      "sellingForLastRounds": 0,
+      "autoSellIn": 0,
+      "diceThrow": "TRUE",
+      "minToPreventBankruptcy": 0,
+      "fixedIncome": 0,
+      "security": 5,
+      "liquidity": 1,
+      "incomeChanges": "",
+      "productDescription": "Byt nebo dům k pronájmu. Přináší nájem, ale prodej trvá dvě kola."
+    },
+    {
+      "ID": 6,
+      "productName": "Zlato",
+      "ticker": "ZLT",
+      "riskScore": 3,
+      "potentialEarnings": 2,
+      "color": 6,
+      "cost": 10,
+      "invested": 0,
+      "sellingNextRound": 0,
+      "timeToSell": 0,
+      "sellingForLastRounds": 0,
+      "autoSellIn": 0,
+      "diceThrow": "FALSE",
+      "minToPreventBankruptcy": 0,
+      "fixedIncome": 0,
+      "security": 5,
+      "liquidity": 3,
+      "incomeChanges": "",
+      "productDescription": "Nepřináší žádný výnos, ale v krizi si obvykle drží hodnotu."
+    },
+    {
+      "ID": 7,
+      "productName": "Podnikání",
+      "ticker": "PDN",
+      "riskScore": 6,
+      "potentialEarnings": 5,
+      "color": 7,
+      "cost": 10,
+      "invested": 0,
+      "sellingNextRound": 0,
+      "timeToSell": 3,
+      "sellingForLastRounds": 0,
+      "autoSellIn": 0,
+      "diceThrow": "TRUE",
+      "minToPreventBankruptcy": 4,
+      "fixedIncome": 0,
+      "security": 2,
+      "liquidity": 1,
+      "incomeChanges": "",
+      "productDescription": "Vlastní firma. Může vydělat nejvíc ze všeho, ale prodat ji trvá tři kola a v krizi může zkrachovat."
+    }
+  ],
+  [
+    {
+      "scenarioName": "Kampaň",
+      "menuText": "Kampaň",
+      "random": "FALSE",
+      "baseGame": "TRUE",
+      "scenarioLength": 5,
+      "howToPlay": "Rozhodni se, kam investuješ své peníze. Každé kolo přinese novou zprávu, která ovlivní ceny.",
+      "howToPlay2": "Hrajete celá třída najednou, zprávy jsou pro všechny stejné.",
+      "howToPlay3": "Na konci porovnejte, kdo investoval nejlépe.",
+      "IMG": "goal-campaign.svg",
+      "IMG2": "start-portfolio-help.svg",
+      "eventOrder": [
+        "Ekonomika roste",
+        "Velká finanční krize zasáhla trhy",
+        "Stabilní období",
+        "Inflace zdražuje",
+        "Technologický boom"
+      ]
+    },
+    {
+      "scenarioName": "Krátká hra",
+      "menuText": "",
+      "random": "TRUE",
+      "baseGame": "TRUE",
+      "scenarioLength": 5,
+      "howToPlay": "Rozhodni se, kam investuješ své peníze. Každé kolo přinese novou zprávu, která ovlivní ceny.",
+      "howToPlay2": "Snaž se mít na konci hry co nejvíc peněz.",
+      "howToPlay3": "Hodně štěstí!",
+      "IMG": "goal-single.svg",
+      "IMG2": "random-vynos.svg",
+      "eventOrder": []
+    },
+    {
+      "scenarioName": "Dlouhá hra",
+      "menuText": "",
+      "random": "TRUE",
+      "baseGame": "TRUE",
+      "scenarioLength": 10,
+      "howToPlay": "Rozhodni se, kam investuješ své peníze. Každé kolo přinese novou zprávu, která ovlivní ceny.",
+      "howToPlay2": "Deset kol: dlouhodobé investice mají čas vydělat.",
+      "howToPlay3": "Hodně štěstí!",
+      "IMG": "goal-single.svg",
+      "IMG2": "random-vynos.svg",
+      "eventOrder": []
+    }
+  ]
+]
