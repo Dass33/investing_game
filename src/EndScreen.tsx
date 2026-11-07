@@ -25,9 +25,9 @@ function EndScreen() {
     const soloGame = (scenarios[gameMode].random === "TRUE");
     let content = (
         <>
-            <div className="text-center text-figma-white bg-figma-black h-screen">
+            <div className="relative text-center text-figma-white bg-figma-black min-h-screen pb-6">
                 <svg
-                    className="h-screen w-full absolute pr-5 pl-7 py-8 z-0"
+                    className="inset-0 h-full w-full absolute pr-5 pl-7 py-8 z-0"
                     preserveAspectRatio="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -75,9 +75,9 @@ function EndScreen() {
 
     if (showRisk) content =
         <>
-            <div className="text-center text-figma-white bg-figma-black h-screen">
+            <div className="relative text-center text-figma-white bg-figma-black min-h-screen pb-6">
                 <svg
-                    className="h-screen w-full absolute pr-5 pl-7 py-8 z-0"
+                    className="inset-0 h-full w-full absolute pr-5 pl-7 py-8 z-0"
                     preserveAspectRatio="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -173,8 +173,8 @@ function EndScreen() {
 
     if (showPlayAgain && !soloGame) content =
         <>
-            <div className="text-center text-figma-white bg-figma-black h-screen">
-                <svg className="h-screen w-full absolute pr-5 pl-7 py-8 z-0"
+            <div className="relative text-center text-figma-white bg-figma-black min-h-screen pb-6">
+                <svg className="inset-0 h-full w-full absolute pr-5 pl-7 py-8 z-0"
                     preserveAspectRatio="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <defs>

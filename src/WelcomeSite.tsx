@@ -49,9 +49,9 @@ function LandingSite() {
         );
     }
     return (
-        <div className="bg-figma-black h-screen relative text-white">
+        <div className="bg-figma-black min-h-screen pb-8 relative text-white">
             <svg
-                className="h-screen w-full absolute pr-5 pl-7 my-auto py-8 z-0"
+                className="inset-0 h-full w-full absolute pr-5 pl-7 my-auto py-8 z-0"
                 preserveAspectRatio="none"
                 xmlns="http://www.w3.org/2000/svg"
             >
