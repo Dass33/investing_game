@@ -1699,9 +1699,9 @@ function NewRound() {
         />
       </svg>
 
-      <div className="fixed bottom-5 z-10 w-ful ">
+      <div className="z-10 w-full flex justify-center fixed bottom-0 py-1 md:py-2 bg-[linear-gradient(135deg,rgba(255,211,42,1)0%,rgba(255,96,48,1)25%,rgba(255,1,91,1)50%,rgba(170,75,179,1)75%,rgba(25,156,249,1)100%)]">
         <button
-          className="block mx-auto  hover:scale-110 duration-200"
+          className="block mx-auto m-2 hover:scale-110 duration-200"
           onClick={() => {
             const diceRolls: number[] = [];
             productData
