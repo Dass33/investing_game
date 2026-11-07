@@ -197,6 +197,8 @@ interface GameLoopState {
     riskColors: string[],
     riskHistory: number[],
     setRiskHistory: Function,
+    changesAppliedRound: number,
+    setChangesAppliedRound: (round: number) => void,
 }
 
 const GameLoopContext = createContext<GameLoopState | undefined>(undefined);
@@ -254,6 +256,7 @@ export const GameLoopProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const [prevRoundLiquidity, setPrevRoundLiquidity] = useState<number | null>(() => configData?.startingMoney || 0);
     const [portfolioRisk, setPortfolioRisk] = useState(1);
     const [riskHistory, setRiskHistory] = useState<number[]>([]);
+    const [changesAppliedRound, setChangesAppliedRound] = useState(0);
     const [rolledDices, setRolledDices] = useState<number[]>([]);
     const riskColors = ['figma-pool-40', 'figma-lime-40', 'figma-lime', 'figma-pool', 'figma-lavender', 'figma-berries'];
 
@@ -288,7 +291,8 @@ export const GameLoopProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             showEvent, setShowEvent,
             rolledDices, setRolledDices,
             riskColors,
-            riskHistory, setRiskHistory
+            riskHistory, setRiskHistory,
+            changesAppliedRound, setChangesAppliedRound
         }}>
             {children}
         </GameLoopContext.Provider>

@@ -134,7 +134,7 @@ function EndScreen() {
                     />
                 </div>
                 <div className="z-10 w-full flex mt-4 justify-center font-[Inter] font-bold">
-                    <button className='bg-figma-black relative z-10 bg flex rounded-full hover:scale-110 duration-200 text-white border-white border py-2 px-6 m-4'
+                    <button className='bg-figma-black relative z-10 bg flex whitespace-nowrap rounded-full hover:scale-110 duration-200 text-white border-white border py-2 px-4 xs:px-6 m-2 xs:m-4'
                         onClick={() => setShowRisk(false)}>
 
 
@@ -145,7 +145,7 @@ function EndScreen() {
                     </button>
 
                     {soloGame ?
-                        <button className='bg-figma-black relative z-10 bg flex rounded-full hover:scale-110 duration-200 text-white border-white border py-2 px-6 m-4'
+                        <button className='bg-figma-black relative z-10 bg flex whitespace-nowrap rounded-full hover:scale-110 duration-200 text-white border-white border py-2 px-4 xs:px-6 m-2 xs:m-4'
                             onClick={() => {
                                 console.log("NHI");
                                 const url = new URL(window.location.href);
@@ -158,7 +158,7 @@ function EndScreen() {
                         </button>
 
                         :
-                        <button className='bg-figma-black relative z-10 bg flex rounded-full hover:scale-110 duration-200 text-white border-white border py-2 px-6 m-4'
+                        <button className='bg-figma-black relative z-10 bg flex whitespace-nowrap rounded-full hover:scale-110 duration-200 text-white border-white border py-2 px-4 xs:px-6 m-2 xs:m-4'
                             onClick={() => setShowPlayAgain(true)}>
 
                             <span className="mr-2">{configData.theEndText}</span>

@@ -88,7 +88,7 @@ function InstructionSite() {
     }
 
     if (scenariosData[gameMode].random == "FALSE") return (
-        <div className="bg-figma-black h-screen text-white">
+        <div className="bg-figma-black min-h-screen pb-24 text-white">
             <button onClick={() => setShowHelp(true)}>
                 <svg className="w-14 mt-2 my-auto" width="31" height="31" viewBox="0 0 31 31" strokeWidth={1.5} fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="15.8669" cy="15.5" r="10.5" stroke="#EEF1F4" />
@@ -101,7 +101,7 @@ function InstructionSite() {
             <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{scenariosData[gameMode].howToPlay}</p>
             <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{scenariosData[gameMode].howToPlay2}</p>
             <p className="text-center pt-8 text-xl mx-auto max-w-96 font-light px-6">{scenariosData[gameMode].howToPlay3}</p>
-            <div className="absolute bottom-5 w-full">
+            <div className="fixed z-20 bottom-0 pt-3 pb-5 w-full bg-figma-black">
                 <button className="block mx-auto rounded-lg hover:scale-110 duration-200" onClick={() => setShowWelcomeSite(false)}>
                     <svg width="65" height="41" viewBox="0 0 65 41" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect x="1.03906" y="1.03418" width="63" height="39" rx="19.5" stroke="#FFFDFD" />
@@ -113,7 +113,7 @@ function InstructionSite() {
     );
     else return (
         <>
-            <div className="bg-figma-black h-screen text-white">
+            <div className="bg-figma-black min-h-screen pb-24 text-white">
 
                 <button onClick={() => setShowHelp(true)}>
                     <svg className="w-14 mt-2 my-auto" width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -137,7 +137,7 @@ function InstructionSite() {
                     <p className="pt-4">{scenariosData[gameMode].howToPlay3}</p>
                 </div>
 
-                <div className="fixed bottom-5 w-full">
+                <div className="fixed z-20 bottom-0 pt-3 pb-5 w-full bg-figma-black">
                     <button className="mx-auto border border-white rounded-full flex  pr-7" onClick={() => setShowWelcomeSite(false)}>
                         <svg width="65" height="41" viewBox="0 0 55 41" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M24.5391 20.5342H40.5391M40.5391 20.5342L34.5391 14.5342M40.5391 20.5342L34.5391 26.5342" stroke="#FFFDFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
