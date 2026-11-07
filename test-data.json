@@ -129,7 +129,7 @@
       "Vzdělání": [
         1,
         1,
-        1
+        2
       ],
       "Spořicí účet": [
         1,
@@ -179,7 +179,7 @@
       "Vzdělání": [
         1,
         1,
-        1
+        2
       ],
       "Spořicí účet": [
         1,
@@ -229,7 +229,7 @@
       "Vzdělání": [
         1,
         1,
-        1
+        2
       ],
       "Spořicí účet": [
         1,
@@ -279,7 +279,7 @@
       "Vzdělání": [
         1,
         1,
-        1
+        2
       ],
       "Spořicí účet": [
         1,
@@ -329,7 +329,7 @@
       "Vzdělání": [
         1,
         1.5,
-        1.5
+        2.5
       ],
       "Spořicí účet": [
         1,
@@ -382,7 +382,7 @@
       "timeToSell": -1,
       "sellingForLastRounds": 0,
       "autoSellIn": 0,
-      "diceThrow": "FALSE",
+      "diceThrow": "TRUE",
       "minToPreventBankruptcy": 0,
       "fixedIncome": 0,
       "security": 7,
